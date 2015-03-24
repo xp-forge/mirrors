@@ -23,6 +23,7 @@ public class lang.mirrors.TypeMirror extends lang.Object {
   public string comment()
   public self parent()
   public lang.mirrors.parse.CodeUnit unit()
+  public lang.mirrors.Constructor constructor()
   public lang.mirrors.Methods methods()
   public lang.mirrors.Fields fields()
   public lang.mirrors.Constants constants()
