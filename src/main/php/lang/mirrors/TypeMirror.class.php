@@ -116,4 +116,13 @@ class TypeMirror extends \lang\Object {
   public function equals($cmp) {
     return $cmp instanceof self && $this->reflect->name === $cmp->reflect->name;
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    return $this->getClassName().'<'.$this->name().'>';
+  }
 }
