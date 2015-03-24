@@ -69,6 +69,12 @@ class TypeMirror extends \lang\Object {
     return $this->unit;
   }
 
+  /** @return lang.mirrors.Constructor */
+  public function constructor() {
+    $constructor= $this->reflect->getConstructor();
+    return $constructor ? new Constructor($this, $constructor) : null;
+  }
+
   /** @return lang.mirrors.Methods */
   public function methods() { return $this->methods; }
 
