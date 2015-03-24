@@ -15,10 +15,6 @@ The entry point class is the type mirror:
 
 ```php
 public class lang.mirrors.TypeMirror extends lang.Object {
-  private var lang.mirrors.TypeMirror::$methods
-  private var lang.mirrors.TypeMirror::$fields
-  private var lang.mirrors.TypeMirror::$constants
-  private var lang.mirrors.TypeMirror::$unit
   public var lang.mirrors.TypeMirror::$reflect
 
   public lang.mirrors.TypeMirror __construct(var $arg) throws lang.ClassNotFoundException
