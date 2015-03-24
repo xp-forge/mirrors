@@ -8,3 +8,34 @@ Mirrors
 [![Latest Stable Version](https://poser.pugx.org/xp-forge/mirrors/version.png)](https://packagist.org/packages/xp-forge/mirrors)
 
 Mirrors.
+
+API
+---
+The entry point class is the type mirror:
+
+```php
+public class lang.mirrors.TypeMirror extends lang.Object {
+  private var lang.mirrors.TypeMirror::$methods
+  private var lang.mirrors.TypeMirror::$fields
+  private var lang.mirrors.TypeMirror::$constants
+  private var lang.mirrors.TypeMirror::$unit
+  public var lang.mirrors.TypeMirror::$reflect
+
+  public lang.mirrors.TypeMirror __construct(var $arg) throws lang.ClassNotFoundException
+
+  public string name()
+  public string comment()
+  public self parent()
+  public lang.mirrors.parse.CodeUnit unit()
+  public lang.mirrors.Methods methods()
+  public lang.mirrors.Fields fields()
+  public lang.mirrors.Constants constants()
+  public lang.mirrors.Annotations annotations()
+  public self resolve(string $name)
+  public bool equals(var $cmp)
+  public string toString()
+  public string hashCode()
+  public string getClassName()
+  public lang.XPClass getClass()
+}
+```
