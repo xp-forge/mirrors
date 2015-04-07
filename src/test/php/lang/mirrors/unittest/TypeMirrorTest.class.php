@@ -36,6 +36,26 @@ class TypeMirrorTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function isClass() {
+    $this->assertTrue((new TypeMirror(self::class))->kind()->isClass());
+  }
+
+  #[@test]
+  public function isInterface() {
+    $this->assertTrue((new TypeMirror(FixtureInterface::class))->kind()->isInterface());
+  }
+
+  #[@test]
+  public function isTrait() {
+    $this->assertTrue((new TypeMirror(FixtureTrait::class))->kind()->isTrait());
+  }
+
+  #[@test]
+  public function isEnum() {
+    $this->assertTrue((new TypeMirror(FixtureEnum::class))->kind()->isEnum());
+  }
+
+  #[@test]
   public function this_class_has_constructor() {
     $this->assertInstanceOf('lang.mirrors.Constructor', (new TypeMirror(self::class))->constructor());
   }
