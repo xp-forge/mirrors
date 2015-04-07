@@ -124,7 +124,7 @@ class TypeMirror extends \lang\Object {
   /**
    * Creates a new instance
    *
-   * @param  var... $args
+   * @param  var* $args
    * @return lang.Generic
    */
   public function newInstance(...$args) {

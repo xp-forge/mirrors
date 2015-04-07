@@ -16,8 +16,6 @@ The entry point class is the type mirror:
 
 ```php
 public class lang.mirrors.TypeMirror extends lang.Object {
-  public var lang.mirrors.TypeMirror::$reflect
-
   public lang.mirrors.TypeMirror __construct(var $arg) throws lang.ClassNotFoundException
 
   public string name()
@@ -33,10 +31,82 @@ public class lang.mirrors.TypeMirror extends lang.Object {
   public lang.mirrors.Annotations annotations()
   public lang.Generic newInstance(var... $args) throws lang.mirrors.TargetInvocationException
   public self resolve(string $name)
-  public bool equals(var $cmp)
-  public string toString()
+}
+```
+
+### Methods
+Methods can be retrieved by invoke `methods()` on a mirror, which returns a Methods collection. It can in turn be used to check for method's existance, fetch a method by name or iterate over provided methods.
+
+```php
+public class lang.mirrors.Methods extends lang.Object implements php.IteratorAggregate {
+  public lang.mirrors.Methods __construct(lang.mirrors.TypeMirror $mirror)
+
+  public bool provides(string $name)
+  public lang.reflection.Method named(string $name) throws lang.ElementNotFoundException
+  public php.Generator getIterator()
+}
+
+public class lang.mirrors.Method extends lang.mirrors.Routine {
+  public lang.mirrors.Method __construct(lang.mirrors.TypeMirror $mirror, var $arg) throws lang.IllegalArgumentException
+
+  public lang.Type returns()
+  public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws lang.mirrors.TargetInvocationException, lang.IllegalArgumentException
+  public string comment()
+  public [:var] tags()
+  public lang.mirrors.Parameters parameters()
+  public string name()
+  public lang.mirrors.TypeMirror declaredIn()
+  public lang.mirrors.Annotations annotations()
+}
+```
+
+### Fields
+Fields can be retrieved by invoke `fields()` on a mirror, which returns a Fields collection. As with methods, it offers named lookup, iteration and existance checks.
+
+```php
+public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggregate {
+  private var lang.mirrors.Fields::$mirror
+
+  public lang.mirrors.Fields __construct(lang.mirrors.TypeMirror $mirror)
+
+  public bool provides(string $name)
+  public lang.reflection.Field named(string $name) throws lang.ElementNotFoundException
+  public php.Generator getIterator()
   public string hashCode()
+  public bool equals(lang.Generic $cmp)
   public string getClassName()
   public lang.XPClass getClass()
+  public string toString()
+}
+
+public class lang.mirrors.Field extends lang.mirrors.Member {
+  public lang.mirrors.Field __construct(lang.mirrors.TypeMirror $mirror, var $arg) throws lang.IllegalArgumentException
+
+  protected string kind()
+  public var get([lang.Generic $instance= null]) throws lang.IllegalArgumentException
+  public void set(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
+  public string name()
+  public lang.mirrors.TypeMirror declaredIn()
+  public lang.mirrors.Annotations annotations()
+}
+```
+
+### Constants
+Class constants in PHP are static final fields with a separate syntax. You can use `constants()` to retrieve the collection of Constant instances:
+
+```php
+public class lang.mirrors.Constants extends lang.Object implements php.IteratorAggregate {
+  public lang.mirrors.Constants __construct(lang.mirrors.TypeMirror $mirror)
+
+  public bool provides(string $name)
+  public lang.reflection.Constant named(string $name) throws lang.ElementNotFoundException
+  public php.Generator getIterator()
+}
+
+public class lang.mirrors.Constant extends lang.Object {
+  public lang.mirrors.Constant __construct(var $name, var $value)
+
+  public string name()
+  public var value()
 }
 ```
