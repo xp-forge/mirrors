@@ -61,6 +61,12 @@ class TypeMirror extends \lang\Object {
     return $parent ? new self($parent) : null;
   }
 
+  /** @return lang.mirrors.Traits */
+  public function traits() { return new Traits($this); }
+
+  /** @return lang.mirrors.Interfaces */
+  public function interfaces() { return new Interfaces($this); }
+
   /** @return lang.mirrors.parse.CodeUnit */
   public function unit() {
     if (null === $this->unit) {
