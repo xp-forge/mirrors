@@ -3,7 +3,7 @@
 use lang\mirrors\TypeMirror;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
-use lang\reflect\TargetInvocationException;
+use lang\mirrors\TargetInvocationException;
 
 /**
  * Tests TypeMirror
@@ -64,8 +64,8 @@ class TypeMirrorTest extends \unittest\TestCase {
 
   #[@test, @expect(TargetInvocationException::class)]
   public function creating_instances_wraps_exceptions() {
-    $fixture= newinstance('lang.Object', [], [
-      '__construct' => function() { throw new IllegalArgumentException('Test'); }
+    $fixture= newinstance('lang.Object', ['Test'], [
+      '__construct' => function($arg) { if (null === $arg) throw new IllegalArgumentException('Test'); }
     ]);
     (new TypeMirror(typeof($fixture)))->newInstance();
   }

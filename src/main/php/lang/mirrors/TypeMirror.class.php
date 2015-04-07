@@ -5,6 +5,7 @@ use lang\mirrors\parse\ClassSource;
 use lang\ClassNotFoundException;
 use lang\IllegalArgumentException;
 use lang\XPClass;
+use lang\Throwable;
 
 /**
  * Reference type mirrors
