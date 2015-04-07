@@ -31,6 +31,7 @@ public class lang.mirrors.TypeMirror extends lang.Object {
   public lang.mirrors.Fields fields()
   public lang.mirrors.Constants constants()
   public lang.mirrors.Annotations annotations()
+  public lang.Generic newInstance(var... $args) throws lang.reflect.TargetInvocationException
   public self resolve(string $name)
   public bool equals(var $cmp)
   public string toString()
