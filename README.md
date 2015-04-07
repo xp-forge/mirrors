@@ -49,12 +49,12 @@ public class lang.mirrors.Methods extends lang.Object implements php.IteratorAgg
 public class lang.mirrors.Method extends lang.mirrors.Routine {
   public lang.mirrors.Method __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
-  public lang.Type returns()
-  public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
+  public string name()
   public string comment()
   public [:var] tags()
+  public lang.Type returns()
+  public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
   public lang.mirrors.Parameters parameters()
-  public string name()
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
 }
@@ -65,8 +65,6 @@ Fields can be retrieved by invoke `fields()` on a mirror, which returns a Fields
 
 ```php
 public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggregate {
-  private var lang.mirrors.Fields::$mirror
-
   public lang.mirrors.Fields __construct(lang.mirrors.TypeMirror $mirror)
 
   public bool provides(string $name)
@@ -77,10 +75,9 @@ public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggr
 public class lang.mirrors.Field extends lang.mirrors.Member {
   public lang.mirrors.Field __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
-  protected string kind()
+  public string name()
   public var get([lang.Generic $instance= null]) throws lang.IllegalArgumentException
   public void set(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
-  public string name()
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
 }
