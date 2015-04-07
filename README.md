@@ -47,10 +47,10 @@ public class lang.mirrors.Methods extends lang.Object implements php.IteratorAgg
 }
 
 public class lang.mirrors.Method extends lang.mirrors.Routine {
-  public lang.mirrors.Method __construct(lang.mirrors.TypeMirror $mirror, var $arg) throws lang.IllegalArgumentException
+  public lang.mirrors.Method __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
   public lang.Type returns()
-  public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws lang.mirrors.TargetInvocationException, lang.IllegalArgumentException
+  public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
   public string comment()
   public [:var] tags()
   public lang.mirrors.Parameters parameters()
@@ -72,15 +72,10 @@ public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggr
   public bool provides(string $name)
   public lang.reflection.Field named(string $name) throws lang.ElementNotFoundException
   public php.Generator getIterator()
-  public string hashCode()
-  public bool equals(lang.Generic $cmp)
-  public string getClassName()
-  public lang.XPClass getClass()
-  public string toString()
 }
 
 public class lang.mirrors.Field extends lang.mirrors.Member {
-  public lang.mirrors.Field __construct(lang.mirrors.TypeMirror $mirror, var $arg) throws lang.IllegalArgumentException
+  public lang.mirrors.Field __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
   protected string kind()
   public var get([lang.Generic $instance= null]) throws lang.IllegalArgumentException
