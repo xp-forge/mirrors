@@ -110,3 +110,24 @@ public class lang.mirrors.Constant extends lang.Object {
   public var value()
 }
 ```
+
+### Annotations
+Types, but also fields and methods may be annotated in the XP Framework. Any annotatable element provides an `annotations()` accessor. It returns an annotation collection usable for named lookups, iterations and existance checks.
+
+```php
+public class lang.mirrors.Annotations extends lang.Object implements php.IteratorAggregate {
+  public lang.mirrors.Annotations __construct(var $mirror, var $backing)
+
+  public bool present()
+  public bool provides(string $name)
+  public lang.reflection.Method named(string $name) throws lang.ElementNotFoundException
+  public php.Generator getIterator()
+}
+
+public class lang.mirrors.Annotation extends lang.Object {
+  public lang.mirrors.Annotation __construct(var $type, var $name, var $value)
+
+  public string name()
+  public var value()
+}
+```
