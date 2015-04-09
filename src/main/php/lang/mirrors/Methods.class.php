@@ -50,4 +50,17 @@ class Methods extends \lang\Object implements \IteratorAggregate {
       }
     }
   }
+
+  /**
+   * Iterates over methods.
+   *
+   * @param  int $kind Either Member::$STATIC or Member::$INSTANCE
+   * @return php.Generator
+   */
+  public function of($kind) {
+    foreach ($this->mirror->reflect->getMethods() as $method) {
+      if (0 === strncmp('__', $method->name, 2) || $kind === ($method->getModifiers() & MODIFIER_STATIC)) continue;
+      yield new Method($this->mirror, $method);
+    }
+  }
 }
