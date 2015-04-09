@@ -1,5 +1,7 @@
 <?php namespace lang\mirrors\parse;
 
+use lang\IllegalArgumentException;
+
 class ClassSource extends \text\parse\Tokens {
   protected $tokens;
 
