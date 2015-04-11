@@ -1,20 +1,20 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Method;
+use lang\mirrors\Member;
 use lang\ElementNotFoundException;
 
 class TypeMirrorMethodsTest extends \unittest\TestCase {
   private $fixture;
 
-  private function fixture() { }
-
   public function setUp() {
-    $this->fixture= new TypeMirror(self::class);
+    $this->fixture= new TypeMirror(MemberFixture::class);
   }
 
   #[@test]
   public function provides_method() {
-    $this->assertTrue($this->fixture->methods()->provides('fixture'));
+    $this->assertTrue($this->fixture->methods()->provides('publicInstanceMethod'));
   }
 
   #[@test]
@@ -24,7 +24,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
 
   #[@test]
   public function method_named() {
-    $this->assertInstanceOf('lang.mirrors.Method', $this->fixture->methods()->named('fixture'));
+    $this->assertInstanceOf('lang.mirrors.Method', $this->fixture->methods()->named('publicInstanceMethod'));
   }
 
   #[@test, @expect(ElementNotFoundException::class)]
@@ -34,10 +34,40 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
 
   #[@test]
   public function all_methods() {
-    $result= [];
-    foreach ($this->fixture->methods() as $method) {
-      $result[]= $method;
-    }
-    $this->assertInstanceOf('lang.mirrors.Method[]', $result);
+    $this->assertEquals(
+      [
+        new Method($this->fixture, 'publicInstanceMethod'),
+        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'privateInstanceMethod'),
+        new Method($this->fixture, 'publicClassMethod'),
+        new Method($this->fixture, 'protectedClassMethod'),
+        new Method($this->fixture, 'privateClassMethod')
+      ],
+      iterator_to_array($this->fixture->methods())
+    );
+  }
+
+  #[@test]
+  public function instance_methods() {
+    $this->assertEquals(
+      [
+        new Method($this->fixture, 'publicInstanceMethod'),
+        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'privateInstanceMethod')
+      ],
+      iterator_to_array($this->fixture->methods()->of(Member::$INSTANCE))
+    );
+  }
+
+  #[@test]
+  public function static_methods() {
+    $this->assertEquals(
+      [
+        new Method($this->fixture, 'publicClassMethod'),
+        new Method($this->fixture, 'protectedClassMethod'),
+        new Method($this->fixture, 'privateClassMethod')
+      ],
+      iterator_to_array($this->fixture->methods()->of(Member::$STATIC))
+    );
   }
 }

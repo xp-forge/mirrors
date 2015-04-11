@@ -4,6 +4,8 @@
  * Base class for all type members: Fields, methods, constructors.
  */
 abstract class Member extends \lang\Object {
+  public static $STATIC= 0, $INSTANCE= 1;
+
   protected static $member;
   protected $mirror, $reflect;
 
@@ -41,5 +43,18 @@ abstract class Member extends \lang\Object {
     $lookup= $this->mirror->unit()->declaration()[static::$kind];
     $name= $this->reflect->name;
     return new Annotations($this->mirror, isset($lookup[$name]) ? (array)$lookup[$name]['annotations'] : []);
+  }
+
+  /**
+   * Returns whether a given value is equal to this member
+   *
+   * @param  var $cmp
+   * @return bool
+   */
+  public function equals($cmp) {
+    return $cmp instanceof self && (
+      $this->name === $cmp->name &&
+      $this->reflect->getDeclaringClass()->name === $cmp->reflect->getDeclaringClass()->name
+    );
   }
 }

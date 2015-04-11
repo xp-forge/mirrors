@@ -21,6 +21,7 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    * @return bool
    */
   public function provides($name) {
+    if (0 === strncmp('__', $name, 2)) return false;
     return $this->mirror->reflect->hasProperty($name);
   }
 
@@ -44,8 +45,22 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
-    foreach ($this->mirror->reflect->getProperties() as $method) {
-      yield new Field($this->mirror, $method);
+    foreach ($this->mirror->reflect->getProperties() as $field) {
+      if (0 === strncmp('__', $field->name, 2)) continue;
+      yield new Field($this->mirror, $field);
+    }
+  }
+
+  /**
+   * Iterates over fields.
+   *
+   * @param  int $kind Either Member::$STATIC or Member::$INSTANCE
+   * @return php.Generator
+   */
+  public function of($kind) {
+    foreach ($this->mirror->reflect->getProperties() as $field) {
+      if (0 === strncmp('__', $field->name, 2) || $kind === ($field->getModifiers() & MODIFIER_STATIC)) continue;
+      yield new Field($this->mirror, $field);
     }
   }
 }
