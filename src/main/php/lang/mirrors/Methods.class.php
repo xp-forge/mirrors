@@ -45,9 +45,8 @@ class Methods extends \lang\Object implements \IteratorAggregate {
    */
   public function getIterator() {
     foreach ($this->mirror->reflect->getMethods() as $method) {
-      if (0 !== strncmp($method->getName(), '__', 2)) {
-        yield new Method($this->mirror, $method);
-      }
+      if (0 === strncmp($method->name, '__', 2)) continue;
+      yield new Method($this->mirror, $method);
     }
   }
 
