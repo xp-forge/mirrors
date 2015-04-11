@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors\unittest;
 
-abstract class MemberFixture {
+class MemberFixture extends AbstractMemberFixture {
   public $publicInstanceField;
   protected $protectedInstanceField;
   private $privateInstanceField;

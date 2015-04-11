@@ -52,6 +52,18 @@ class Fields extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Iterates over declared fields.
+   *
+   * @return php.Generator
+   */
+  public function declared() {
+    foreach ($this->mirror->reflect->getProperties() as $field) {
+      if (0 === strncmp('__', $field->name, 2) || $field->getDeclaringClass()->name !== $this->mirror->reflect->name) continue;
+      yield new Field($this->mirror, $field);
+    }
+  }
+
+  /**
    * Iterates over fields.
    *
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE

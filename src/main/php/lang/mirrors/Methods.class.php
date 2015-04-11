@@ -52,6 +52,18 @@ class Methods extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Iterates over declared methods.
+   *
+   * @return php.Generator
+   */
+  public function declared() {
+    foreach ($this->mirror->reflect->getMethods() as $method) {
+      if (0 === strncmp('__', $method->name, 2) || $method->getDeclaringClass()->name !== $this->mirror->reflect->name) continue;
+      yield new Method($this->mirror, $method);
+    }
+  }
+
+  /**
    * Iterates over methods.
    *
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE

@@ -36,9 +36,25 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'publicClassField'),
         new Field($this->fixture, 'protectedClassField'),
-        new Field($this->fixture, 'privateClassField')
+        new Field($this->fixture, 'privateClassField'),
+        new Field($this->fixture, 'inheritedField')
       ],
       iterator_to_array($this->fixture->fields())
+    );
+  }
+
+  #[@test]
+  public function declared_fields() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'publicInstanceField'),
+        new Field($this->fixture, 'protectedInstanceField'),
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'publicClassField'),
+        new Field($this->fixture, 'protectedClassField'),
+        new Field($this->fixture, 'privateClassField')
+      ],
+      iterator_to_array($this->fixture->fields()->declared())
     );
   }
 
@@ -48,7 +64,8 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
       [
         new Field($this->fixture, 'publicInstanceField'),
         new Field($this->fixture, 'protectedInstanceField'),
-        new Field($this->fixture, 'privateInstanceField')
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'inheritedField')
       ],
       iterator_to_array($this->fixture->fields()->of(Member::$INSTANCE))
     );
