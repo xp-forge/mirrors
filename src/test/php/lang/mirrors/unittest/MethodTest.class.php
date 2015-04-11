@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\Method;
+use lang\mirrors\Modifiers;
 use lang\mirrors\TypeMirror;
 use lang\IllegalArgumentException;
 
@@ -24,6 +25,11 @@ class MethodTest extends AbstractMethodTest {
   #[@test]
   public function name() {
     $this->assertEquals(__FUNCTION__, $this->fixture(__FUNCTION__)->name());
+  }
+
+  #[@test]
+  public function modifiers() {
+    $this->assertEquals(new Modifiers(MODIFIER_PUBLIC), $this->fixture(__FUNCTION__)->modifiers());
   }
 
   #[@test]

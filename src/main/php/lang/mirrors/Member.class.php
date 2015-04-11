@@ -23,6 +23,9 @@ abstract class Member extends \lang\Object {
   /** @return string */
   public function name() { return $this->reflect->name; }
 
+  /** @return lang.mirrors.Modifiers */
+  public function modifiers() { return new Modifiers($this->reflect->getModifiers() & ~0x1fb7f008); }
+
   /**
    * Returns the type this member was declared in. Via inheritance, this may
    * differ from the type this member was created with.

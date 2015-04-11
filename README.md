@@ -53,6 +53,7 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
   public lang.mirrors.Method __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
   public string name()
+  public lang.mirrors.Modifiers modifiers()
   public string comment()
   public [:var] tags()
   public lang.Type returns()
@@ -81,6 +82,7 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
   public lang.mirrors.Field __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
   public string name()
+  public lang.mirrors.Modifiers modifiers()
   public var get([lang.Generic $instance= null]) throws lang.IllegalArgumentException
   public void set(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
   public lang.mirrors.TypeMirror declaredIn()

@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\Field;
+use lang\mirrors\Modifiers;
 use lang\mirrors\TypeMirror;
 use lang\IllegalArgumentException;
 
@@ -25,6 +26,11 @@ class FieldTest extends AbstractFieldTest {
   #[@test]
   public function name() {
     $this->assertEquals('fixture', $this->fixture('fixture')->name());
+  }
+
+  #[@test]
+  public function modifiers() {
+    $this->assertEquals(new Modifiers(MODIFIER_PRIVATE), $this->fixture('fixture')->modifiers());
   }
 
   #[@test]
