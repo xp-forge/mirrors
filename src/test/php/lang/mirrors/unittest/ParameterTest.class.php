@@ -2,6 +2,7 @@
 
 use lang\mirrors\Parameter;
 use lang\mirrors\Method;
+use lang\mirrors\Annotation;
 use lang\mirrors\TypeMirror;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
@@ -34,7 +35,6 @@ class ParameterTest extends \unittest\TestCase {
   /** @param lang.Type */
   private function oneDocumentedTypeParam($arg) { }
 
-
   /**
    * Fixture
    *
@@ -42,6 +42,9 @@ class ParameterTest extends \unittest\TestCase {
    * @param lang.Type $b
    */
   private function twoDocumentedTypeParams($a, $b) { }
+
+  #[@$arg: test]
+  private function oneAnnotatedParam($arg) { }
 
   /**
    * Creates a new parameter
@@ -150,5 +153,19 @@ class ParameterTest extends \unittest\TestCase {
   #[@test]
   public function array_default_value_for_optional() {
     $this->assertEquals([1, 2, 3], $this->newFixture('oneArrayOptionalParam', 0)->defaultValue());
+  }
+
+  #[@test]
+  public function no_annotations() {
+    $this->assertFalse($this->newFixture('oneParam', 0)->annotations()->present());
+  }
+
+  #[@test]
+  public function annotated_parameter() {
+    $fixture= $this->newFixture('oneAnnotatedParam', 0);
+    $this->assertEquals(
+      [new Annotation(new TypeMirror(self::class), 'test', null)],
+      iterator_to_array($fixture->annotations())
+    );
   }
 }
