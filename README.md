@@ -90,6 +90,31 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
 }
 ```
 
+### Modifiers
+Both methods and fields can have access modifiers, accessible via `modifiers()`.
+
+```php
+public class lang.mirrors.Modifiers extends lang.Object {
+  const IS_STATIC = 1
+  const IS_ABSTRACT = 2
+  const IS_FINAL = 4
+  const IS_PUBLIC = 256
+  const IS_PROTECTED = 512
+  const IS_PRIVATE = 1024
+
+  public lang.mirrors.Modifiers __construct(var $arg)
+
+  public int bits()
+  public string names()
+  public bool isStatic()
+  public bool isAbstract()
+  public bool isFinal()
+  public bool isPublic()
+  public bool isProtected()
+  public bool isPrivate()
+}
+```
+
 ### Constants
 Class constants in PHP are static final fields with a separate syntax. You can use `constants()` to retrieve the collection of Constant instances:
 
