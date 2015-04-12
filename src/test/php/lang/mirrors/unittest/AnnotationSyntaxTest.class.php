@@ -20,13 +20,14 @@ class AnnotationSyntaxTest extends \unittest\TestCase {
    * Parses a string
    *
    * @param  string $input
+   * @param  string $target
    * @return var
    */
-  private function parse($input) {
+  private function parse($input, $target= null) {
     $unit= (new ClassSyntax())->parse(new StringInput(
       "<?php class Test {\n  $input\n  function fixture() { } }"
     ));
-    return $unit->declaration()['method']['fixture']['annotations'];
+    return $unit->declaration()['method']['fixture']['annotations'][$target];
   }
 
   #[@test]
@@ -144,6 +145,30 @@ class AnnotationSyntaxTest extends \unittest\TestCase {
     $this->assertEquals(
       ['test' => new Pairs($value)],
       $this->parse('[@test('.$literal.')]')
+    );
+  }
+
+  #[@test]
+  public function target_annotation_without_value() {
+    $this->assertEquals(
+      ['test' => null],
+      $this->parse('[@$param: test]', '$param')
+    );
+  }
+
+  #[@test, @values(['$a', '$b'])]
+  public function two_target_annotations_without_values($name) {
+    $this->assertEquals(
+      ['test' => null],
+      $this->parse('[@$a: test, @$b: test]', $name)
+    );
+  }
+
+  #[@test]
+  public function target_annotation_with_key_value_pair() {
+    $this->assertEquals(
+      ['inject' => new Pairs(['name' => new Value('db')])],
+      $this->parse('[@$param: inject(name= "db")]', '$param')
     );
   }
 }
