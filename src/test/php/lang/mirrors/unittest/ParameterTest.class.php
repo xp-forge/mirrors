@@ -56,13 +56,13 @@ class ParameterTest extends \unittest\TestCase {
    */
   private function newFixture($method, $num) {
     if (null === self::$type) {
-      if (!defined('HHVM_VERSION')) {
+      if (NotOnHHVM::runtime()) {
+        self::$type= new TypeMirror(self::class);
+      } else {
         $class= ClassLoader::defineClass('ParameterTestWithTypedVariadic', self::class, [], '{
           private function oneVariadicTypedParam(Type... $arg) { }
         }');
         self::$type= new TypeMirror($class);
-      } else {
-        self::$type= new TypeMirror(self::class);
       }
     }
 
@@ -125,7 +125,7 @@ class ParameterTest extends \unittest\TestCase {
     $this->assertEquals(typeof($this), $this->newFixture('oneSelfTypeHintedParam', 0)->type());
   }
 
-  #[@test]
+  #[@test, @action(new NotOnHHVM())]
   public function variadic_type_hint() {
     $this->assertEquals(new XPClass(Type::class), $this->newFixture('oneVariadicTypedParam', 0)->type());
   }
@@ -190,7 +190,6 @@ class ParameterTest extends \unittest\TestCase {
   #[@test, @values([
   #  ['oneParam', false],
   #  ['oneVariadicParam', false],
-  #  ['oneVariadicTypedParam', true],
   #  ['oneTypeHintedParam', true],
   #  ['oneSelfTypeHintedParam', true],
   #  ['oneArrayTypeHintedParam', true],
@@ -198,5 +197,10 @@ class ParameterTest extends \unittest\TestCase {
   #])]
   public function isVerified($method, $expect) {
     $this->assertEquals($expect, $this->newFixture($method, 0)->isVerified());
+  }
+
+  #[@test, @action(new NotOnHHVM())]
+  public function variadicWithTypeisVerified() {
+    $this->assertTrue($this->newFixture('oneVariadicTypedParam', 0)->isVerified());
   }
 }
