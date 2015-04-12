@@ -148,7 +148,7 @@ public class lang.mirrors.Modifiers extends lang.Object {
   const IS_PROTECTED = 512
   const IS_PRIVATE = 1024
 
-  public lang.mirrors.Modifiers __construct(var $arg)
+  public __construct(var $arg)
 
   public int bits()
   public string names()
@@ -187,7 +187,7 @@ Types, but also fields and methods may be annotated in the XP Framework. Any ann
 
 ```php
 public class lang.mirrors.Annotations extends lang.Object implements php.IteratorAggregate {
-  public lang.mirrors.Annotations __construct(var $mirror, var $backing)
+  public __construct(var $mirror, var $backing)
 
   public bool present()
   public bool provides(string $name)
@@ -196,7 +196,7 @@ public class lang.mirrors.Annotations extends lang.Object implements php.Iterato
 }
 
 public class lang.mirrors.Annotation extends lang.Object {
-  public lang.mirrors.Annotation __construct(var $type, var $name, var $value)
+  public __construct(var $type, var $name, var $value)
 
   public string name()
   public var value()
