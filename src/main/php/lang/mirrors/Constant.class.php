@@ -8,6 +8,12 @@
 class Constant extends \lang\Object {
   private $name, $value;
 
+  /**
+   * Creates a new constat
+   *
+   * @param  string $name
+   * @param  var $value
+   */
   public function __construct($name, $value) {
     $this->name= $name;
     $this->value= $value;

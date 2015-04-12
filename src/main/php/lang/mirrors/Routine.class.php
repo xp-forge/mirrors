@@ -2,6 +2,9 @@
 
 /**
  * Base class for constructors and methods
+ *
+ * @see    xp://lang.mirrors.Constructor
+ * @see    xp://lang.mirrors.Method
  */
 abstract class Routine extends Member {
   protected static $kind= 'method';
@@ -9,7 +12,7 @@ abstract class Routine extends Member {
   private $parameters;
 
   /**
-   * Creates a new method
+   * Creates a new routine
    *
    * @param  lang.mirrors.TypeMirror $mirror
    * @param  php.ReflectionMethod $reflect
