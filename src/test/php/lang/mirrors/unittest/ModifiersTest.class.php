@@ -25,6 +25,16 @@ class ModifiersTest extends AbstractMethodTest {
     ];
   }
 
+  /**
+   * Returns fixtures filtered by a given modifier bit
+   *
+   * @param  int $filter
+   * @return var[][]
+   */
+  public function modifiersWith($filter) {
+    return array_filter($this->modifiers(), function($e) use($filter) { return $e[0] & $filter; });
+  }
+
   #[@test, @values('modifiers')]
   public function bits_from_int($bits, $names) {
     $this->assertEquals($bits, (new Modifiers($bits))->bits());
@@ -58,6 +68,42 @@ class ModifiersTest extends AbstractMethodTest {
   #[@test, @values('modifiers')]
   public function names($bits, $names) {
     $this->assertEquals($names, (new Modifiers($bits))->names());
+  }
+
+  #[@test, @values(source= 'modifiersWith', args= Modifiers::IS_PUBLIC)]
+  public function isPublic($bits, $names) {
+    $this->assertTrue((new Modifiers($bits))->isPublic());
+    $this->assertFalse((new Modifiers($bits))->isProtected());
+    $this->assertFalse((new Modifiers($bits))->isPrivate());
+  }
+
+  #[@test, @values(source= 'modifiersWith', args= Modifiers::IS_PROTECTED)]
+  public function isProtected($bits, $names) {
+    $this->assertFalse((new Modifiers($bits))->isPublic());
+    $this->assertTrue((new Modifiers($bits))->isProtected());
+    $this->assertFalse((new Modifiers($bits))->isPrivate());
+  }
+
+  #[@test, @values(source= 'modifiersWith', args= Modifiers::IS_PRIVATE)]
+  public function isPrivate($bits, $names) {
+    $this->assertFalse((new Modifiers($bits))->isPublic());
+    $this->assertFalse((new Modifiers($bits))->isProtected());
+    $this->assertTrue((new Modifiers($bits))->isPrivate());
+  }
+
+  #[@test, @values(source= 'modifiersWith', args= Modifiers::IS_STATIC)]
+  public function isStatic($bits, $names) {
+    $this->assertTrue((new Modifiers($bits))->isStatic());
+  }
+
+  #[@test, @values(source= 'modifiersWith', args= Modifiers::IS_ABSTRACT)]
+  public function isAbstract($bits, $names) {
+    $this->assertTrue((new Modifiers($bits))->isAbstract());
+  }
+
+  #[@test, @values(source= 'modifiersWith', args= Modifiers::IS_FINAL)]
+  public function isFinal($bits, $names) {
+    $this->assertTrue((new Modifiers($bits))->isFinal());
   }
 
   #[@test]

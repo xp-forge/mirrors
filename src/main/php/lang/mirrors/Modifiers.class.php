@@ -69,6 +69,24 @@ class Modifiers extends \lang\Object {
     return substr($names, 1);
   }
 
+  /** @return bool */
+  public function isStatic() { return 0 !== ($this->bits & self::IS_STATIC); }
+
+  /** @return bool */
+  public function isAbstract() { return 0 !== ($this->bits & self::IS_ABSTRACT); }
+
+  /** @return bool */
+  public function isFinal() { return 0 !== ($this->bits & self::IS_FINAL); }
+
+  /** @return bool */
+  public function isPublic() { return 0 !== ($this->bits & self::IS_PUBLIC); }
+
+  /** @return bool */
+  public function isProtected() { return 0 !== ($this->bits & self::IS_PROTECTED); }
+
+  /** @return bool */
+  public function isPrivate() { return 0 !== ($this->bits & self::IS_PRIVATE); }
+
   /**
    * Returns whether a given value is equal to this member
    *
