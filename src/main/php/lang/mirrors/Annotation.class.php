@@ -12,7 +12,7 @@ class Annotation extends \lang\Object {
    * @param  string $name
    * @param  var $value A resolveable value or NULL
    */
-  public function __construct(TypeMirror $mirror, $name, $value) {
+  public function __construct($mirror, $name, $value) {
     $this->mirror= $mirror;
     $this->name= $name;
     $this->value= $value;
