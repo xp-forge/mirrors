@@ -50,9 +50,6 @@ class Field extends Member {
     }
   }
 
-  /** @return string */
-  protected function kind() { return 'field'; }
-
   /**
    * Read this field's value
    *
