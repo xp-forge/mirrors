@@ -17,7 +17,7 @@ use lang\Enum;
  */
 class TypeMirror extends \lang\Object {
   private $methods, $fields, $constants;
-  private $kind, $unit;
+  private $kind= null, $unit= null;
   public $reflect;
 
   /**
