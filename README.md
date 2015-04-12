@@ -8,7 +8,7 @@ Mirrors
 [![Required HHVM 3.5+](https://raw.githubusercontent.com/xp-framework/web/master/static/hhvm-3_5plus.png)](http://hhvm.com/)
 [![Latest Stable Version](https://poser.pugx.org/xp-forge/mirrors/version.png)](https://packagist.org/packages/xp-forge/mirrors)
 
-Mirrors.
+The *Mirrors* library provides a replacement for the XP Framework's reflection API, using a concise and fluent API.
 
 API
 ---
