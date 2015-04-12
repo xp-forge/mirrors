@@ -105,9 +105,14 @@ class ParameterTest extends \unittest\TestCase {
     $this->assertEquals($result, $this->newFixture($method, 0)->isOptional());
   }
 
-  #[@test, @values([['oneVariadicParam', true], ['oneVariadicTypedParam', true], ['oneParam', false]])]
+  #[@test, @values([['oneVariadicParam', true], ['oneParam', false]])]
   public function isVariadic($method, $result) {
     $this->assertEquals($result, $this->newFixture($method, 0)->isVariadic());
+  }
+
+  #[@test, @action(new NotOnHHVM())]
+  public function isVariadicWithType() {
+    $this->assertTrue($this->newFixture('oneVariadicTypedParam', 0)->isVariadic());
   }
 
   #[@test]
