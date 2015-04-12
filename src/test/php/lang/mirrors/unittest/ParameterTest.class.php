@@ -22,7 +22,9 @@ class ParameterTest extends \unittest\TestCase {
 
   private function oneArrayOptionalParam($arg= [1, 2, 3]) { }
 
-  private function oneVariadicParam(...$arg) { }
+  private function oneVariadicParam(... $arg) { }
+
+  private function oneVariadicTypedParam(Type... $arg) { }
 
   private function oneTypeHintedParam(Type $arg) { }
 
@@ -92,7 +94,7 @@ class ParameterTest extends \unittest\TestCase {
     $this->assertEquals($result, $this->newFixture($method, 0)->isOptional());
   }
 
-  #[@test, @values([['oneVariadicParam', true], ['oneParam', false]])]
+  #[@test, @values([['oneVariadicParam', true], ['oneVariadicTypedParam', true], ['oneParam', false]])]
   public function isVariadic($method, $result) {
     $this->assertEquals($result, $this->newFixture($method, 0)->isVariadic());
   }
@@ -110,6 +112,11 @@ class ParameterTest extends \unittest\TestCase {
   #[@test]
   public function self_type_hint() {
     $this->assertEquals(typeof($this), $this->newFixture('oneSelfTypeHintedParam', 0)->type());
+  }
+
+  #[@test]
+  public function variadic_type_hint() {
+    $this->assertEquals(new XPClass(Type::class), $this->newFixture('oneVariadicTypedParam', 0)->type());
   }
 
   #[@test]

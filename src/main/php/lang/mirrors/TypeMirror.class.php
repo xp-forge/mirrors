@@ -145,7 +145,7 @@ class TypeMirror extends \lang\Object {
    * @param  var* $args
    * @return lang.Generic
    */
-  public function newInstance(...$args) {
+  public function newInstance(... $args) {
     if (!$this->reflect->isInstantiable()) {
       throw new IllegalArgumentException('Verifying '.$this->name().': Cannot instantiate');
     }

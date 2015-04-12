@@ -77,7 +77,7 @@ class TypeMirrorTest extends \unittest\TestCase {
   public function creating_instances_invokes_constructor() {
     $fixture= newinstance('lang.Object', [], [
       'passed'      => null,
-      '__construct' => function(...$args) { $this->passed= $args; }
+      '__construct' => function(... $args) { $this->passed= $args; }
     ]);
     $this->assertEquals([1, 2, 3], (new TypeMirror(typeof($fixture)))->newInstance(1, 2, 3)->passed);
   }
