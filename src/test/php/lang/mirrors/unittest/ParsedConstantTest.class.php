@@ -4,7 +4,7 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\Constant;
 use lang\ElementNotFoundException;
 
-class ConstantTest extends \unittest\TestCase {
+class ParsedConstantTest extends \unittest\TestCase {
   private $type;
 
   /** @return void */
