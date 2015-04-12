@@ -62,6 +62,24 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
 }
+
+public class lang.mirrors.Parameters extends lang.Object implements php.IteratorAggregate {
+  public lang.mirrors.Parameters __construct(lang.mirrors.Method $mirror, var $reflect)
+
+  public bool present()
+  private [:var] lookup()
+  public bool provides(string $name)
+  public lang.mirrors.Parameter named(string $name) throws lang.ElementNotFoundException
+  public lang.mirrors.Parameter first() throws lang.ElementNotFoundException
+  public php.Generator getIterator()
+}
+
+public class lang.mirrors.Parameter extends lang.Object {
+  public lang.mirrors.Parameter __construct(lang.mirrors.Method $mirror, var $reflect)
+
+  public string name()
+  public lang.Type type()
+}
 ```
 
 ### Fields
