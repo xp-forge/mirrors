@@ -135,7 +135,7 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
 ```
 
 ### Modifiers
-Both methods and fields can have access modifiers, accessible via `modifiers()`.
+Types, constructors, methods and fields can have modifiers, accessible via `modifiers()`.
 
 ```php
 public class lang.mirrors.Modifiers extends lang.Object {
