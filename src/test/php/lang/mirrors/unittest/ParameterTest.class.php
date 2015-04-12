@@ -8,9 +8,11 @@ use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 use lang\Type;
 use lang\XPClass;
+use lang\ClassLoader;
 
 class ParameterTest extends \unittest\TestCase {
-  const CONSTANT = 'Test';
+  private static $type= null;
+  const CONSTANT= 'Test';
 
   private function noParam() { }
 
@@ -23,8 +25,6 @@ class ParameterTest extends \unittest\TestCase {
   private function oneArrayOptionalParam($arg= [1, 2, 3]) { }
 
   private function oneVariadicParam(... $arg) { }
-
-  private function oneVariadicTypedParam(Type... $arg) { }
 
   private function oneTypeHintedParam(Type $arg) { }
 
@@ -55,7 +55,18 @@ class ParameterTest extends \unittest\TestCase {
    * @return lang.mirrors.Parameter
    */
   private function newFixture($method, $num) {
-    return new Parameter(new Method(new TypeMirror(self::class), $method), $num);
+    if (null === self::$type) {
+      if (!defined('HHVM_VERSION')) {
+        $class= ClassLoader::defineClass('ParameterTestWithTypedVariadic', self::class, [], '{
+          private function oneVariadicTypedParam(Type... $arg) { }
+        }');
+        self::$type= new TypeMirror($class);
+      } else {
+        self::$type= new TypeMirror(self::class);
+      }
+    }
+
+    return new Parameter(new Method(self::$type, $method), $num);
   }
 
   #[@test]
