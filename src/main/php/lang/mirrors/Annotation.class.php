@@ -3,10 +3,10 @@
 use util\Objects;
 
 class Annotation extends \lang\Object {
-  private $type, $name, $value;
+  private $mirror, $name, $value;
 
-  public function __construct(TypeMirror $type, $name, $value) {
-    $this->type= $type;
+  public function __construct(TypeMirror $mirror, $name, $value) {
+    $this->mirror= $mirror;
     $this->name= $name;
     $this->value= $value;
   }
@@ -15,7 +15,7 @@ class Annotation extends \lang\Object {
   public function name() { return $this->name; }
 
   /** @return var */
-  public function value() { return $this->value ? $this->value->resolve($this->type->unit()) : null; }
+  public function value() { return $this->value ? $this->value->resolve($this->mirror->unit()) : null; }
 
   /**
    * Returns whether a given value is equal to this annotation
