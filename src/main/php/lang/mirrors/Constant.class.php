@@ -6,15 +6,17 @@
  * @test   xp://lang.mirrors.unittest.ConstantTest
  */
 class Constant extends \lang\Object {
-  private $name, $value;
+  private $mirror, $name, $value;
 
   /**
    * Creates a new constat
    *
+   * @param  lang.mirrors.TypeMirror $mirror
    * @param  string $name
    * @param  var $value
    */
-  public function __construct($name, $value) {
+  public function __construct($mirror, $name, $value) {
+    $this->mirror= $mirror;
     $this->name= $name;
     $this->value= $value;
   }
@@ -24,6 +26,13 @@ class Constant extends \lang\Object {
 
   /** @return var */
   public function value() { return $this->value; }
+
+  /**
+   * Returns the type this member was declared in.
+   *
+   * @return lang.mirrors.TypeMirror
+   */
+  public function declaredIn() { return $this->mirror; }
 
   /**
    * Creates a string representation

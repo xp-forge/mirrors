@@ -199,5 +199,6 @@ public class lang.mirrors.Annotation extends lang.Object {
 
   public string name()
   public var value()
+  public lang.mirrors.TypeMirror declaredIn()
 }
 ```
