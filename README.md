@@ -78,6 +78,7 @@ public class lang.mirrors.Parameter extends lang.Object {
   public lang.mirrors.Parameter __construct(lang.mirrors.Method $mirror, var $reflect)
 
   public string name()
+  public int position()
   public bool isOptional()
   public bool isVariadic()
   public lang.Type type()

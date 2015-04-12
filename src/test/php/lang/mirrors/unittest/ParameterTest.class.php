@@ -68,6 +68,16 @@ class ParameterTest extends \unittest\TestCase {
     $this->newFixture($method, $offset);
   }
 
+  #[@test]
+  public function name() {
+    $this->assertEquals('arg', $this->newFixture('oneParam', 0)->name());
+  }
+
+  #[@test]
+  public function position() {
+    $this->assertEquals(0, $this->newFixture('oneParam', 0)->position());
+  }
+
   #[@test, @values([['oneOptionalParam', true], ['oneParam', false]])]
   public function isOptional($method, $result) {
     $this->assertEquals($result, $this->newFixture($method, 0)->isOptional());

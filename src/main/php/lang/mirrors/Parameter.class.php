@@ -35,6 +35,9 @@ class Parameter extends \lang\Object {
   /** @return string */
   public function name() { return $this->reflect->name; }
 
+  /** @return int */
+  public function position() { return $this->reflect->getPosition(); }
+
   /** @return bool */
   public function isOptional() { return $this->reflect->isOptional(); }
 
