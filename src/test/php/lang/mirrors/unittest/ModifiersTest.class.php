@@ -11,17 +11,17 @@ class ModifiersTest extends AbstractMethodTest {
       [Modifiers::IS_PROTECTED, 'protected'],
       [Modifiers::IS_PRIVATE, 'private'],
 
-      [Modifiers::IS_PUBLIC | Modifiers::IS_STATIC, 'public static'],
-      [Modifiers::IS_PROTECTED | Modifiers::IS_STATIC, 'protected static'],
-      [Modifiers::IS_PRIVATE | Modifiers::IS_STATIC, 'private static'],
+      [Modifiers::IS_STATIC | Modifiers::IS_PUBLIC, 'public static'],
+      [Modifiers::IS_STATIC | Modifiers::IS_PROTECTED, 'protected static'],
+      [Modifiers::IS_STATIC | Modifiers::IS_PRIVATE, 'private static'],
 
-      [Modifiers::IS_PUBLIC | Modifiers::IS_FINAL, 'public final'],
-      [Modifiers::IS_PROTECTED | Modifiers::IS_FINAL, 'protected final'],
-      [Modifiers::IS_PRIVATE | Modifiers::IS_FINAL, 'private final'],
+      [Modifiers::IS_FINAL | Modifiers::IS_PUBLIC, 'public final'],
+      [Modifiers::IS_FINAL | Modifiers::IS_PROTECTED, 'protected final'],
+      [Modifiers::IS_FINAL | Modifiers::IS_PRIVATE, 'private final'],
 
-      [Modifiers::IS_PUBLIC | Modifiers::IS_ABSTRACT, 'public abstract'],
-      [Modifiers::IS_PROTECTED | Modifiers::IS_ABSTRACT, 'protected abstract'],
-      [Modifiers::IS_PRIVATE | Modifiers::IS_ABSTRACT, 'private abstract'],
+      [Modifiers::IS_ABSTRACT | Modifiers::IS_PUBLIC, 'public abstract'],
+      [Modifiers::IS_ABSTRACT | Modifiers::IS_PROTECTED, 'protected abstract'],
+      [Modifiers::IS_ABSTRACT | Modifiers::IS_PRIVATE, 'private abstract'],
     ];
   }
 
