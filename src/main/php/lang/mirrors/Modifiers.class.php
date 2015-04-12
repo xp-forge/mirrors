@@ -4,6 +4,7 @@
  * Modifiers
  *
  * @test  xp://lang.mirrors.unittest.ModifiersTest
+ * @see   https://github.com/xp-framework/xp-framework/wiki/codingstandards#modifiers
  */
 class Modifiers extends \lang\Object {
   const IS_STATIC    = 0x0001;
@@ -58,7 +59,7 @@ class Modifiers extends \lang\Object {
   /**
    * Returns the modifier names as a string.
    *
-   * @see   https://github.com/xp-framework/xp-framework/wiki/codingstandards#modifiers
+   * @return string
    */
   public function names() {
     $names= '';
