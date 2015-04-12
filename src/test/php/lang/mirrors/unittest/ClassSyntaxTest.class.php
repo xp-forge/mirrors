@@ -2,6 +2,7 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\CodeUnit;
+use lang\mirrors\parse\Value;
 
 /**
  * Tests ClassSyntax
@@ -46,12 +47,24 @@ class ClassSyntaxTest extends \unittest\TestCase {
             ]
           ],
           'method' => [
+            'connect' => [
+              'kind'        => 'method',
+              'name'        => 'connect',
+              'params'      => [[
+                'name'    => '$arg',
+                'type'    => null,
+                'ref'     => false,
+                'default' => null,
+              ]],
+              'access'      => ['private'],
+              'annotations' => ['$arg' => ['inject' => new Value('db')]]
+            ],
             'can_create' => [
               'kind'        => 'method',
               'name'        => 'can_create',
               'params'      => [],
               'access'      => ['public'],
-              'annotations' => ['test' => null]
+              'annotations' => [null => ['test' => null]]
             ]
           ]
         ]
@@ -62,6 +75,9 @@ class ClassSyntaxTest extends \unittest\TestCase {
 
         class IntegrationTest extends \unittest\TestCase {
           private $fixture;
+
+          #[@$arg: inject("db")]
+          private function connect($arg) { /* ... */ }
 
           #[@test]
           public function can_create() { /* ... */ }

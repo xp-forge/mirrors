@@ -35,6 +35,14 @@ class ClassSyntax extends \text\parse\Syntax {
         }
       }
     }');
+    $collectAnnotations= newinstance('text.parse.rules.Collect', [-3, 'MAP_BY_TARGET_AND_NAME'], '{
+      static function __static() { }
+
+      public function collect(&$values, $value) {
+        $target= $value["target"];
+        $values[$target[0]][$target[1]]= $value["value"];
+      }
+    }');
 
     return new Rules([
       new Sequence([new Token(T_OPEN_TAG), new Optional(new Apply('package')), new Repeated(new Apply('import')), new Apply('decl')], function($values) {
@@ -65,13 +73,17 @@ class ClassSyntax extends \text\parse\Syntax {
         function($values) { return array_merge($values[1], ['annotations' => $values[0]]); }
       ),
       'annotations' => new Sequence(
-        [new Token('['), new Repeated(new Apply('annotation'), new Token(','), Collect::$AS_MAP), new Token(']')],
+        [new Token('['), new Repeated(new Apply('annotation'), new Token(','), $collectAnnotations), new Token(']')],
         function($values) { return $values[1]; }
       ),
       'annotation' => new Sequence(
-        [new Token('@'), new Token(T_STRING), new Optional(new Apply('value'))],
-        function($values) { return [$values[1] => $values[2]]; }
+        [new Token('@'), new Apply('annotation_target'), new Optional(new Apply('value'))],
+        function($values) { return ['target' => $values[1], 'value' => $values[2]]; }
       ),
+      'annotation_target' => new Match([
+        T_STRING   => new Returns(function($values) { return [null, $values[0]]; }),
+        T_VARIABLE => new Sequence([new Token(':'), new Token(T_STRING)], function($values) { return [$values[0], $values[2]]; })
+      ]),
       'value' => new Sequence(
         [new Token('('), new Apply('expr'), new Token(')')],
         function($values) { return $values[1]; }
@@ -107,7 +119,7 @@ class ClassSyntax extends \text\parse\Syntax {
       'modifiers' => new Tokens(T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC, T_FINAL, T_ABSTRACT),
       'param' => new Sequence(
         [
-          new Tokens(T_ARRAY, T_CALLABLE, T_STRING, T_NS_SEPARATOR),
+          new Tokens(T_ARRAY, T_CALLABLE, T_STRING, T_NS_SEPARATOR, T_ELLIPSIS),
           new Optional(new Token('&')),
           new Token(T_VARIABLE),
           new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; }))
