@@ -5,6 +5,7 @@
  */
 abstract class Routine extends Member {
   protected static $kind= 'method';
+  protected static $tags= ['param' => [], 'return' => [], 'throws' => []];
   private $parameters;
 
   /**

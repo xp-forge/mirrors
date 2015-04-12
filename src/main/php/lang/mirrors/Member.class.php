@@ -9,7 +9,6 @@ use lang\mirrors\parse\TagsSource;
 abstract class Member extends \lang\Object {
   public static $STATIC= 0, $INSTANCE= 1;
   public $reflect;
-  protected static $member;
   protected $mirror;
   private $tags= null;
 
@@ -52,14 +51,13 @@ abstract class Member extends \lang\Object {
    */
   public function tags() {
     if (null === $this->tags) {
-      $this->tags= ['param' => [], 'return' => [], 'throws' => []];
       if ($raw= $this->reflect->getDocComment()) {
         $parsed= (new TagsSyntax())->parse(new TagsSource(preg_replace('/\n\s+\* ?/', "\n", substr(
           $raw,
           strpos($raw, '* @') + 2,    // position of first details token
           - 2                         // "*/"
         ))));
-        $this->tags= array_merge($this->tags, $parsed);
+        $this->tags= array_merge(static::$tags, $parsed);
       }
     }
     return $this->tags;

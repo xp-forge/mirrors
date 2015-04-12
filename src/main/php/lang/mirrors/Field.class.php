@@ -11,6 +11,7 @@ use lang\Type;
  */
 class Field extends Member {
   protected static $kind= 'field';
+  protected static $tags= [];
 
   /**
    * Creates a new field
