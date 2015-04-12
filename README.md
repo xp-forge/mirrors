@@ -128,6 +128,8 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
   public __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
   public string name()
+  public string comment()
+  public [:var] tags()
   public lang.mirrors.Modifiers modifiers()
   public var read([lang.Generic $instance= null]) throws lang.IllegalArgumentException
   public void modify(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
