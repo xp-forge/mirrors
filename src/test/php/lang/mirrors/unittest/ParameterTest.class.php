@@ -28,6 +28,15 @@ class ParameterTest extends \unittest\TestCase {
   /** @param lang.Type */
   private function oneDocumentedTypeParam($arg) { }
 
+
+  /**
+   * Fixture
+   *
+   * @param var $a
+   * @param lang.Type $b
+   */
+  private function twoDocumentedTypeParams($a, $b) { }
+
   /**
    * Creates a new parameter
    *
@@ -95,7 +104,12 @@ class ParameterTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function documented_type_hint() {
+  public function documented_type_hint_using_short_form() {
     $this->assertEquals(new XPClass(Type::class), $this->newFixture('oneDocumentedTypeParam', 0)->type());
+  }
+
+  #[@test]
+  public function documented_type_hint_using_long_form() {
+    $this->assertEquals(new XPClass(Type::class), $this->newFixture('twoDocumentedTypeParams', 1)->type());
   }
 }
