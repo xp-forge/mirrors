@@ -1,5 +1,10 @@
 <?php namespace lang\mirrors;
 
+/**
+ * An XP package refers to what PHP calls a namespace.
+ *
+ * @test   xp://lang.mirrors.unittest.PackageTest
+ */
 class Package extends \lang\Object {
   private $name;
 
@@ -14,6 +19,9 @@ class Package extends \lang\Object {
 
   /** @return string */
   public function name() { return $this->name; }
+
+  /** @return string */
+  public function declaration() { return substr($this->name, strrpos($this->name, '.') + 1); }
 
   /**
    * Returns whether a given value is equal to this code unit
