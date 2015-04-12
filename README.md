@@ -88,10 +88,12 @@ public class lang.mirrors.Parameters extends lang.Object implements php.Iterator
   public lang.mirrors.Parameters __construct(lang.mirrors.Method $mirror, var $reflect)
 
   public bool present()
+  public int length()
   private [:var] lookup()
   public bool provides(string $name)
   public lang.mirrors.Parameter named(string $name) throws lang.ElementNotFoundException
   public lang.mirrors.Parameter first() throws lang.ElementNotFoundException
+  public lang.mirrors.Parameter at(int $position) throws lang.ElementNotFoundException
   public php.Generator getIterator()
 }
 
