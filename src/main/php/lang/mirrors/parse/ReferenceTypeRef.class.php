@@ -19,6 +19,9 @@ class ReferenceTypeRef extends \lang\Object {
     $this->name= $name;
   }
 
+  /** @return string */
+  public function name() { return $this->name; }
+
   /**
    * Resolve this value 
    *

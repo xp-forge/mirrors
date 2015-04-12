@@ -47,6 +47,7 @@ public class lang.mirrors.Constructor extends lang.mirrors.Routine {
   public [:var] tags()
   public bool present()
   public lang.Generic newInstance([var* $args= null])
+  public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
@@ -76,6 +77,7 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
   public [:var] tags()
   public lang.Type returns()
   public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
+  public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()

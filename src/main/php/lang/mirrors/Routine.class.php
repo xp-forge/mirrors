@@ -61,4 +61,7 @@ abstract class Routine extends Member {
 
   /** @return lang.mirrors.Parameters */
   public function parameters() { return $this->parameters; }
+
+  /** @return lang.mirrors.Throws */
+  public function throws() { return new Throws($this); }
 }
