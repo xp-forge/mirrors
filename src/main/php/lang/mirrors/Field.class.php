@@ -31,13 +31,13 @@ class Field extends Member {
   protected function kind() { return 'field'; }
 
   /**
-   * Gets this field's value
+   * Read this field's value
    *
    * @param  lang.Generic $instance
    * @return var
    * @throws lang.IllegalArgumentException
    */
-  public function get(Generic $instance= null) {
+  public function read(Generic $instance= null) {
     if ($this->reflect->isStatic()) {
       return $this->reflect->getValue(null);
     } else if ($instance && $this->reflect->getDeclaringClass()->isInstance($instance)) {
@@ -51,14 +51,14 @@ class Field extends Member {
   }
 
   /**
-   * Sets this field's value
+   * Modify this field's value
    *
    * @param  lang.Generic $instance
    * @param  var $value
    * @return void
    * @throws lang.IllegalArgumentException
    */
-  public function set(Generic $instance= null, $value) {
+  public function modify(Generic $instance= null, $value) {
     if ($this->reflect->isStatic()) {
       $this->reflect->setValue(null, $value);
       return;

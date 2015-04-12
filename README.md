@@ -47,7 +47,7 @@ public class lang.mirrors.Constructor extends lang.mirrors.Routine {
   public [:var] tags()
   public bool present()
   public lang.mirrors.Modifiers modifiers()
-  public lang.Generic newInstance([var* $args= null])
+  public lang.Generic newInstance([var* $args= null]) throws ...
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
   public lang.mirrors.TypeMirror declaredIn()
@@ -129,8 +129,8 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
 
   public string name()
   public lang.mirrors.Modifiers modifiers()
-  public var get([lang.Generic $instance= null]) throws lang.IllegalArgumentException
-  public void set(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
+  public var read([lang.Generic $instance= null]) throws lang.IllegalArgumentException
+  public void modify(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
 }

@@ -12,50 +12,50 @@ class FieldValueTest extends AbstractFieldTest {
 
   #[@test]
   public function no_value() {
-    $this->assertNull($this->fixture('noValueFixture')->get($this));
+    $this->assertNull($this->fixture('noValueFixture')->read($this));
   }
 
   #[@test]
   public function with_value() {
-    $this->assertEquals($this->valueFixture, $this->fixture('valueFixture')->get($this));
+    $this->assertEquals($this->valueFixture, $this->fixture('valueFixture')->read($this));
   }
 
   #[@test]
   public function modifiying_member() {
     $modified= 'Tested';
-    $this->fixture('valueFixture')->set($this, $modified);
-    $this->assertEquals($modified, $this->fixture('valueFixture')->get($this));
+    $this->fixture('valueFixture')->modify($this, $modified);
+    $this->assertEquals($modified, $this->fixture('valueFixture')->read($this));
   }
 
   #[@test]
   public function static_member() {
-    $this->assertEquals(self::$staticFixture, $this->fixture('staticFixture')->get(null));
+    $this->assertEquals(self::$staticFixture, $this->fixture('staticFixture')->read(null));
   }
 
   #[@test]
   public function modifying_static_member() {
     $modified= 'Tested';
-    $this->fixture('staticFixture')->set(null, $modified);
-    $this->assertEquals($modified, $this->fixture('staticFixture')->get(null));
+    $this->fixture('staticFixture')->modify(null, $modified);
+    $this->assertEquals($modified, $this->fixture('staticFixture')->read(null));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
-  public function get_raises_exception_with_incompatible_instance() {
-    $this->fixture('valueFixture')->get(new Object());
+  public function read_raises_exception_with_incompatible_instance() {
+    $this->fixture('valueFixture')->read(new Object());
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
-  public function get_raises_exception_with_null_instance() {
-    $this->fixture('valueFixture')->get(null);
+  public function read_raises_exception_with_null_instance() {
+    $this->fixture('valueFixture')->read(null);
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
-  public function set_raises_exception_with_incompatible_instance() {
-    $this->fixture('valueFixture')->set(new Object(), 'any-value');
+  public function modify_raises_exception_with_incompatible_instance() {
+    $this->fixture('valueFixture')->modify(new Object(), 'any-value');
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
-  public function set_raises_exception_with_null_instance() {
-    $this->fixture('valueFixture')->set(null, 'any-value');
+  public function modify_raises_exception_with_null_instance() {
+    $this->fixture('valueFixture')->modify(null, 'any-value');
   }
 }

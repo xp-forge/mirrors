@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Changed lang.mirrors.Field::get() to read() - @thekid
+* Changed lang.mirrors.Field::set() to modify() - @thekid
+
 ## 0.1.1 / 2015-04-12
 
 * Made this library work with HHVM 3.5
