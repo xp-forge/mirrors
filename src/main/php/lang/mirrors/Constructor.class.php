@@ -52,4 +52,13 @@ class Constructor extends Routine {
       throw new IllegalArgumentException('Instantiating '.$this->mirror->name().': '.$e->getMessage());
     }
   }
+
+  /** @return string */
+  public function __toString() {
+    $params= '';
+    foreach ($this->parameters() as $param) {
+      $params.= ', '.$param;
+    }
+    return $this->modifiers()->names().' '.$this->mirror->name().' __construct('.substr($params, 2).')';
+  }
 }

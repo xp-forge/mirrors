@@ -93,4 +93,12 @@ class MethodTest extends AbstractMethodTest {
   public function throws_contains($class, $expected) {
     $this->assertEquals($expected, $this->fixture('raisesOne')->throws()->contains($class));
   }
+
+  #[@test]
+  public function string_representation() {
+    $this->assertEquals(
+      'lang.mirrors.Method(protected lang.mirrors.Method fixture(string $name))',
+      $this->fixture('fixture')->toString()
+    );
+  }
 }

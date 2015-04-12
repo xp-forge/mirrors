@@ -3,7 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
-* Implemented `toString()` and string casts for Field class - @thekid
+* Implemented `toString()` and string casts for all members: Fields,
+  methods, constants and constructors.
+  (@thekid)
 * Changed lang.mirrors.Field::get() to `read()` - @thekid
 * Changed lang.mirrors.Field::set() to `modify()` - @thekid
 

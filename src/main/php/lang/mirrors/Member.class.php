@@ -102,4 +102,16 @@ abstract class Member extends \lang\Object {
       $this->reflect->getDeclaringClass()->name === $cmp->reflect->getDeclaringClass()->name
     );
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    return $this->getClassName().'('.$this.')';
+  }
+
+  /** @return string */
+  public abstract function __toString();
 }

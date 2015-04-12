@@ -4,6 +4,11 @@ use lang\IllegalArgumentException;
 use lang\Generic;
 use lang\Type;
 
+/**
+ * A class field
+ *
+ * @test   xp://lang.mirrors.unittest.FieldTest
+ */
 class Field extends Member {
   protected static $kind= 'field';
 
@@ -88,15 +93,6 @@ class Field extends Member {
       'Verifying %s(): Object passed is not an instance of the class declaring this field',
       $this->name()
     ));
-  }
-
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'('.$this.')';
   }
 
   /** @return string */

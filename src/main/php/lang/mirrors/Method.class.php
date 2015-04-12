@@ -7,6 +7,11 @@ use lang\IllegalArgumentException;
 use lang\mirrors\parse\TagsSyntax;
 use lang\mirrors\parse\TagsSource;
 
+/**
+ * A class method
+ *
+ * @test   xp://lang.mirrors.unittest.MethodTest
+ */
 class Method extends Routine {
 
   /**
@@ -56,5 +61,14 @@ class Method extends Routine {
     } catch (\Exception $e) {
       throw new IllegalArgumentException('Verifying '.$this->name().'(): '.$e->getMessage());
     }
+  }
+
+  /** @return string */
+  public function __toString() {
+    $params= '';
+    foreach ($this->parameters() as $param) {
+      $params.= ', '.$param;
+    }
+    return $this->modifiers()->names().' '.$this->returns().' '.$this->name().'('.substr($params, 2).')';
   }
 }

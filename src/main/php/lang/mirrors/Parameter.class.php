@@ -97,4 +97,18 @@ class Parameter extends \lang\Object {
       isset($lookup[$method]['annotations'][$name]) ? $lookup[$method]['annotations'][$name] : []
     );
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    return $this->getClassName().'('.$this.')';
+  }
+
+  /** @return string */
+  public function __toString() {
+    return $this->type().' $'.$this->name();
+  }
 }

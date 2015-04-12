@@ -72,4 +72,12 @@ class ConstructorTest extends \unittest\TestCase {
   public function cannot_create_instances_from_abstract_classes() {
     (new Constructor(new TypeMirror(FixtureAbstract::class)))->newInstance();
   }
+
+  #[@test]
+  public function string_representation() {
+    $this->assertEquals(
+      'lang.mirrors.Constructor(public unittest.TestCase __construct(string $name))',
+      (new Constructor(new TypeMirror('unittest.TestCase')))->toString()
+    );
+  }
 }
