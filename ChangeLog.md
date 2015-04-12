@@ -3,7 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
-* Added lang.mirrors.Constants::declaredIn() - @thekid
+* Implemented `toString()` and string casts for Annotation instances
+  (@thekid)
+* Added lang.mirrors.Annotation::declaredIn() - @thekid
+* Added lang.mirrors.Constant::declaredIn() - @thekid
 * Implemented `toString()` and string casts for all members: Fields,
   methods, constants and constructors.
   (@thekid)

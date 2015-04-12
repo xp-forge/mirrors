@@ -1,5 +1,7 @@
 <?php namespace lang\mirrors;
 
+use util\Objects;
+
 /**
  * A class constant
  *
@@ -45,6 +47,6 @@ class Constant extends \lang\Object {
 
   /** @return string */
   public function __toString() {
-    return $this->name.'= '.var_export($this->value, true);
+    return $this->name.'= '.Objects::stringOf($this->value);
   }
 }
