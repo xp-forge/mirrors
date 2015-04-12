@@ -29,7 +29,7 @@ class MethodTest extends AbstractMethodTest {
 
   #[@test]
   public function modifiers() {
-    $this->assertEquals(new Modifiers(MODIFIER_PUBLIC), $this->fixture(__FUNCTION__)->modifiers());
+    $this->assertEquals(new Modifiers(MODIFIER_PROTECTED), $this->fixture('fixture')->modifiers());
   }
 
   #[@test]
