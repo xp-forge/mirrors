@@ -10,9 +10,9 @@ class Annotation extends \lang\Object {
    *
    * @param  lang.mirrors.TypeMirror $mirror
    * @param  string $name
-   * @param  var $value A resolveable value or NULL
+   * @param  lang.mirrors.parse.Resolveable $value A resolveable value or NULL
    */
-  public function __construct($mirror, $name, $value) {
+  public function __construct($mirror, $name, $value= null) {
     $this->mirror= $mirror;
     $this->name= $name;
     $this->value= $value;
@@ -25,6 +25,13 @@ class Annotation extends \lang\Object {
   public function value() { return $this->value ? $this->value->resolve($this->mirror->unit()) : null; }
 
   /**
+   * Returns the type this member was declared in.
+   *
+   * @return lang.mirrors.TypeMirror
+   */
+  public function declaredIn() { return $this->mirror; }
+
+  /**
    * Returns whether a given value is equal to this annotation
    *
    * @param  var $cmp
@@ -35,5 +42,19 @@ class Annotation extends \lang\Object {
       $this->name === $cmp->name &&
       Objects::equal($this->value, $cmp->value)
     );
+  }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    return $this->getClassName().'('.$this.')';
+  }
+
+  /** @return string */
+  public function __toString() {
+    return '@'.$this->name.(null === $this->value ? '' : '('.$this->value.')');
   }
 }
