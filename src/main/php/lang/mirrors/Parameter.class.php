@@ -76,4 +76,10 @@ class Parameter extends \lang\Object {
     }
     throw new IllegalStateException('Parameter is not optional');
   }
+
+  /** @return lang.mirrors.Annotations */
+  public function annotations() {
+    $lookup= $this->mirror->declaredIn()->unit()->declaration()['method'][$this->mirror->reflect->name];
+    return new Annotations($this->mirror, (array)$lookup['annotations']);
+  }
 }
