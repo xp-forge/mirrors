@@ -48,6 +48,9 @@ class TypeMirror extends \lang\Object {
   public function name() { return strtr($this->reflect->getName(), '\\', '.'); }
 
   /** @return string */
+  public function declaration() { return $this->reflect->getShortName(); }
+
+  /** @return string */
   public function comment() {
     $comment= $this->reflect->getDocComment();
     return false === $comment ? null : trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(

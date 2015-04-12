@@ -21,6 +21,11 @@ class TypeMirrorTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function declaration() {
+    $this->assertEquals('TypeMirrorTest', (new TypeMirror(self::class))->declaration());
+  }
+
+  #[@test]
   public function comment() {
     $this->assertEquals('Tests TypeMirror', (new TypeMirror(self::class))->comment());
   }
