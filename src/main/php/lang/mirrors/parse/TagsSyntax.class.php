@@ -21,9 +21,7 @@ class TagsSyntax extends \text\parse\Syntax {
       new Repeated(
         new Sequence([new Token('@'), new Apply('tag')], function($values) { return $values[1]; }),
         new Token("\n"),
-        newinstance('text.parse.rules.Collect', [-3, 'AS_MAP_OF_LISTS'], '{
-          static function __static() { }
-
+        newinstance('text.parse.rules.Collection', [], '{
           public function collect(&$values, $value) {
             $values[key($value)][]= current($value);
           }

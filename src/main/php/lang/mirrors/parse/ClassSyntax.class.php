@@ -17,16 +17,12 @@ class ClassSyntax extends \text\parse\Syntax {
   /** @return text.parse.Rules */
   protected function rules() {
     $typeName= new Tokens(T_STRING, T_NS_SEPARATOR);
-    $collectMembers= newinstance('text.parse.rules.Collect', [-1, 'MAP_BY_KIND_AND_NAME'], '{
-      static function __static() { }
-
+    $collectMembers= newinstance('text.parse.rules.Collection', [], '{
       public function collect(&$values, $value) {
         $values[$value["kind"]][$value["name"]]= $value;
       }
     }');
-    $collectElements= newinstance('text.parse.rules.Collect', [-2, 'COMPOSE_ARRAY'], '{
-      static function __static() { }
-
+    $collectElements= newinstance('text.parse.rules.Collection', [], '{
       public function collect(&$values, $value) {
         if (is_array($value)) {
           $values[key($value)]= current($value);
@@ -35,9 +31,7 @@ class ClassSyntax extends \text\parse\Syntax {
         }
       }
     }');
-    $collectAnnotations= newinstance('text.parse.rules.Collect', [-3, 'MAP_BY_TARGET_AND_NAME'], '{
-      static function __static() { }
-
+    $collectAnnotations= newinstance('text.parse.rules.Collection', [], '{
       public function collect(&$values, $value) {
         $target= $value["target"];
         $values[$target[0]][$target[1]]= $value["value"];
