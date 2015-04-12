@@ -5,6 +5,12 @@ use lang\ElementNotFoundException;
 class Annotations extends \lang\Object implements \IteratorAggregate {
   private $mirror, $backing;
 
+  /**
+   * Creates a new annotations instance
+   *
+   * @param  lang.mirrors.TypeMirror $mirror
+   * @param  [:var] $backing As parsed via ClassSyntax
+   */
   public function __construct($mirror, array $backing) {
     $this->mirror= $mirror;
     $this->backing= $backing;

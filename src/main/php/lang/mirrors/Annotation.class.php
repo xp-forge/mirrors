@@ -5,6 +5,13 @@ use util\Objects;
 class Annotation extends \lang\Object {
   private $mirror, $name, $value;
 
+  /**
+   * Creates a new annotation.
+   *
+   * @param  lang.mirrors.TypeMirror $mirror
+   * @param  string $name
+   * @param  var $value A resolveable value or NULL
+   */
   public function __construct(TypeMirror $mirror, $name, $value) {
     $this->mirror= $mirror;
     $this->name= $name;
