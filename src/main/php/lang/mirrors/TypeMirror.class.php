@@ -115,15 +115,19 @@ class TypeMirror extends \lang\Object {
 
   /** @return lang.mirrors.Modifiers */
   public function modifiers() {
-    $r= Modifiers::IS_PUBLIC;
 
-    // Map PHP reflection modifiers to generic form
-    $m= $this->reflect->getModifiers();
-    $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
-    $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
-    $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
-
-    return new Modifiers($r);
+    // HHVM and PHP differ in this. We'll handle traits as *always* abstract (needs
+    // to be implemented) and *never* final (couldn't be implemented otherwise).
+    if ($this->reflect->isTrait()) {
+      return new Modifiers(Modifiers::IS_PUBLIC | Modifiers::IS_ABSTRACT);
+    } else {
+      $r= Modifiers::IS_PUBLIC;
+      $m= $this->reflect->getModifiers();
+      $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
+      $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
+      $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
+      return new Modifiers($r);
+    }
   }
 
   /** @return lang.mirrors.Annotations */
