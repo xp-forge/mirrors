@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.1.1 / 2015-04-12
+
 * Made this library work with HHVM 3.5
   (@thekid)
 * Changed dependency for xp-forge parse from "dev-master" to "0.1"
