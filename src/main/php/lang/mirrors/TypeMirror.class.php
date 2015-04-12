@@ -111,7 +111,8 @@ class TypeMirror extends \lang\Object {
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
-    return new Annotations($this, $this->unit()->declaration()['annotations']);
+    $lookup= $this->unit()->declaration()['annotations'];
+    return new Annotations($this, isset($lookup[null]) ? $lookup[null] : []);
   }
 
   /**
