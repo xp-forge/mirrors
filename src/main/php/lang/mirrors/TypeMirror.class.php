@@ -5,7 +5,6 @@ use lang\mirrors\parse\ClassSource;
 use lang\ClassNotFoundException;
 use lang\IllegalArgumentException;
 use lang\XPClass;
-use lang\Throwable;
 use lang\Enum;
 
 /**
@@ -99,8 +98,7 @@ class TypeMirror extends \lang\Object {
 
   /** @return lang.mirrors.Constructor */
   public function constructor() {
-    $constructor= $this->reflect->getConstructor();
-    return $constructor ? new Constructor($this, $constructor) : null;
+    return new Constructor($this);
   }
 
   /** @return lang.mirrors.Methods */
@@ -139,26 +137,6 @@ class TypeMirror extends \lang\Object {
         if (0 === substr_compare($imported, $name, strrpos($imported, '.') + 1)) return new self($imported);
       }
       return new self($unit->package().'.'.$name);
-    }
-  }
-
-  /**
-   * Creates a new instance
-   *
-   * @param  var* $args
-   * @return lang.Generic
-   */
-  public function newInstance(... $args) {
-    if (!$this->reflect->isInstantiable()) {
-      throw new IllegalArgumentException('Verifying '.$this->name().': Cannot instantiate');
-    }
-
-    try {
-      return $this->reflect->newInstanceArgs($args);
-    } catch (Throwable $e) {
-      throw new TargetInvocationException('Creating a new instance of '.$this->name().' raised '.$e->getClassName(), $e);
-    } catch (\Exception $e) {
-      throw new IllegalArgumentException('Instantiating '.$this->name().': '.$e->getMessage());
     }
   }
 

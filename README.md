@@ -30,8 +30,26 @@ public class lang.mirrors.TypeMirror extends lang.Object {
   public lang.mirrors.Fields fields()
   public lang.mirrors.Constants constants()
   public lang.mirrors.Annotations annotations()
-  public lang.Generic newInstance(var... $args) throws lang.mirrors.TargetInvocationException
   public self resolve(string $name)
+}
+```
+
+### Constructor
+In order to create instances of a type, use the `constructor()` method. It will always return a Constructor instance regardless whether the type has a declared constructor - use `present()` to test if necessary.
+
+```php
+public class lang.mirrors.Constructor extends lang.mirrors.Routine {
+  public lang.mirrors.Constructor __construct(lang.mirrors.TypeMirror $mirror)
+
+  public string name()
+  public lang.mirrors.Modifiers modifiers()
+  public string comment()
+  public [:var] tags()
+  public bool present()
+  public lang.Generic newInstance([var* $args= null])
+  public lang.mirrors.Parameters parameters()
+  public lang.mirrors.TypeMirror declaredIn()
+  public lang.mirrors.Annotations annotations()
 }
 ```
 

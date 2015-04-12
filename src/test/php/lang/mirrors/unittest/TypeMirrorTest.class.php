@@ -4,7 +4,6 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\Package;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
-use lang\mirrors\TargetInvocationException;
 
 /**
  * Tests TypeMirror
@@ -63,51 +62,11 @@ class TypeMirrorTest extends \unittest\TestCase {
 
   #[@test]
   public function this_class_has_constructor() {
-    $this->assertInstanceOf('lang.mirrors.Constructor', (new TypeMirror(self::class))->constructor());
+    $this->assertTrue((new TypeMirror(self::class))->constructor()->present());
   }
 
   #[@test]
   public function object_class_does_not_have_constructor() {
-    $this->assertNull((new TypeMirror('lang.Object'))->constructor());
-  }
-
-  #[@test]
-  public function creating_new_object_instances() {
-    $this->assertInstanceOf(
-      'lang.Object',
-      (new TypeMirror('lang.Object'))->newInstance()
-    );
-  }
-
-  #[@test]
-  public function creating_instances_invokes_constructor() {
-    $fixture= newinstance('lang.Object', [], [
-      'passed'      => null,
-      '__construct' => function(... $args) { $this->passed= $args; }
-    ]);
-    $this->assertEquals([1, 2, 3], (new TypeMirror(typeof($fixture)))->newInstance(1, 2, 3)->passed);
-  }
-
-  #[@test, @expect(TargetInvocationException::class)]
-  public function creating_instances_wraps_exceptions() {
-    $fixture= newinstance('lang.Object', ['Test'], [
-      '__construct' => function($arg) { if (null === $arg) throw new IllegalArgumentException('Test'); }
-    ]);
-    (new TypeMirror(typeof($fixture)))->newInstance();
-  }
-
-  #[@test, @expect(IllegalArgumentException::class)]
-  public function cannot_create_instances_from_interfaces() {
-    (new TypeMirror(FixtureInterface::class))->newInstance();
-  }
-
-  #[@test, @expect(IllegalArgumentException::class)]
-  public function cannot_create_instances_from_traits() {
-    (new TypeMirror(FixtureTrait::class))->newInstance();
-  }
-
-  #[@test, @expect(IllegalArgumentException::class)]
-  public function cannot_create_instances_from_abstract_classes() {
-    (new TypeMirror(FixtureAbstract::class))->newInstance();
+    $this->assertFalse((new TypeMirror('lang.Object'))->constructor()->present());
   }
 }
