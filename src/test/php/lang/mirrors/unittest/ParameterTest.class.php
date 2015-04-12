@@ -4,16 +4,22 @@ use lang\mirrors\Parameter;
 use lang\mirrors\Method;
 use lang\mirrors\TypeMirror;
 use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 use lang\Type;
 use lang\XPClass;
 
 class ParameterTest extends \unittest\TestCase {
+  const CONSTANT = 'Test';
 
   private function noParam() { }
 
   private function oneParam($arg) { }
 
   private function oneOptionalParam($arg= null) { }
+
+  private function oneConstantOptionalParam($arg= self::CONSTANT) { }
+
+  private function oneArrayOptionalParam($arg= [1, 2, 3]) { }
 
   private function oneVariadicParam(...$arg) { }
 
@@ -121,5 +127,25 @@ class ParameterTest extends \unittest\TestCase {
   #[@test]
   public function documented_type_hint_using_long_form() {
     $this->assertEquals(new XPClass(Type::class), $this->newFixture('twoDocumentedTypeParams', 1)->type());
+  }
+
+  #[@test, @expect(IllegalStateException::class)]
+  public function cannot_get_default_value_for_non_optional() {
+    $this->newFixture('oneParam', 0)->defaultValue();
+  }
+
+  #[@test]
+  public function null_default_value_for_optional() {
+    $this->assertEquals(null, $this->newFixture('oneOptionalParam', 0)->defaultValue());
+  }
+
+  #[@test]
+  public function constant_default_value_for_optional() {
+    $this->assertEquals(self::CONSTANT, $this->newFixture('oneConstantOptionalParam', 0)->defaultValue());
+  }
+
+  #[@test]
+  public function array_default_value_for_optional() {
+    $this->assertEquals([1, 2, 3], $this->newFixture('oneArrayOptionalParam', 0)->defaultValue());
   }
 }

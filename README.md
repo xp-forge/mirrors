@@ -82,6 +82,7 @@ public class lang.mirrors.Parameter extends lang.Object {
   public bool isOptional()
   public bool isVariadic()
   public lang.Type type()
+  public var defaultValue() throws lang.IllegalStateException
 }
 ```
 

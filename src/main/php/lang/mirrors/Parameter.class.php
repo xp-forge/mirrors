@@ -3,6 +3,7 @@
 use lang\Type;
 use lang\XPClass;
 use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 
 /**
  * A method or constructor parameter
@@ -61,5 +62,18 @@ class Parameter extends \lang\Object {
     } else {
       return new XPClass($class);
     }
+  }
+
+  /**
+   * Returns the default value for an optional parameter
+   *
+   * @return var
+   * @throws lang.IllegalStateException
+   */
+  public function defaultValue() {
+    if ($this->reflect->isOptional()) {
+      return $this->reflect->getDefaultValue();
+    }
+    throw new IllegalStateException('Parameter is not optional');
   }
 }
