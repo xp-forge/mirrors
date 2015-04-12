@@ -22,6 +22,7 @@ public class lang.mirrors.TypeMirror extends lang.Object {
   public string comment()
   public self parent()
   public lang.mirrors.Kind kind()
+  public lang.mirrors.Modifiers modifiers()
   public lang.mirrors.parse.CodeUnit unit()
   public lang.mirrors.Traits traits()
   public lang.mirrors.Interfaces interfaces()
@@ -42,10 +43,10 @@ public class lang.mirrors.Constructor extends lang.mirrors.Routine {
   public lang.mirrors.Constructor __construct(lang.mirrors.TypeMirror $mirror)
 
   public string name()
-  public lang.mirrors.Modifiers modifiers()
   public string comment()
   public [:var] tags()
   public bool present()
+  public lang.mirrors.Modifiers modifiers()
   public lang.Generic newInstance([var* $args= null])
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
@@ -72,9 +73,9 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
   public lang.mirrors.Method __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
   public string name()
-  public lang.mirrors.Modifiers modifiers()
   public string comment()
   public [:var] tags()
+  public lang.mirrors.Modifiers modifiers()
   public lang.Type returns()
   public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
   public lang.mirrors.Throws throws()

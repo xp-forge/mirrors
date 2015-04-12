@@ -96,4 +96,13 @@ class Modifiers extends \lang\Object {
   public function equals($cmp) {
     return $cmp instanceof self && $this->bits === $cmp->bits;
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    return $this->getClassName().'<'.$this->names().'>';
+  }
 }

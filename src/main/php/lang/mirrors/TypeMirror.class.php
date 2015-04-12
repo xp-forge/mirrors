@@ -113,6 +113,19 @@ class TypeMirror extends \lang\Object {
   /** @return lang.mirrors.Constants */
   public function constants() { return $this->constants; }
 
+  /** @return lang.mirrors.Modifiers */
+  public function modifiers() {
+    $r= Modifiers::IS_PUBLIC;
+
+    // Map PHP reflection modifiers to generic form
+    $m= $this->reflect->getModifiers();
+    $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
+    $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
+    $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
+
+    return new Modifiers($r);
+  }
+
   /** @return lang.mirrors.Annotations */
   public function annotations() {
     $lookup= $this->unit()->declaration()['annotations'];

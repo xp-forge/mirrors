@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\mirrors\Package;
+use lang\mirrors\Modifiers;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use unittest\TestCase;
@@ -64,6 +65,31 @@ class TypeMirrorTest extends TestCase {
   #[@test]
   public function isEnum() {
     $this->assertTrue((new TypeMirror(FixtureEnum::class))->kind()->isEnum());
+  }
+
+  #[@test]
+  public function this_class_is_public() {
+    $this->assertEquals(new Modifiers('public'), (new TypeMirror(self::class))->modifiers());
+  }
+
+  #[@test]
+  public function abstract_class_is_abstract() {
+    $this->assertEquals(new Modifiers('public abstract'), (new TypeMirror(FixtureAbstract::class))->modifiers());
+  }
+
+  #[@test]
+  public function final_class_is_final() {
+    $this->assertEquals(new Modifiers('public final'), (new TypeMirror(FixtureFinal::class))->modifiers());
+  }
+
+  #[@test]
+  public function interface_class_is_public() {
+    $this->assertEquals(new Modifiers('public'), (new TypeMirror(FixtureInterface::class))->modifiers());
+  }
+
+  #[@test]
+  public function trait_class_is_abstract_public() {
+    $this->assertEquals(new Modifiers('public abstract'), (new TypeMirror(FixtureTrait::class))->modifiers());
   }
 
   #[@test, @values([
