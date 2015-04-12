@@ -45,6 +45,15 @@ class Parameter extends \lang\Object {
   /** @return bool */
   public function isVariadic() { return $this->reflect->isVariadic(); }
 
+  /** @return bool */
+  public function isVerified() {
+    return (
+      $this->reflect->isArray() ||
+      $this->reflect->isCallable() ||
+      $this->reflect->getClass()
+    );
+  }
+
   /** @return lang.Type */
   public function type() {
     if ($this->reflect->isArray()) {

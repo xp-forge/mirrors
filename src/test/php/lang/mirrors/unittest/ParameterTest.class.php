@@ -175,4 +175,17 @@ class ParameterTest extends \unittest\TestCase {
       iterator_to_array($fixture->annotations())
     );
   }
+
+  #[@test, @values([
+  #  ['oneParam', false],
+  #  ['oneVariadicParam', false],
+  #  ['oneVariadicTypedParam', true],
+  #  ['oneTypeHintedParam', true],
+  #  ['oneSelfTypeHintedParam', true],
+  #  ['oneArrayTypeHintedParam', true],
+  #  ['oneCallableTypeHintedParam', true]
+  #])]
+  public function isVerified($method, $expect) {
+    $this->assertEquals($expect, $this->newFixture($method, 0)->isVerified());
+  }
 }
