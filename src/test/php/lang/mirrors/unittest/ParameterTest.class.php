@@ -129,9 +129,12 @@ class ParameterTest extends \unittest\TestCase {
     $this->assertEquals(new XPClass(Type::class), $this->newFixture('twoDocumentedTypeParams', 1)->type());
   }
 
-  #[@test, @expect(IllegalStateException::class)]
-  public function cannot_get_default_value_for_non_optional() {
-    $this->newFixture('oneParam', 0)->defaultValue();
+  #[@test, @expect(IllegalStateException::class), @values([
+  #  ['oneParam', 0],
+  #  ['oneVariadicParam', 0]
+  #])]
+  public function cannot_get_default_value_for_non_optional($method, $offset) {
+    $this->newFixture($method, $offset)->defaultValue();
   }
 
   #[@test]

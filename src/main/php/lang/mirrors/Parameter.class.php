@@ -71,7 +71,7 @@ class Parameter extends \lang\Object {
    * @throws lang.IllegalStateException
    */
   public function defaultValue() {
-    if ($this->reflect->isOptional()) {
+    if ($this->reflect->isOptional() && !$this->reflect->isVariadic()) {
       return $this->reflect->getDefaultValue();
     }
     throw new IllegalStateException('Parameter is not optional');
