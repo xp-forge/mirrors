@@ -30,7 +30,7 @@ class FieldTest extends AbstractFieldTest {
 
   #[@test]
   public function modifiers() {
-    $this->assertEquals(new Modifiers(MODIFIER_PRIVATE), $this->fixture('fixture')->modifiers());
+    $this->assertEquals(new Modifiers('private'), $this->fixture('fixture')->modifiers());
   }
 
   #[@test]

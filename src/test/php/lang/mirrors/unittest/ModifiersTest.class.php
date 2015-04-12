@@ -7,21 +7,21 @@ class ModifiersTest extends AbstractMethodTest {
   /** @return var[][] */
   private function modifiers() {
     return [
-      [MODIFIER_PUBLIC, 'public'],
-      [MODIFIER_PROTECTED, 'protected'],
-      [MODIFIER_PRIVATE, 'private'],
+      [Modifiers::IS_PUBLIC, 'public'],
+      [Modifiers::IS_PROTECTED, 'protected'],
+      [Modifiers::IS_PRIVATE, 'private'],
 
-      [MODIFIER_PUBLIC | MODIFIER_STATIC, 'public static'],
-      [MODIFIER_PROTECTED | MODIFIER_STATIC, 'protected static'],
-      [MODIFIER_PRIVATE | MODIFIER_STATIC, 'private static'],
+      [Modifiers::IS_PUBLIC | Modifiers::IS_STATIC, 'public static'],
+      [Modifiers::IS_PROTECTED | Modifiers::IS_STATIC, 'protected static'],
+      [Modifiers::IS_PRIVATE | Modifiers::IS_STATIC, 'private static'],
 
-      [MODIFIER_PUBLIC | MODIFIER_FINAL, 'public final'],
-      [MODIFIER_PROTECTED | MODIFIER_FINAL, 'protected final'],
-      [MODIFIER_PRIVATE | MODIFIER_FINAL, 'private final'],
+      [Modifiers::IS_PUBLIC | Modifiers::IS_FINAL, 'public final'],
+      [Modifiers::IS_PROTECTED | Modifiers::IS_FINAL, 'protected final'],
+      [Modifiers::IS_PRIVATE | Modifiers::IS_FINAL, 'private final'],
 
-      [MODIFIER_PUBLIC | MODIFIER_ABSTRACT, 'public abstract'],
-      [MODIFIER_PROTECTED | MODIFIER_ABSTRACT, 'protected abstract'],
-      [MODIFIER_PRIVATE | MODIFIER_ABSTRACT, 'private abstract'],
+      [Modifiers::IS_PUBLIC | Modifiers::IS_ABSTRACT, 'public abstract'],
+      [Modifiers::IS_PROTECTED | Modifiers::IS_ABSTRACT, 'protected abstract'],
+      [Modifiers::IS_PRIVATE | Modifiers::IS_ABSTRACT, 'private abstract'],
     ];
   }
 
@@ -42,17 +42,17 @@ class ModifiersTest extends AbstractMethodTest {
 
   #[@test]
   public function passing_zero_yields_public_as_default() {
-    $this->assertEquals(MODIFIER_PUBLIC, (new Modifiers(0))->bits());
+    $this->assertEquals(Modifiers::IS_PUBLIC, (new Modifiers(0))->bits());
   }
 
   #[@test]
   public function passing_empty_string_yields_public_as_default() {
-    $this->assertEquals(MODIFIER_PUBLIC, (new Modifiers(''))->bits());
+    $this->assertEquals(Modifiers::IS_PUBLIC, (new Modifiers(''))->bits());
   }
 
   #[@test]
   public function passing_empty_array_yields_public_as_default() {
-    $this->assertEquals(MODIFIER_PUBLIC, (new Modifiers([]))->bits());
+    $this->assertEquals(Modifiers::IS_PUBLIC, (new Modifiers([]))->bits());
   }
 
   #[@test, @values('modifiers')]
@@ -62,17 +62,17 @@ class ModifiersTest extends AbstractMethodTest {
 
   #[@test]
   public function equals_itself() {
-    $modifiers= new Modifiers(MODIFIER_PUBLIC);
+    $modifiers= new Modifiers(Modifiers::IS_PUBLIC);
     $this->assertTrue($modifiers->equals($modifiers));
   }
 
   #[@test]
   public function equals_other_instance_with_same_bits() {
-    $this->assertTrue((new Modifiers(MODIFIER_PUBLIC))->equals(new Modifiers(MODIFIER_PUBLIC)));
+    $this->assertTrue((new Modifiers(Modifiers::IS_PUBLIC))->equals(new Modifiers(Modifiers::IS_PUBLIC)));
   }
 
   #[@test]
   public function does_not_equal_instance_with_differing_bits() {
-    $this->assertFalse((new Modifiers(MODIFIER_PUBLIC))->equals(new Modifiers(MODIFIER_PROTECTED)));
+    $this->assertFalse((new Modifiers(Modifiers::IS_PUBLIC))->equals(new Modifiers(Modifiers::IS_PROTECTED)));
   }
 }

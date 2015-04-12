@@ -6,13 +6,20 @@
  * @test  xp://lang.mirrors.unittest.ModifiersTest
  */
 class Modifiers extends \lang\Object {
+  const IS_STATIC    = 0x0001;
+  const IS_ABSTRACT  = 0x0002;
+  const IS_FINAL     = 0x0004;
+  const IS_PUBLIC    = 0x0100;
+  const IS_PROTECTED = 0x0200;
+  const IS_PRIVATE   = 0x0400;
+
   private static $names= [
-    'public'    => MODIFIER_PUBLIC,
-    'protected' => MODIFIER_PROTECTED,
-    'private'   => MODIFIER_PRIVATE,
-    'static'    => MODIFIER_STATIC,
-    'final'     => MODIFIER_FINAL,
-    'abstract'  => MODIFIER_ABSTRACT
+    'public'    => self::IS_PUBLIC,
+    'protected' => self::IS_PROTECTED,
+    'private'   => self::IS_PRIVATE,
+    'static'    => self::IS_STATIC,
+    'final'     => self::IS_FINAL,
+    'abstract'  => self::IS_ABSTRACT
   ];
   private $bits;
 
@@ -23,11 +30,11 @@ class Modifiers extends \lang\Object {
    */
   public function __construct($arg) {
     if (is_string($arg)) {
-      $this->bits= '' === $arg ? MODIFIER_PUBLIC : self::parse(explode(' ', $arg));
+      $this->bits= '' === $arg ? self::IS_PUBLIC : self::parse(explode(' ', $arg));
     } else if (is_array($arg)) {
-      $this->bits= empty($arg) ? MODIFIER_PUBLIC : self::parse($arg);
+      $this->bits= empty($arg) ? self::IS_PUBLIC : self::parse($arg);
     } else {
-      $this->bits= $arg ? (int)$arg : MODIFIER_PUBLIC;
+      $this->bits= $arg ? (int)$arg : self::IS_PUBLIC;
     }
   }
 
