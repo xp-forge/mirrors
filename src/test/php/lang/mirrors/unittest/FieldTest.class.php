@@ -46,10 +46,18 @@ class FieldTest extends AbstractFieldTest {
   }
 
   #[@test]
-  public function string_representation() {
+  public function string_representation_with_type() {
     $this->assertEquals(
       'lang.mirrors.Field(private lang.mirrors.Field $fixture)',
       $this->fixture('fixture')->toString()
+    );
+  }
+
+  #[@test]
+  public function string_representation() {
+    $this->assertEquals(
+      'lang.mirrors.Field(protected var $type)',
+      $this->fixture('type')->toString()
     );
   }
 }
