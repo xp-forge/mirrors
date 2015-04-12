@@ -3,7 +3,7 @@
 use lang\XPClass;
 use util\Objects;
 
-class GenericTypeRef extends \lang\Object {
+class GenericTypeRef extends Resolveable {
   private $base, $arguments;
 
   public function __construct($base, $arguments) {
@@ -34,12 +34,6 @@ class GenericTypeRef extends \lang\Object {
     );
   }
 
-  /**
-   * Returns a string represenation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'('.$this->base->toString().', '.Objects::stringOf($this->arguments).')';
-  }
+  /** @return string */
+  public function __toString() { return $this->base.', '.Objects::stringOf($this->arguments); }
 }

@@ -7,7 +7,7 @@ use util\Objects;
  *
  * @test  xp://lang.reflection.unittest.ValueTest
  */
-class Value extends \lang\Object {
+class Value extends Resolveable {
   private $backing;
 
   public function __construct($value) {
@@ -25,15 +25,6 @@ class Value extends \lang\Object {
   }
 
   /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'('.Objects::stringOf($this->backing).')';
-  }
-
-  /**
    * Returns whether a given value is equal to this code unit
    *
    * @param  var $cmp
@@ -42,4 +33,7 @@ class Value extends \lang\Object {
   public function equals($cmp) {
     return $cmp instanceof self && Objects::equal($this->backing, $cmp->backing);
   }
+
+  /** @return string */
+  public function __toString() { return Objects::stringOf($this->backing); }
 }

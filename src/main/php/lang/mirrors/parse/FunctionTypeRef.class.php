@@ -8,7 +8,7 @@ use util\Objects;
  *
  * @test  xp://lang.mirrors.unittest.FunctionTypeRefTest
  */
-class FunctionTypeRef extends \lang\Object {
+class FunctionTypeRef extends Resolveable {
   private $parameters, $return;
 
   /**
@@ -49,12 +49,12 @@ class FunctionTypeRef extends \lang\Object {
     );
   }
 
-  /**
-   * Returns a string represenation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'<('.Objects::stringOf($this->parameters).'): '.$this->return->toString().'>';
+  /** @return string */
+  public function __toString() {
+    $params= '';
+    foreach ($this->parameters as $param) {
+      $params.= ', '.$param;
+    }
+    return '('.substr($params, 2).'): '.$this->return;
   }
 }

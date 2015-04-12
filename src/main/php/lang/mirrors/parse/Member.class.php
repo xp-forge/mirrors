@@ -2,7 +2,7 @@
 
 use lang\Objects;
 
-class Member extends \lang\Object {
+class Member extends Resolveable {
   private $type;
 
   public function __construct($type, $name) {
@@ -39,4 +39,7 @@ class Member extends \lang\Object {
       $this->type === $cmp->type
     );
   }
+
+  /** @return string */
+  public function __toString() { return $this->type.'::'.$this->name; }
 }

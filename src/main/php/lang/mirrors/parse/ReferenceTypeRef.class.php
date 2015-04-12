@@ -7,7 +7,7 @@ use lang\XPClass;
  *
  * @test  xp://lang.mirrors.unittest.ReferenceTypeRefTest
  */
-class ReferenceTypeRef extends \lang\Object {
+class ReferenceTypeRef extends Resolveable {
   private $name;
 
   /**
@@ -42,12 +42,6 @@ class ReferenceTypeRef extends \lang\Object {
     return $cmp instanceof self && $this->name === $cmp->name;
   }
 
-  /**
-   * Returns a string represenation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'<'.$this->name.'>';
-  }
+  /** @return string */
+  public function __toString() { return $this->name; }
 }

@@ -1,11 +1,13 @@
 <?php namespace lang\mirrors\parse;
 
+use lang\ElementNotFoundException;
+
 /**
  * Represents a parsed value 
  *
- * @test  xp://lang.reflection.unittest.ConstantTest
+ * @test  xp://lang.reflection.unittest.ParsedConstantTest
  */
-class Constant extends \lang\Object {
+class Constant extends Resolveable {
   private $name;
 
   public function __construct($name) {
@@ -22,16 +24,7 @@ class Constant extends \lang\Object {
     if (defined($this->name)) {
       return constant($this->name);
     }
-    raise('lang.ElementNotFoundException', 'Undefined constant "'.$this->name.'"');
-  }
-
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'('.$this->name.')';
+    throw new ElementNotFoundException('Undefined constant "'.$this->name.'"');
   }
 
   /**
@@ -43,4 +36,7 @@ class Constant extends \lang\Object {
   public function equals($cmp) {
     return $cmp instanceof self && $this->name === $cmp->name;
   }
+
+  /** @return string */
+  public function __toString() { return $this->name; }
 }

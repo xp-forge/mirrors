@@ -2,7 +2,7 @@
 
 use util\Objects;
 
-class NewInstance extends \lang\Object {
+class NewInstance extends Resolveable {
   private $type;
 
   public function __construct($type, $arguments) {
@@ -17,24 +17,11 @@ class NewInstance extends \lang\Object {
    * @return var
    */
   public function resolve($type) {
-    $resolved= $type->resolve($type, $this->type);
-    // if ($resolved->hasConstructor()) {
-    //   return $resolved->getConstructor()->newInstance(array_map(
-    //     function($arg) use($unit) { return $arg->resolve($unit); },
-    //     $this->arguments
-    //   ));
-    // } else {
-    //   return $resolved->newInstance();
-    // }
-  }
-
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'(new '.$this->type.'('.Objects::stringOf($this->arguments).'))';
+    $constructor= $type->resolve($type, $this->type)->constructor();
+    return $constructor->newInstance(...array_map(
+      function($arg) use($unit) { return $arg->resolve($unit); },
+      $this->arguments
+    ));
   }
 
   /**
@@ -49,4 +36,7 @@ class NewInstance extends \lang\Object {
       Objects::equal($this->arguments, $cmp->arguments)
     );
   }
+
+  /** @return string */
+  public function __toString() { return 'new '.$this->type.'('.Objects::stringOf($this->arguments).')'; }
 }

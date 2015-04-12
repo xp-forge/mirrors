@@ -2,7 +2,7 @@
 
 use util\Objects;
 
-class Pairs extends \lang\Object {
+class Pairs extends Resolveable {
   private $backing;
 
   public function __construct($value) {
@@ -24,15 +24,6 @@ class Pairs extends \lang\Object {
   }
 
   /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'('.Objects::stringOf($this->backing).')';
-  }
-
-  /**
    * Returns whether a given value is equal to this code unit
    *
    * @param  var $cmp
@@ -41,4 +32,7 @@ class Pairs extends \lang\Object {
   public function equals($cmp) {
     return $cmp instanceof self && Objects::equal($this->backing, $cmp->backing);
   }
+
+  /** @return string */
+  public function __toString() { return Objects::stringOf($this->backing); }
 }

@@ -7,7 +7,7 @@ use lang\MapType;
  *
  * @test  xp://lang.mirrors.unittest.MapTypeRefTest
  */
-class MapTypeRef extends \lang\Object {
+class MapTypeRef extends Resolveable {
   private $component;
 
   public function __construct($component) {
@@ -34,12 +34,7 @@ class MapTypeRef extends \lang\Object {
     return $cmp instanceof self && $this->component->equals($cmp->component);
   }
 
-  /**
-   * Returns a string represenation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'<'.$this->component->toString().'>';
-  }
+  /** @return string */
+  public function __toString() { return (string)$this->component; }
+
 }

@@ -7,7 +7,7 @@ use lang\ArrayType;
  *
  * @test  xp://lang.mirrors.unittest.ArrayTypeRefTest
  */
-class ArrayTypeRef extends \lang\Object {
+class ArrayTypeRef extends Resolveable {
   private $component;
 
   public function __construct($component) {
@@ -34,12 +34,6 @@ class ArrayTypeRef extends \lang\Object {
     return $cmp instanceof self && $this->component->equals($cmp->component);
   }
 
-  /**
-   * Returns a string represenation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'<'.$this->component->toString().'>';
-  }
+  /** @return string */
+  public function __toString() { return (string)$this->component; }
 }

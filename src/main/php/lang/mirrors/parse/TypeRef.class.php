@@ -7,7 +7,7 @@ use lang\Type;
  *
  * @test  xp://lang.mirrors.unittest.TypeRefTest
  */
-class TypeRef extends \lang\Object {
+class TypeRef extends Resolveable {
   private $type;
 
   public function __construct(Type $type) {
@@ -34,12 +34,6 @@ class TypeRef extends \lang\Object {
     return $cmp instanceof self && $this->type->equals($cmp->type);
   }
 
-  /**
-   * Returns a string represenation
-   *
-   * @return string
-   */
-  public function toString() {
-    return $this->getClassName().'<'.$this->type->getName().'>';
-  }
+  /** @return string */
+  public function __toString() { return $this->type->getName(); }
 }
