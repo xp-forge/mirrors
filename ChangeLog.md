@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.2.0 / 2015-04-13
+
 * Implemented `toString()` and string casts for Annotation instances
   (@thekid)
 * Added lang.mirrors.Annotation::declaredIn() - @thekid
