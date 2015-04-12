@@ -2,9 +2,20 @@
 
 use util\Objects;
 
+/**
+ * Represents an instance creation expression.
+ *
+ * @test   xp://lang.mirrors.unittest.NewInstanceTest
+ */
 class NewInstance extends Resolveable {
   private $type;
 
+  /**
+   * Creates a new Newinstance instance:)
+   *
+   * @param  string $type
+   * @param  self[] $arguments
+   */
   public function __construct($type, $arguments) {
     $this->type= $type;
     $this->arguments= $arguments;
@@ -17,9 +28,9 @@ class NewInstance extends Resolveable {
    * @return var
    */
   public function resolve($type) {
-    $constructor= $type->resolve($type, $this->type)->constructor();
+    $constructor= $type->resolve($this->type)->constructor();
     return $constructor->newInstance(...array_map(
-      function($arg) use($unit) { return $arg->resolve($unit); },
+      function($arg) use($type) { return $arg->resolve($type); },
       $this->arguments
     ));
   }
