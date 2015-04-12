@@ -5,9 +5,9 @@
  */
 abstract class Member extends \lang\Object {
   public static $STATIC= 0, $INSTANCE= 1;
-
+  public $reflect;
   protected static $member;
-  protected $mirror, $reflect;
+  protected $mirror;
 
   /**
    * Creates a new method

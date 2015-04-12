@@ -2,23 +2,44 @@
 
 use lang\Type;
 use lang\XPClass;
+use lang\IllegalArgumentException;
 
+/**
+ * A method or constructor parameter
+ *
+ * @test  xp://lang.mirrors.unittest.ParameterTest
+ */
 class Parameter extends \lang\Object {
   private $mirror, $reflect;
 
   /**
-   * Creates a new method
+   * Creates a new parameter
    *
    * @param  lang.mirrors.Method $mirror
-   * @param  php.ReflectionParameter $reflect
+   * @param  var $arg Either a ReflectionParameter or an offset
+   * @throws lang.IllegalArgumentException If there is no such parameter
    */
-  public function __construct($mirror, $reflect) {
+  public function __construct($mirror, $arg) {
+    if ($arg instanceof \ReflectionParameter) {
+      $this->reflect= $arg;
+    } else {
+      try {
+        $this->reflect= new \ReflectionParameter([$mirror->reflect->class, $mirror->reflect->name], $arg);
+      } catch (\Exception $e) {
+        throw new IllegalArgumentException('No parameter '.$arg.' in '.$mirror->name());
+      }
+    }
     $this->mirror= $mirror;
-    $this->reflect= $reflect;
   }
 
   /** @return string */
   public function name() { return $this->reflect->name; }
+
+  /** @return bool */
+  public function isOptional() { return $this->reflect->isOptional(); }
+
+  /** @return bool */
+  public function isVariadic() { return $this->reflect->isVariadic(); }
 
   /** @return lang.Type */
   public function type() {
