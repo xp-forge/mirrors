@@ -53,6 +53,15 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Returns how many parameters exist.
+   *
+   * @return int
+   */
+  public function length() {
+    return $this->reflect->getNumberOfParameters();
+  }
+
+  /**
    * Returns a given method if provided or raises an exception
    *
    * @param  string $name
@@ -66,6 +75,21 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
       return new Parameter($this, $lookup[self::BY_ID][$pos]);
     }
     throw new ElementNotFoundException('No parameter '.$name.' in '.$this->mirror->name());
+  }
+
+  /**
+   * Returns parameter at a given offset
+   *
+   * @param  int $position
+   * @return lang.mirrors.Parameter
+   * @throws lang.ElementNotFoundException
+   */
+  public function at($position) {
+    $params= $this->lookup()[self::BY_ID];
+    if (isset($params[$position])) {
+      return new Parameter($this->mirror, $params[$position]);
+    }
+    throw new ElementNotFoundException('No parameter #'.$position.' in '.$this->mirror->name());
   }
 
   /**

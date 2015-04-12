@@ -89,4 +89,23 @@ class MethodParametersTest extends AbstractMethodTest {
   public function first_raises_exception_when_no_parameters_exist() {
     $this->assertEquals('fixture', $this->fixture('noParameterFixture')->parameters()->first());
   }
+
+  #[@test, @values(['singleParameterFixture', 'multipleParameterFixture'])]
+  public function at_0($fixture) {
+    $this->assertEquals('fixture', $this->fixture($fixture)->parameters()->at(0)->name());
+  }
+
+  #[@test]
+  public function at_1() {
+    $this->assertEquals('other', $this->fixture('multipleParameterFixture')->parameters()->at(1)->name());
+  }
+
+  #[@test, @values([
+  #  ['noParameterFixture', 0],
+  #  ['singleParameterFixture', 1],
+  #  ['multipleParameterFixture', 2]
+  #])]
+ public function length($fixture, $expect) {
+    $this->assertEquals($expect, $this->fixture($fixture)->parameters()->length());
+  }
 }
