@@ -156,6 +156,14 @@ class AnnotationSyntaxTest extends \unittest\TestCase {
     );
   }
 
+  #[@test, @values(['$a', '$b'])]
+  public function two_target_annotations_without_values($name) {
+    $this->assertEquals(
+      ['test' => null],
+      $this->parse('[@$a: test, @$b: test]', $name)
+    );
+  }
+
   #[@test]
   public function target_annotation_with_key_value_pair() {
     $this->assertEquals(
