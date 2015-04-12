@@ -1,5 +1,8 @@
 <?php namespace lang\mirrors;
 
+use lang\mirrors\parse\TagsSyntax;
+use lang\mirrors\parse\TagsSource;
+
 /**
  * Base class for all type members: Fields, methods, constructors.
  */
@@ -8,6 +11,7 @@ abstract class Member extends \lang\Object {
   public $reflect;
   protected static $member;
   protected $mirror;
+  private $tags= null;
 
   /**
    * Creates a new method
@@ -25,6 +29,41 @@ abstract class Member extends \lang\Object {
 
   /** @return lang.mirrors.Modifiers */
   public function modifiers() { return new Modifiers($this->reflect->getModifiers() & ~0x1fb7f008); }
+
+  /** @return string */
+  public function comment() {
+    $raw= $this->reflect->getDocComment();
+    if (false === $raw) {
+      return null;
+    } else {
+      $text= trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
+        $raw,
+        4,                          // "/**\n"
+        strpos($raw, '* @') - 2     // position of first details token
+      )));
+      return '' === $text ? null : $text;
+    }
+  }
+
+  /**
+   * Returns tags from doc comment
+   *
+   * @return [:var]
+   */
+  public function tags() {
+    if (null === $this->tags) {
+      $this->tags= ['param' => [], 'return' => [], 'throws' => []];
+      if ($raw= $this->reflect->getDocComment()) {
+        $parsed= (new TagsSyntax())->parse(new TagsSource(preg_replace('/\n\s+\* ?/', "\n", substr(
+          $raw,
+          strpos($raw, '* @') + 2,    // position of first details token
+          - 2                         // "*/"
+        ))));
+        $this->tags= array_merge($this->tags, $parsed);
+      }
+    }
+    return $this->tags;
+  }
 
   /**
    * Returns the type this member was declared in. Via inheritance, this may

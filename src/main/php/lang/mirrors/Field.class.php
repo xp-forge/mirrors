@@ -2,6 +2,7 @@
 
 use lang\IllegalArgumentException;
 use lang\Generic;
+use lang\Type;
 
 class Field extends Member {
   protected static $kind= 'field';
@@ -25,6 +26,22 @@ class Field extends Member {
     }
     parent::__construct($mirror, $reflect);
     $reflect->setAccessible(true);
+  }
+
+  /**
+   * Returns the field's type
+   *
+   * @return lang.Type
+   */
+  public function type() {
+    $tags= $this->tags();
+    if (isset($tags['type'])) {
+      return Type::forName($tags['type'][0]);
+    } else if (isset($tags['var'])) {
+      return Type::forName($tags['var'][0]);
+    } else {
+      return Type::$VAR;
+    }
   }
 
   /** @return string */
@@ -79,6 +96,11 @@ class Field extends Member {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'($'.$this->name().')';
+    return $this->getClassName().'('.$this.')';
+  }
+
+  /** @return string */
+  public function __toString() {
+    return $this->modifiers()->names().' '.$this->type().' $'.$this->name();
   }
 }
