@@ -7,7 +7,7 @@ abstract class AbstractFieldTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->type= new TypeMirror($this->getClassName());
+    $this->type= new TypeMirror(static::class);
   }
 
   /**

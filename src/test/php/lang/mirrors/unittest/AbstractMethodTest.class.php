@@ -7,7 +7,7 @@ abstract class AbstractMethodTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->type= new TypeMirror($this->getClassName());
+    $this->type= new TypeMirror(static::class);
   }
 
   /**
