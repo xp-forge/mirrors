@@ -16,7 +16,7 @@ The entry point class is the type mirror:
 
 ```php
 public class lang.mirrors.TypeMirror extends lang.Object {
-  public lang.mirrors.TypeMirror __construct(var $arg) throws lang.ClassNotFoundException
+  public __construct(var $arg) throws lang.ClassNotFoundException
 
   public string name()
   public string comment()
@@ -40,7 +40,7 @@ In order to create instances of a type, use the `constructor()` method. It will 
 
 ```php
 public class lang.mirrors.Constructor extends lang.mirrors.Routine {
-  public lang.mirrors.Constructor __construct(lang.mirrors.TypeMirror $mirror)
+  public __construct(lang.mirrors.TypeMirror $mirror)
 
   public string name()
   public string comment()
@@ -60,7 +60,7 @@ Methods can be retrieved by invoke `methods()` on a mirror, which returns a Meth
 
 ```php
 public class lang.mirrors.Methods extends lang.Object implements php.IteratorAggregate {
-  public lang.mirrors.Methods __construct(lang.mirrors.TypeMirror $mirror)
+  public __construct(lang.mirrors.TypeMirror $mirror)
 
   public bool provides(string $name)
   public lang.reflection.Method named(string $name) throws lang.ElementNotFoundException
@@ -70,7 +70,7 @@ public class lang.mirrors.Methods extends lang.Object implements php.IteratorAgg
 }
 
 public class lang.mirrors.Method extends lang.mirrors.Routine {
-  public lang.mirrors.Method __construct(lang.mirrors.TypeMirror $mirror, var $arg)
+  public __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
   public string name()
   public string comment()
@@ -85,7 +85,7 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
 }
 
 public class lang.mirrors.Parameters extends lang.Object implements php.IteratorAggregate {
-  public lang.mirrors.Parameters __construct(lang.mirrors.Method $mirror, var $reflect)
+  public __construct(lang.mirrors.Method $mirror, var $reflect)
 
   public bool present()
   public int length()
@@ -98,7 +98,7 @@ public class lang.mirrors.Parameters extends lang.Object implements php.Iterator
 }
 
 public class lang.mirrors.Parameter extends lang.Object {
-  public lang.mirrors.Parameter __construct(lang.mirrors.Method $mirror, var $reflect)
+  public __construct(lang.mirrors.Method $mirror, var $reflect)
 
   public string name()
   public int position()
@@ -115,7 +115,7 @@ Fields can be retrieved by invoke `fields()` on a mirror, which returns a Fields
 
 ```php
 public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggregate {
-  public lang.mirrors.Fields __construct(lang.mirrors.TypeMirror $mirror)
+  public __construct(lang.mirrors.TypeMirror $mirror)
 
   public bool provides(string $name)
   public lang.reflection.Field named(string $name) throws lang.ElementNotFoundException
@@ -125,7 +125,7 @@ public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggr
 }
 
 public class lang.mirrors.Field extends lang.mirrors.Member {
-  public lang.mirrors.Field __construct(lang.mirrors.TypeMirror $mirror, var $arg)
+  public __construct(lang.mirrors.TypeMirror $mirror, var $arg)
 
   public string name()
   public lang.mirrors.Modifiers modifiers()
@@ -166,7 +166,7 @@ Class constants in PHP are static final fields with a separate syntax. You can u
 
 ```php
 public class lang.mirrors.Constants extends lang.Object implements php.IteratorAggregate {
-  public lang.mirrors.Constants __construct(lang.mirrors.TypeMirror $mirror)
+  public __construct(lang.mirrors.TypeMirror $mirror)
 
   public bool provides(string $name)
   public lang.reflection.Constant named(string $name) throws lang.ElementNotFoundException
@@ -174,7 +174,7 @@ public class lang.mirrors.Constants extends lang.Object implements php.IteratorA
 }
 
 public class lang.mirrors.Constant extends lang.Object {
-  public lang.mirrors.Constant __construct(lang.mirrors.TypeMirror $mirror, string $name, var $value)
+  public __construct(lang.mirrors.TypeMirror $mirror, string $name, var $value)
 
   public string name()
   public var value()

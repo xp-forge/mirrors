@@ -76,7 +76,7 @@ class ConstructorTest extends \unittest\TestCase {
   #[@test]
   public function string_representation() {
     $this->assertEquals(
-      'lang.mirrors.Constructor(public unittest.TestCase __construct(string $name))',
+      'lang.mirrors.Constructor(public __construct(string $name))',
       (new Constructor(new TypeMirror('unittest.TestCase')))->toString()
     );
   }

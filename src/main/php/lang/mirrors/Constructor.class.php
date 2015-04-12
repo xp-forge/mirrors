@@ -59,6 +59,6 @@ class Constructor extends Routine {
     foreach ($this->parameters() as $param) {
       $params.= ', '.$param;
     }
-    return $this->modifiers()->names().' '.$this->mirror->name().' __construct('.substr($params, 2).')';
+    return $this->modifiers()->names().' __construct('.substr($params, 2).')';
   }
 }
