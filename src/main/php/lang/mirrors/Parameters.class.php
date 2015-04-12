@@ -72,7 +72,8 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    * Returns first parameter
    *
    * @param  string $name
-   * @return bool
+   * @return lang.mirrors.Parameter
+   * @throws lang.ElementNotFoundException
    */
   public function first() {
     $params= $this->lookup()[self::BY_ID];
