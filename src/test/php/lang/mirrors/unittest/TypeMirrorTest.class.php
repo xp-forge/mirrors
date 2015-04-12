@@ -4,11 +4,12 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\Package;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
+use unittest\TestCase;
 
 /**
  * Tests TypeMirror
  */
-class TypeMirrorTest extends \unittest\TestCase {
+class TypeMirrorTest extends TestCase {
 
   #[@test]
   public function can_create() {
@@ -63,6 +64,24 @@ class TypeMirrorTest extends \unittest\TestCase {
   #[@test]
   public function isEnum() {
     $this->assertTrue((new TypeMirror(FixtureEnum::class))->kind()->isEnum());
+  }
+
+  #[@test, @values([
+  #  'unittest.TestCase',
+  #  TestCase::class,
+  #  new TypeMirror(TestCase::class)
+  #])]
+  public function this_class_is_subtype_of_TestCase($type) {
+    $this->assertTrue((new TypeMirror(self::class))->isSubtypeOf($type));
+  }
+
+  #[@test, @values([
+  #  FixtureInterface::class,
+  #  FixtureTrait::class,
+  #  FixtureEnum::class
+  #])]
+  public function this_class_is_not_subtype_of($type) {
+    $this->assertFalse((new TypeMirror(self::class))->isSubtypeOf($type));
   }
 
   #[@test]

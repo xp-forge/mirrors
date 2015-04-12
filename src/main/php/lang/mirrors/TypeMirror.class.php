@@ -144,6 +144,17 @@ class TypeMirror extends \lang\Object {
   }
 
   /**
+   * Returns whether this type is a subtype of a given argument
+   *
+   * @param  var $arg Either a TypeMirror or a string
+   * @return bool
+   */
+  public function isSubtypeOf($arg) {
+    $type= $arg instanceof self ? $arg->reflect : strtr($arg, '.', '\\');
+    return $this->reflect->isSubclassOf($type);
+  }
+
+  /**
    * Returns whether a given value is equal to this code unit
    *
    * @param  var $cmp
