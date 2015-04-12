@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Package;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use lang\mirrors\TargetInvocationException;
@@ -23,6 +24,11 @@ class TypeMirrorTest extends \unittest\TestCase {
   #[@test]
   public function comment() {
     $this->assertEquals('Tests TypeMirror', (new TypeMirror(self::class))->comment());
+  }
+
+  #[@test]
+  public function package() {
+    $this->assertEquals(new Package('lang.mirrors.unittest'), (new TypeMirror(self::class))->package());
   }
 
   #[@test]

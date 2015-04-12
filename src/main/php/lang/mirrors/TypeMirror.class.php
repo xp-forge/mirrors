@@ -58,6 +58,9 @@ class TypeMirror extends \lang\Object {
     )));
   }
 
+  /** @return lang.mirrors.Package */
+  public function package() { return new Package($this->reflect->getNamespaceName()); }
+
   /** @return self */
   public function parent() {
     $parent= $this->reflect->getParentClass();
