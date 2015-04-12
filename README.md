@@ -174,7 +174,7 @@ public class lang.mirrors.Constants extends lang.Object implements php.IteratorA
 }
 
 public class lang.mirrors.Constant extends lang.Object {
-  public lang.mirrors.Constant __construct(var $name, var $value)
+  public lang.mirrors.Constant __construct(lang.mirrors.TypeMirror $mirror, string $name, var $value)
 
   public string name()
   public var value()
