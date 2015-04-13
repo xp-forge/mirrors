@@ -101,9 +101,7 @@ class TypeMirror extends \lang\Object {
   }
 
   /** @return lang.mirrors.Constructor */
-  public function constructor() {
-    return new Constructor($this);
-  }
+  public function constructor() { return new Constructor($this); }
 
   /** @return lang.mirrors.Methods */
   public function methods() { return $this->methods; }
