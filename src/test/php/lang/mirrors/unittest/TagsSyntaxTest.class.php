@@ -11,9 +11,6 @@ use lang\mirrors\parse\ReferenceTypeRef;
 use lang\Type;
 use lang\Primitive;
 
-/**
- * Tests TagsSyntax
- */
 class TagsSyntaxTest extends \unittest\TestCase {
 
   /**
