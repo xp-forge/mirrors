@@ -29,7 +29,7 @@ class ReferenceTypeRef extends Resolveable {
    * @return var
    */
   public function resolve($type) {
-    return new XPClass($type->resolve($this->name)->reflect);
+    return XPClass::forName($type->resolve($this->name)->name());
   }
 
   /**

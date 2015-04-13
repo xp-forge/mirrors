@@ -23,20 +23,19 @@ class TypeMirror extends \lang\Object {
   /**
    * Creates a new mirrors instance
    *
-   * @param  var $arg Either a php.ReflectionClass or a string with the FQCN
+   * @param  var $arg Either a php.ReflectionClass, an XPClass instance or a string with the FQCN
+   * @param  lang.mirrors.Sources $source
    * @throws lang.ClassNotFoundException
    */
-  public function __construct($arg) {
+  public function __construct($arg, Sources $source= null) {
     if ($arg instanceof \ReflectionClass) {
-      $this->reflect= $arg;
+      $this->reflect= new FromReflection($arg);
     } else if ($arg instanceof XPClass) {
-      $this->reflect= $arg->_reflect;
+      $this->reflect= new FromReflection($arg->_reflect);
+    } else if (null === $source) {
+      $this->reflect= Sources::$REFLECTION->reflect($arg);
     } else {
-      try {
-        $this->reflect= new \ReflectionClass(strtr($arg, '.', '\\'));
-      } catch (\Exception $e) {
-        throw new ClassNotFoundException($arg);
-      }
+      $this->reflect= $source->reflect($arg);
     }
 
     $this->methods= new Methods($this);
@@ -45,7 +44,7 @@ class TypeMirror extends \lang\Object {
   }
 
   /** @return string */
-  public function name() { return strtr($this->reflect->getName(), '\\', '.'); }
+  public function name() { return $this->reflect->typeName(); }
 
   /** @return string */
   public function declaration() { return $this->reflect->getShortName(); }
@@ -167,7 +166,7 @@ class TypeMirror extends \lang\Object {
    * @return bool
    */
   public function isSubtypeOf($arg) {
-    $type= $arg instanceof self ? $arg->reflect : strtr($arg, '.', '\\');
+    $type= $arg instanceof self ? $arg->reflect->name : strtr($arg, '.', '\\');
     return $this->reflect->isSubclassOf($type);
   }
 
