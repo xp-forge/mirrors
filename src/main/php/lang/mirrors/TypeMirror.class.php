@@ -32,6 +32,8 @@ class TypeMirror extends \lang\Object {
       $this->reflect= new FromReflection($arg);
     } else if ($arg instanceof XPClass) {
       $this->reflect= new FromReflection($arg->_reflect);
+    } else if ($arg instanceof Source) {
+      $this->reflect= $arg;
     } else if (null === $source) {
       $this->reflect= Sources::$REFLECTION->reflect($arg);
     } else {
@@ -47,7 +49,7 @@ class TypeMirror extends \lang\Object {
   public function name() { return $this->reflect->typeName(); }
 
   /** @return string */
-  public function declaration() { return $this->reflect->getShortName(); }
+  public function declaration() { return $this->reflect->typeDeclaration(); }
 
   /** @return string */
   public function comment() {
@@ -64,7 +66,7 @@ class TypeMirror extends \lang\Object {
 
   /** @return self */
   public function parent() {
-    $parent= $this->reflect->getParentClass();
+    $parent= $this->reflect->typeParent();
     return $parent ? new self($parent) : null;
   }
 

@@ -19,7 +19,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function object_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'name' => 'Object', 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Object', 'annotations' => null]),
       $this->parse('<?php class Object { }')
     );
   }
@@ -33,6 +33,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
         [
           'kind'        => 'class',
           'name'        => 'IntegrationTest',
+          'parent'      => '\unittest\TestCase',
           'annotations' => null,
           'field' => [
             '$fixture' => [

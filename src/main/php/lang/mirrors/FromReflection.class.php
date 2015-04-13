@@ -9,7 +9,11 @@ class FromReflection extends \lang\Object implements Source {
     $this->name= $reflect->getName();
   }
 
+  /** @return string */
   public function typeName() { return strtr($this->name, '\\', '.'); }
+
+  /** @return string */
+  public function typeDeclaration() { return $this->reflect->getShortName(); }
 
   public function typeParent() {
     $parent= $this->reflect->getParentClass();
@@ -18,5 +22,9 @@ class FromReflection extends \lang\Object implements Source {
 
   public function __call($name, $args) {
     return $this->reflect->{$name}(...$args);
+  }
+
+  public function equals($cmp) {
+    return $cmp instanceof self && $this->name === $cmp->name;
   }
 }
