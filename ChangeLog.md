@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.2.1 / 2015-04-13
+
 * Fixed `new T(...)` inside annotations not creating instances - @thekid
 * Fixed issue #9: GenericTypeRef broken - @thekid
 
