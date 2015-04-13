@@ -17,6 +17,11 @@ class TypeMirrorAnnotationsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function does_not_provide_non_existant() {
+    $this->assertFalse($this->fixture->annotations()->provides('does-not-exist'));
+  }
+
+  #[@test]
   public function annotation_named() {
     $this->assertInstanceOf('lang.mirrors.Annotation', $this->fixture->annotations()->named('fixture'));
   }
