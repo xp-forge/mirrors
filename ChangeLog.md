@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed `new T(...)` inside annotations not creating instances - @thekid
+* Fixed issue #9: GenericTypeRef broken - @thekid
+
 ## 0.2.0 / 2015-04-13
 
 * Implemented `toString()` and string casts for Annotation instances
