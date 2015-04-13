@@ -18,6 +18,11 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function does_not_provide_non_existant() {
+    $this->assertFalse($this->fixture->fields()->provides('does-not-exist'));
+  }
+
+  #[@test]
   public function field_named() {
     $this->assertInstanceOf('lang.mirrors.Field', $this->fixture->fields()->named('publicInstanceField'));
   }

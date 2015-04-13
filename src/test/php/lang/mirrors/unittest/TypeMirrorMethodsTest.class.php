@@ -18,6 +18,11 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function does_not_provide_non_existant() {
+    $this->assertFalse($this->fixture->methods()->provides('does-not-exist'));
+  }
+
+  #[@test]
   public function does_not_provide_constructor() {
     $this->assertFalse($this->fixture->methods()->provides('__construct'));
   }

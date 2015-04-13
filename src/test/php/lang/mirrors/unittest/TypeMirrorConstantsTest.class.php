@@ -17,6 +17,11 @@ class TypeMirrorConstantsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function does_not_provide_non_existant() {
+    $this->assertFalse($this->fixture->constants()->provides('does-not-exist'));
+  }
+
+  #[@test]
   public function constant_named() {
     $this->assertInstanceOf('lang.mirrors.Constant', $this->fixture->constants()->named('CONSTANT'));
   }
