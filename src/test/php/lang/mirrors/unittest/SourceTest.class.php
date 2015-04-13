@@ -64,6 +64,16 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function typeModifiers_of_final() {
+    $this->assertEquals(new Modifiers('public final'), $this->reflect(FixtureFinal::class)->typeModifiers());
+  }
+
+  #[@test]
+  public function typeModifiers_of_enum() {
+    $this->assertEquals(new Modifiers('public'), $this->reflect(FixtureEnum::class)->typeModifiers());
+  }
+
+  #[@test]
   public function typeModifiers_of_interface() {
     $this->assertEquals(new Modifiers('public'), $this->reflect(FixtureInterface::class)->typeModifiers());
   }
