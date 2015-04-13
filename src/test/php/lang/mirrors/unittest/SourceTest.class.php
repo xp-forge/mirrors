@@ -1,5 +1,6 @@
 <?php namespace lang\mirrors\unittest;
 
+#[@fixture]
 abstract class SourceTest extends \unittest\TestCase {
 
   /**
@@ -33,5 +34,15 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function typeParent_of_parentless_class() {
     $this->assertNull($this->reflect(AbstractMemberFixture::class)->typeParent());
+  }
+
+  #[@test]
+  public function typeAnnotations_of_this_class() {
+    $this->assertEquals([null => ['fixture' => null]], $this->reflect(self::class)->typeAnnotations());
+  }
+
+  #[@test]
+  public function typeAnnotations_of_annotationless_class() {
+    $this->assertNull($this->reflect(AbstractMemberFixture::class)->typeAnnotations());
   }
 }

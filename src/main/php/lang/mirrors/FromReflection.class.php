@@ -1,7 +1,11 @@
 <?php namespace lang\mirrors;
 
+use lang\mirrors\parse\ClassSyntax;
+use lang\mirrors\parse\ClassSource;
+
 class FromReflection extends \lang\Object implements Source {
   private $reflect;
+  private $unit= null;
   public $name;
 
   public function __construct(\ReflectionClass $reflect) {
@@ -23,6 +27,17 @@ class FromReflection extends \lang\Object implements Source {
     return $parent ? new self($parent) : null;
   }
 
+  public function unit() {
+    if (null === $this->unit) {
+      $this->unit= (new ClassSyntax())->parse(new ClassSource($this->typeName()));
+    }
+    return $this->unit;
+  }
+
+  /** @return var */
+  public function typeAnnotations() {
+    return $this->unit()->declaration()['annotations'];
+  }
 
   public function __call($name, $args) {
     return $this->reflect->{$name}(...$args);

@@ -29,6 +29,9 @@ class FromCode extends \lang\Object implements Source {
     return $parent ? new self($this->resolve($parent)) : null;
   }
 
+  /** @return var */
+  public function typeAnnotations() { return $this->decl['annotations']; }
+
   private function resolve($name) {
     if ('\\' === $name{0}) {
       return strtr(substr($name, 1), '\\', '.');
