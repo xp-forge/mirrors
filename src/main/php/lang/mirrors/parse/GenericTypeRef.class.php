@@ -3,9 +3,18 @@
 use lang\XPClass;
 use util\Objects;
 
+/**
+ * References a generic type
+ *
+ * @test   xp://lang.mirrors.unittest.GenericTypeRefTest
+ */
 class GenericTypeRef extends Resolveable {
   private $base, $arguments;
 
+  /**
+   * @param  lang.mirrors.parse.ReferenceTypeRef $base
+   * @param  lang.mirrors.parse.TypeRef[] $arguments
+   */
   public function __construct($base, $arguments) {
     $this->base= $base;
     $this->arguments= $arguments;
@@ -18,7 +27,9 @@ class GenericTypeRef extends Resolveable {
    * @return var
    */
   public function resolve($type) {
-    return new FunctionType(/*X*/);
+    $base= $this->base->resolve($type);
+    $arguments= array_map(function($arg) use($type) { return $arg->resolve($type); }, $this->arguments);
+    return $base->newGenericType($arguments);
   }
 
   /**
