@@ -20,6 +20,9 @@ class FromCode extends \lang\Object implements Source {
   public function typeDeclaration() { return $this->unit->declaration()['name']; }
 
   /** @return string */
+  public function packageName() { return $this->unit->package(); }
+
+  /** @return string */
   public function typeParent() {
     $parent= $this->unit->declaration()['parent'];
     return $parent ? new self($this->resolve($parent)) : null;

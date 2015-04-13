@@ -15,10 +15,14 @@ class FromReflection extends \lang\Object implements Source {
   /** @return string */
   public function typeDeclaration() { return $this->reflect->getShortName(); }
 
+  /** @return string */
+  public function packageName() { return strtr($this->reflect->getNamespaceName(), '\\', '.'); }
+
   public function typeParent() {
     $parent= $this->reflect->getParentClass();
     return $parent ? new self($parent) : null;
   }
+
 
   public function __call($name, $args) {
     return $this->reflect->{$name}(...$args);

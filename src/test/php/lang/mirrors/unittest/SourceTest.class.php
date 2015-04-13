@@ -21,6 +21,11 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function packageName() {
+    $this->assertEquals('lang.mirrors.unittest', $this->reflect(self::class)->packageName());
+  }
+
+  #[@test]
   public function typeParent_of_this_class() {
     $this->assertEquals($this->reflect(parent::class), $this->reflect(self::class)->typeParent());
   }
