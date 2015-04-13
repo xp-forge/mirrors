@@ -2,9 +2,19 @@
 
 use util\Objects;
 
+/**
+ * Represents key/value pairs
+ *
+ * @test  xp://lang.mirrors.unittest.PairsTest
+ */
 class Pairs extends Resolveable {
   private $backing;
 
+  /**
+   * Creates a new instance
+   *
+   * @param  [:lang.mirrors.parse.Resolveable] $value
+   */
   public function __construct($value) {
     $this->backing= $value;
   }
