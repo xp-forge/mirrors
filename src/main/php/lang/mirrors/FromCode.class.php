@@ -34,7 +34,11 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
-    return new Modifiers(array_merge(['public'], $this->decl['modifiers']));
+    if ('trait' === $this->decl['kind']) {
+      return new Modifiers(Modifiers::IS_PUBLIC | Modifiers::IS_ABSTRACT);
+    } else {
+      return new Modifiers(array_merge(['public'], $this->decl['modifiers']));
+    }
   }
 
   private function resolve($name) {

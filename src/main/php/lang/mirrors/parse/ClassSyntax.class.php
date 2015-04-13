@@ -61,8 +61,12 @@ class ClassSyntax extends \text\parse\Syntax {
             T_CLASS     => new Sequence([new Token(T_STRING), new Optional(new Apply('parent')), new Tokens(T_STRING, T_NS_SEPARATOR, T_IMPLEMENTS), new Apply('type')], function($values) {
               return array_merge(['kind' => $values[0], 'parent' => $values[2], 'name' => $values[1]], $values[4]);
             }),
-            T_INTERFACE => new Returns(T_INTERFACE),
-            T_TRAIT     => new Returns(T_TRAIT)
+            T_INTERFACE => new Sequence([new Token(T_STRING), new Apply('type')], function($values) {
+              return array_merge(['kind' => $values[0], 'name' => $values[1]], $values[2]);
+            }),
+            T_TRAIT     => new Sequence([new Token(T_STRING), new Apply('type')], function($values) {
+              return array_merge(['kind' => $values[0], 'name' => $values[1]], $values[2]);
+            }),
           ])
         ],
         function($values) { return array_merge($values[2], ['modifiers' => $values[1], 'annotations' => $values[0]]); }

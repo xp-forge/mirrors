@@ -52,4 +52,19 @@ abstract class SourceTest extends \unittest\TestCase {
   public function typeModifiers() {
     $this->assertEquals(new Modifiers('public abstract'), $this->reflect(self::class)->typeModifiers());
   }
+
+  #[@test]
+  public function typeModifiers_of_trait() {
+    $this->assertEquals(new Modifiers('public abstract'), $this->reflect(FixtureTrait::class)->typeModifiers());
+  }
+
+  #[@test]
+  public function typeModifiers_of_abstract() {
+    $this->assertEquals(new Modifiers('public abstract'), $this->reflect(FixtureAbstract::class)->typeModifiers());
+  }
+
+  #[@test]
+  public function typeModifiers_of_interface() {
+    $this->assertEquals(new Modifiers('public'), $this->reflect(FixtureInterface::class)->typeModifiers());
+  }
 }

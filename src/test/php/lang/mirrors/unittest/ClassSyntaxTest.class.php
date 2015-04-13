@@ -25,6 +25,22 @@ class ClassSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function serializable_interface() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'interface', 'name' => 'Serializable', 'modifiers' => [], 'annotations' => null]),
+      $this->parse('<?php interface Serializable { }')
+    );
+  }
+
+  #[@test]
+  public function creation_trait() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'trait', 'name' => 'Creation', 'modifiers' => [], 'annotations' => null]),
+      $this->parse('<?php trait Creation { }')
+    );
+  }
+
+  #[@test]
   public function abstract_class() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),
