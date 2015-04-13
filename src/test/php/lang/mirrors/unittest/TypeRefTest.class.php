@@ -1,17 +1,10 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\TypeRef;
 use lang\Primitive;
 use lang\Type;
 
-class TypeRefTest extends \unittest\TestCase {
-  private $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(__CLASS__);
-  }
+class TypeRefTest extends ResolveableTest {
 
   #[@test, @values([[Primitive::$INT], [Primitive::$BOOL], [Primitive::$DOUBLE], [Primitive::$STRING]])]
   public function primitives($primitive) {

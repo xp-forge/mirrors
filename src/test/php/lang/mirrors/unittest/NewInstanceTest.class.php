@@ -1,16 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\NewInstance;
 use lang\mirrors\parse\Value;
 
-class NewInstanceTest extends \unittest\TestCase {
-  private $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(__CLASS__);
-  }
+class NewInstanceTest extends ResolveableTest {
 
   #[@test]
   public function resolved() {

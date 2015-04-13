@@ -1,16 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\Value;
 use lang\mirrors\parse\ArrayExpr;
 
-class ArrayExprTest extends \unittest\TestCase {
-  private $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(__CLASS__);
-  }
+class ArrayExprTest extends ResolveableTest {
 
   #[@test]
   public function resolve_resolves_values_in_array_backing() {

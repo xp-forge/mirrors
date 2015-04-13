@@ -1,16 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\Pairs;
 use lang\mirrors\parse\Value;
 
-class PairsTest extends \unittest\TestCase {
-  private $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(__CLASS__);
-  }
+class PairsTest extends ResolveableTest {
 
   #[@test]
   public function empty_pairs() {

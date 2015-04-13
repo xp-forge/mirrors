@@ -1,17 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\ReferenceTypeRef;
-use lang\ReferenceType;
 use lang\XPClass;
 
-class ReferenceTypeRefTest extends \unittest\TestCase {
-  private $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(__CLASS__);
-  }
+class ReferenceTypeRefTest extends ResolveableTest {
 
   #[@test]
   public function fully_qualified_class_name() {
@@ -24,8 +16,8 @@ class ReferenceTypeRefTest extends \unittest\TestCase {
   #[@test]
   public function looks_up_unqualified_class_names_in_imports() {
     $this->assertEquals(
-      XPClass::forName('lang.mirrors.TypeMirror'),
-      (new ReferenceTypeRef('TypeMirror'))->resolve($this->type)
+      XPClass::forName('lang.XPClass'),
+      (new ReferenceTypeRef('XPClass'))->resolve($this->type)
     );
   }
 

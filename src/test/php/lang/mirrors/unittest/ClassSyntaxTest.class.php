@@ -4,9 +4,6 @@ use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\CodeUnit;
 use lang\mirrors\parse\Value;
 
-/**
- * Tests ClassSyntax
- */
 class ClassSyntaxTest extends \unittest\TestCase {
 
   /**

@@ -1,18 +1,11 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\MapTypeRef;
 use lang\mirrors\parse\TypeRef;
 use lang\MapType;
 use lang\Type;
 
-class MapTypeRefTest extends \unittest\TestCase {
-  private $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(__CLASS__);
-  }
+class MapTypeRefTest extends ResolveableTest {
 
   #[@test]
   public function component_type_resolved() {

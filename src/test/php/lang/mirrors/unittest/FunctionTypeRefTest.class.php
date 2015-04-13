@@ -1,19 +1,12 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\FunctionTypeRef;
 use lang\mirrors\parse\TypeRef;
 use lang\FunctionType;
 use lang\Type;
 use lang\Primitive;
 
-class FunctionTypeRefTest extends \unittest\TestCase {
-  private $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(__CLASS__);
-  }
+class FunctionTypeRefTest extends ResolveableTest {
 
   #[@test]
   public function empty_parameter_list() {

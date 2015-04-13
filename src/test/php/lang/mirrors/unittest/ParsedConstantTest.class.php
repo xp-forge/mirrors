@@ -1,16 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\Constant;
 use lang\ElementNotFoundException;
 
-class ParsedConstantTest extends \unittest\TestCase {
-  private $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(__CLASS__);
-  }
+class ParsedConstantTest extends ResolveableTest {
 
   #[@test, @values([['true', true], ['false', false], ['null', null]])]
   public function resolve_looks_up_special($name, $value) {
