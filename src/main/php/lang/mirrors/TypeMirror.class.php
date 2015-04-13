@@ -113,21 +113,7 @@ class TypeMirror extends \lang\Object {
   public function constants() { return $this->constants; }
 
   /** @return lang.mirrors.Modifiers */
-  public function modifiers() {
-
-    // HHVM and PHP differ in this. We'll handle traits as *always* abstract (needs
-    // to be implemented) and *never* final (couldn't be implemented otherwise).
-    if ($this->reflect->isTrait()) {
-      return new Modifiers(Modifiers::IS_PUBLIC | Modifiers::IS_ABSTRACT);
-    } else {
-      $r= Modifiers::IS_PUBLIC;
-      $m= $this->reflect->getModifiers();
-      $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
-      $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
-      $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
-      return new Modifiers($r);
-    }
-  }
+  public function modifiers() { return $this->reflect->typeModifiers(); }
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
@@ -148,7 +134,7 @@ class TypeMirror extends \lang\Object {
       return $this->parent();
     } else if (strstr($name, '\\') || strstr($name, '.')) {
       return new self($name);
-    } else if ($name === $this->reflect->getShortName()) {
+    } else if ($name === $this->reflect->typeDeclaration()) {
       return $this;
     } else {
       $unit= $this->unit();

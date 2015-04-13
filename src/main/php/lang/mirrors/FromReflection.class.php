@@ -39,6 +39,23 @@ class FromReflection extends \lang\Object implements Source {
     return $this->unit()->declaration()['annotations'];
   }
 
+  /** @return lang.mirrors.Modifiers */
+  public function typeModifiers() {
+
+    // HHVM and PHP differ in this. We'll handle traits as *always* abstract (needs
+    // to be implemented) and *never* final (couldn't be implemented otherwise).
+    if ($this->reflect->isTrait()) {
+      return new Modifiers(Modifiers::IS_PUBLIC | Modifiers::IS_ABSTRACT);
+    } else {
+      $r= Modifiers::IS_PUBLIC;
+      $m= $this->reflect->getModifiers();
+      $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
+      $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
+      $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
+      return new Modifiers($r);
+    }
+  }
+
   public function __call($name, $args) {
     return $this->reflect->{$name}(...$args);
   }

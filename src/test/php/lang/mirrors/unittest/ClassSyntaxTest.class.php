@@ -19,8 +19,24 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function object_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Object', 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Object', 'modifiers' => [], 'annotations' => null]),
       $this->parse('<?php class Object { }')
+    );
+  }
+
+  #[@test]
+  public function abstract_class() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),
+      $this->parse('<?php abstract class Test { }')
+    );
+  }
+
+  #[@test]
+  public function final_class() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Test', 'modifiers' => ['final'], 'annotations' => null]),
+      $this->parse('<?php final class Test { }')
     );
   }
 
@@ -34,6 +50,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
           'kind'        => 'class',
           'name'        => 'IntegrationTest',
           'parent'      => '\unittest\TestCase',
+          'modifiers'   => [],
           'annotations' => null,
           'field' => [
             '$fixture' => [

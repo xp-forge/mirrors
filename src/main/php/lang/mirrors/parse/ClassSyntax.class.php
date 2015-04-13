@@ -65,7 +65,7 @@ class ClassSyntax extends \text\parse\Syntax {
             T_TRAIT     => new Returns(T_TRAIT)
           ])
         ],
-        function($values) { return array_merge($values[2], ['annotations' => $values[0]]); }
+        function($values) { return array_merge($values[2], ['modifiers' => $values[1], 'annotations' => $values[0]]); }
       ),
       'parent' => new Sequence(
         [new Token(T_EXTENDS), $typeName],

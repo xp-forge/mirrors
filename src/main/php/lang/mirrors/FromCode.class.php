@@ -32,6 +32,11 @@ class FromCode extends \lang\Object implements Source {
   /** @return var */
   public function typeAnnotations() { return $this->decl['annotations']; }
 
+  /** @return lang.mirrors.Modifiers */
+  public function typeModifiers() {
+    return new Modifiers(array_merge(['public'], $this->decl['modifiers']));
+  }
+
   private function resolve($name) {
     if ('\\' === $name{0}) {
       return strtr(substr($name, 1), '\\', '.');

@@ -1,5 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
+use lang\mirrors\Modifiers;
+
 #[@fixture]
 abstract class SourceTest extends \unittest\TestCase {
 
@@ -44,5 +46,10 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function typeAnnotations_of_annotationless_class() {
     $this->assertNull($this->reflect(AbstractMemberFixture::class)->typeAnnotations());
+  }
+
+  #[@test]
+  public function typeModifiers() {
+    $this->assertEquals(new Modifiers('public abstract'), $this->reflect(self::class)->typeModifiers());
   }
 }
