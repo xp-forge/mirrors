@@ -11,6 +11,10 @@ class FromCode extends \lang\Object implements Source {
     $this->decl= $this->unit->declaration();
   }
 
+  public function codeUnit() {
+    return $this->unit;
+  }
+
   /** @return string */
   public function typeName() { 
     $package= $this->unit->package();
@@ -38,6 +42,19 @@ class FromCode extends \lang\Object implements Source {
       return new Modifiers(Modifiers::IS_PUBLIC | Modifiers::IS_ABSTRACT);
     } else {
       return new Modifiers(array_merge(['public'], $this->decl['modifiers']));
+    }
+  }
+
+  /** @return lang.mirrors.Kind */
+  public function typeKind() {
+    if ('trait' === $this->decl['kind']) {
+      return Kind::$TRAIT;
+    } else if ('interface' === $this->decl['kind']) {
+      return Kind::$INTERFACE;
+    } else if ('lang.Enum' === $this->resolve($this->decl['parent'])) {
+      return Kind::$ENUM;
+    } else {
+      return Kind::$CLASS;
     }
   }
 

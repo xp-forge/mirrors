@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\Modifiers;
+use lang\mirrors\Kind;
 
 #[@fixture]
 abstract class SourceTest extends \unittest\TestCase {
@@ -76,5 +77,25 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function typeModifiers_of_interface() {
     $this->assertEquals(new Modifiers('public'), $this->reflect(FixtureInterface::class)->typeModifiers());
+  }
+
+  #[@test]
+  public function typeKind() {
+    $this->assertEquals(Kind::$CLASS, $this->reflect(self::class)->typeKind());
+  }
+
+  #[@test]
+  public function typeKind_of_trait() {
+    $this->assertEquals(Kind::$TRAIT, $this->reflect(FixtureTrait::class)->typeKind());
+  }
+
+  #[@test]
+  public function typeKind_of_enum() {
+    $this->assertEquals(Kind::$ENUM, $this->reflect(FixtureEnum::class)->typeKind());
+  }
+
+  #[@test]
+  public function typeKind_of_interface() {
+    $this->assertEquals(Kind::$INTERFACE, $this->reflect(FixtureInterface::class)->typeKind());
   }
 }

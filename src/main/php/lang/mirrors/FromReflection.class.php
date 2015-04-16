@@ -2,6 +2,7 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
+use lang\Enum;
 
 class FromReflection extends \lang\Object implements Source {
   private $reflect;
@@ -13,6 +14,13 @@ class FromReflection extends \lang\Object implements Source {
     $this->name= $reflect->getName();
   }
 
+  public function codeUnit() {
+    if (null === $this->unit) {
+      $this->unit= (new ClassSyntax())->parse(new ClassSource($this->typeName()));
+    }
+    return $this->unit;
+  }
+
   /** @return string */
   public function typeName() { return strtr($this->name, '\\', '.'); }
 
@@ -22,21 +30,28 @@ class FromReflection extends \lang\Object implements Source {
   /** @return string */
   public function packageName() { return strtr($this->reflect->getNamespaceName(), '\\', '.'); }
 
+  /** @return self */
   public function typeParent() {
     $parent= $this->reflect->getParentClass();
     return $parent ? new self($parent) : null;
   }
 
-  public function unit() {
-    if (null === $this->unit) {
-      $this->unit= (new ClassSyntax())->parse(new ClassSource($this->typeName()));
-    }
-    return $this->unit;
-  }
-
   /** @return var */
   public function typeAnnotations() {
-    return $this->unit()->declaration()['annotations'];
+    return $this->codeUnit()->declaration()['annotations'];
+  }
+
+  /** @return lang.mirrors.Kind */
+  public function typeKind() {
+    if ($this->reflect->isTrait()) {
+      return Kind::$TRAIT;
+    } else if ($this->reflect->isInterface()) {
+      return Kind::$INTERFACE;
+    } else if ($this->reflect->isSubclassOf(Enum::class)) {
+      return Kind::$ENUM;
+    } else {
+      return Kind::$CLASS;
+    }
   }
 
   /** @return lang.mirrors.Modifiers */

@@ -5,7 +5,6 @@ use lang\mirrors\parse\ClassSource;
 use lang\ClassNotFoundException;
 use lang\IllegalArgumentException;
 use lang\XPClass;
-use lang\Enum;
 
 /**
  * Reference type mirrors
@@ -17,7 +16,6 @@ use lang\Enum;
  */
 class TypeMirror extends \lang\Object {
   private $methods, $fields, $constants;
-  private $kind= null, $unit= null;
   public $reflect;
 
   /**
@@ -77,28 +75,10 @@ class TypeMirror extends \lang\Object {
   public function interfaces() { return new Interfaces($this); }
 
   /** @return lang.mirrors.parse.CodeUnit */
-  public function unit() {
-    if (null === $this->unit) {
-      $this->unit= (new ClassSyntax())->parse(new ClassSource($this->name()));
-    }
-    return $this->unit;
-  }
+  public function unit() { return $this->reflect->codeUnit(); }
 
   /** @return lang.mirrors.Kind */
-  public function kind() {
-    if (null === $this->kind) {
-      if ($this->reflect->isTrait()) {
-        $this->kind= Kind::$TRAIT;
-      } else if ($this->reflect->isInterface()) {
-        $this->kind= Kind::$INTERFACE;
-      } else if ($this->reflect->isSubclassOf(Enum::class)) {
-        $this->kind= Kind::$ENUM;
-      } else {
-        $this->kind= Kind::$CLASS;
-      }
-    }
-    return $this->kind;
-  }
+  public function kind() { return $this->reflect->typeKind(); }
 
   /** @return lang.mirrors.Constructor */
   public function constructor() { return new Constructor($this); }
