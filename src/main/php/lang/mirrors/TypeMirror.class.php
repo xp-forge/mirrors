@@ -108,21 +108,7 @@ class TypeMirror extends \lang\Object {
    * @return self
    */
   public function resolve($name) {
-    if ('self' === $name) {
-      return $this;
-    } else if ('parent' === $name) {
-      return $this->parent();
-    } else if (strstr($name, '\\') || strstr($name, '.')) {
-      return new self($name);
-    } else if ($name === $this->reflect->typeDeclaration()) {
-      return $this;
-    } else {
-      $unit= $this->reflect->codeUnit();
-      foreach ($unit->imports() as $imported) {
-        if (0 === substr_compare($imported, $name, strrpos($imported, '.') + 1)) return new self($imported);
-      }
-      return new self($unit->package().'.'.$name);
-    }
+    return new self($this->reflect->resolve($name));
   }
 
   /**

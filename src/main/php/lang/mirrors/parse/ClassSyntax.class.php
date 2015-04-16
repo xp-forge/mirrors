@@ -55,9 +55,9 @@ class ClassSyntax extends \text\parse\Syntax {
       ]),
       'decl' => new Sequence(
         [
+          new Returns(function($values, $source) { return $source->lastComment(); }),
           new Optional(new Apply('annotations')),
           new Apply('modifiers'),
-          new Returns(function($values, $source) { return $source->lastComment(); }),
           new Match([
             T_CLASS     => new Sequence([new Token(T_STRING), new Optional(new Apply('parent')), new Tokens(T_STRING, T_NS_SEPARATOR, T_IMPLEMENTS), new Apply('type')], function($values) {
               return array_merge(['kind' => $values[0], 'parent' => $values[2], 'name' => $values[1]], $values[4]);
@@ -70,7 +70,7 @@ class ClassSyntax extends \text\parse\Syntax {
             }),
           ])
         ],
-        function($values) { return array_merge($values[3], ['comment' => $values[2], 'modifiers' => $values[1], 'annotations' => $values[0]]); }
+        function($values) { return array_merge($values[3], ['comment' => $values[0], 'modifiers' => $values[2], 'annotations' => $values[1]]); }
       ),
       'parent' => new Sequence(
         [new Token(T_EXTENDS), $typeName],

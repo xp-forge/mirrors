@@ -11,9 +11,8 @@ class FromCode extends \lang\Object implements Source {
     $this->decl= $this->unit->declaration();
   }
 
-  public function codeUnit() {
-    return $this->unit;
-  }
+  /** @return lang.mirrors.parse.CodeUnit */
+  public function codeUnit() { return $this->unit; }
 
   /** @return string */
   public function typeName() { 
@@ -30,7 +29,7 @@ class FromCode extends \lang\Object implements Source {
   /** @return string */
   public function typeParent() {
     $parent= $this->decl['parent'];
-    return $parent ? new self($this->resolve($parent)) : null;
+    return $parent ? $this->resolve($parent) : null;
   }
 
   /** @return string */
@@ -54,18 +53,44 @@ class FromCode extends \lang\Object implements Source {
       return Kind::$TRAIT;
     } else if ('interface' === $this->decl['kind']) {
       return Kind::$INTERFACE;
-    } else if ('lang.Enum' === $this->resolve($this->decl['parent'])) {
+    } else if ('lang.Enum' === $this->resolve0($this->decl['parent'])) {
       return Kind::$ENUM;
     } else {
       return Kind::$CLASS;
     }
   }
 
-  private function resolve($name) {
-    if ('\\' === $name{0}) {
+  /**
+   * Resolves a type name in the context of this reflection source
+   *
+   * @param  string $name
+   * @return string
+   */
+  private function resolve0($name) {
+    if ('self' === $name || $name === $this->decl['name']) {
+      return $this->typeName();
+    } else if ('parent' === $name) {
+      return $this->resolve0($this->decl['parent']);
+    } else if ('\\' === $name{0}) {
       return strtr(substr($name, 1), '\\', '.');
+    } else if (strstr($name, '\\') || strstr($name, '.')) {
+      return strtr($name, '\\', '.');
+    } else {
+      foreach ($this->unit->imports() as $imported) {
+        if (0 === substr_compare($imported, $name, strrpos($imported, '.') + 1)) return $imported;
+      }
+      return $this->unit->package().'.'.$name;
     }
-    throw new \lang\MethodNotImplementedException($name);
+  }
+
+  /**
+   * Resolves a type name in the context of this reflection source
+   *
+   * @param  string $name
+   * @return self
+   */
+  public function resolve($name) {
+    return new self($this->resolve0($name));
   }
 
   public function equals($cmp) {

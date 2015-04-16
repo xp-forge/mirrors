@@ -14,6 +14,7 @@ class FromReflection extends \lang\Object implements Source {
     $this->name= $reflect->getName();
   }
 
+  /** @return lang.mirrors.parse.CodeUnit */
   public function codeUnit() {
     if (null === $this->unit) {
       $this->unit= (new ClassSyntax())->parse(new ClassSource($this->typeName()));
@@ -74,6 +75,29 @@ class FromReflection extends \lang\Object implements Source {
       $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
       $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
       return new Modifiers($r);
+    }
+  }
+
+  /**
+   * Resolves a type name in the context of this reflection source
+   *
+   * @param  string $name
+   * @return self
+   */
+  public function resolve($name) {
+    if ('self' === $name || $name === $this->reflect->getShortName()) {
+      return new self($this->reflect);
+    } else if ('parent' === $name) {
+      return $this->reflect->getParentClass();
+    } else if ('\\' === $name{0}) {
+      return new self(new \ReflectionClass(strtr(substr($name, 1), '.', '\\')));
+    } else if (strstr($name, '\\') || strstr($name, '.')) {
+      return new self(new \ReflectionClass(strtr($name, '.', '\\')));
+    } else {
+      foreach ($this->codeUnit()->imports() as $imported) {
+        if (0 === substr_compare($imported, $name, strrpos($imported, '.') + 1)) return new self(new \ReflectionClass(strtr($imported, '.', '\\')));
+      }
+      return new self(new \ReflectionClass($this->reflect->getNamespaceName().'\\'.$name));
     }
   }
 
