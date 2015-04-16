@@ -38,7 +38,8 @@ class FromReflection extends \lang\Object implements Source {
 
   /** @return string */
   public function typeComment() {
-    return $this->reflect->getDocComment();
+    $comment= $this->reflect->getDocComment();
+    return false === $comment ? null : $comment;
   }
 
   /** @return var */

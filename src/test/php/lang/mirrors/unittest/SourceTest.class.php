@@ -36,6 +36,11 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function typeComment_for_undocumented_class() {
+    $this->assertNull($this->reflect(FixtureTrait::class)->typeComment());
+  }
+
+  #[@test]
   public function packageName() {
     $this->assertEquals('lang.mirrors.unittest', $this->reflect(self::class)->packageName());
   }

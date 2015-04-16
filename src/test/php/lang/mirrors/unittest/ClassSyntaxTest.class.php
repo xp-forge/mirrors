@@ -57,6 +57,14 @@ class ClassSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function documented_class() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => '/** Doc */', 'parent' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null]),
+      $this->parse('<?php /** Doc */ class Test { }')
+    );
+  }
+
+  #[@test]
   public function test_class() {
     $this->assertEquals(
       new CodeUnit(
