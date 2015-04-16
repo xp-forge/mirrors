@@ -51,7 +51,7 @@ class TypeMirror extends \lang\Object {
 
   /** @return string */
   public function comment() {
-    $comment= $this->reflect->getDocComment();
+    $comment= $this->reflect->typeComment();
     return false === $comment ? null : trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
       $comment,
       4,                              // "/**\n"
@@ -117,7 +117,7 @@ class TypeMirror extends \lang\Object {
     } else if ($name === $this->reflect->typeDeclaration()) {
       return $this;
     } else {
-      $unit= $this->unit();
+      $unit= $this->reflect->codeUnit();
       foreach ($unit->imports() as $imported) {
         if (0 === substr_compare($imported, $name, strrpos($imported, '.') + 1)) return new self($imported);
       }

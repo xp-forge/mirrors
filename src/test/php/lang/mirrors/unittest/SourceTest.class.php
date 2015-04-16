@@ -3,6 +3,9 @@
 use lang\mirrors\Modifiers;
 use lang\mirrors\Kind;
 
+/**
+ * Base class for source implementation testing
+ */
 #[@fixture]
 abstract class SourceTest extends \unittest\TestCase {
 
@@ -22,6 +25,14 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function typeDeclaration() {
     $this->assertEquals('SourceTest', $this->reflect(self::class)->typeDeclaration());
+  }
+
+  #[@test]
+  public function typeComment() {
+    $this->assertEquals(
+      "/**\n * Base class for source implementation testing\n */",
+      $this->reflect(self::class)->typeComment()
+    );
   }
 
   #[@test]

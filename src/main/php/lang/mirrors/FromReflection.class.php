@@ -36,6 +36,11 @@ class FromReflection extends \lang\Object implements Source {
     return $parent ? new self($parent) : null;
   }
 
+  /** @return string */
+  public function typeComment() {
+    return $this->reflect->getDocComment();
+  }
+
   /** @return var */
   public function typeAnnotations() {
     return $this->codeUnit()->declaration()['annotations'];

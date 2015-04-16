@@ -19,7 +19,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function object_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Object', 'modifiers' => [], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'name' => 'Object', 'modifiers' => [], 'annotations' => null]),
       $this->parse('<?php class Object { }')
     );
   }
@@ -27,7 +27,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function serializable_interface() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'interface', 'name' => 'Serializable', 'modifiers' => [], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'name' => 'Serializable', 'modifiers' => [], 'annotations' => null]),
       $this->parse('<?php interface Serializable { }')
     );
   }
@@ -35,7 +35,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function creation_trait() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'trait', 'name' => 'Creation', 'modifiers' => [], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'trait', 'comment' => null, 'name' => 'Creation', 'modifiers' => [], 'annotations' => null]),
       $this->parse('<?php trait Creation { }')
     );
   }
@@ -43,7 +43,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function abstract_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),
       $this->parse('<?php abstract class Test { }')
     );
   }
@@ -51,7 +51,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function final_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'parent' => null, 'name' => 'Test', 'modifiers' => ['final'], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'name' => 'Test', 'modifiers' => ['final'], 'annotations' => null]),
       $this->parse('<?php final class Test { }')
     );
   }
@@ -67,6 +67,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
           'name'        => 'IntegrationTest',
           'parent'      => '\unittest\TestCase',
           'modifiers'   => [],
+          'comment'     => null, 
           'annotations' => null,
           'field' => [
             '$fixture' => [

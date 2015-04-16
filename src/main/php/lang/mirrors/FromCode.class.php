@@ -33,6 +33,9 @@ class FromCode extends \lang\Object implements Source {
     return $parent ? new self($this->resolve($parent)) : null;
   }
 
+  /** @return string */
+  public function typeComment() { return $this->decl['comment']; }
+
   /** @return var */
   public function typeAnnotations() { return $this->decl['annotations']; }
 
