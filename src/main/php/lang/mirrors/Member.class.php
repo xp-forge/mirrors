@@ -24,14 +24,26 @@ abstract class Member extends \lang\Object {
   }
 
   /** @return string */
-  public function name() { return $this->reflect->name; }
+  public function name() {
+if (is_array($this->reflect)) {
+  return $this->reflect['name'];
+}
+    return $this->reflect->name; }
 
   /** @return lang.mirrors.Modifiers */
-  public function modifiers() { return new Modifiers($this->reflect->getModifiers() & ~0x1fb7f008); }
+  public function modifiers() {
+if (is_array($this->reflect)) {
+  return new Modifiers($this->reflect['access']);
+}
+   return new Modifiers($this->reflect->getModifiers() & ~0x1fb7f008); }
 
   /** @return string */
   public function comment() {
+if (is_array($this->reflect)) {
+    $raw= $this->reflect['comment']();
+} else {
     $raw= $this->reflect->getDocComment();
+}
     if (false === $raw) {
       return null;
     } else {
@@ -51,7 +63,12 @@ abstract class Member extends \lang\Object {
    */
   public function tags() {
     if (null === $this->tags) {
-      if ($raw= $this->reflect->getDocComment()) {
+if (is_array($this->reflect)) {
+    $raw= $this->reflect['comment']();
+} else {
+    $raw= $this->reflect->getDocComment();
+}
+      if ($raw) {
         $parsed= (new TagsSyntax())->parse(new TagsSource(preg_replace('/\n\s+\* ?/', "\n", substr(
           $raw,
           strpos($raw, '* @') + 2,    // position of first details token
@@ -70,6 +87,9 @@ abstract class Member extends \lang\Object {
    * @return lang.mirrors.TypeMirror
    */
   public function declaredIn() { 
+    if (is_array($this->reflect)) {
+      return $this->mirror->resolve($this->reflect['holder']);
+    }
     $declaring= $this->reflect->getDeclaringClass();
     if ($declaring->name === $this->mirror->reflect->name) {
       return $this->mirror;
@@ -95,9 +115,11 @@ abstract class Member extends \lang\Object {
    * @return bool
    */
   public function equals($cmp) {
+    $thisDecl= is_array($this->reflect) ? $this->reflect['holder'] : $this->reflect->getDeclaringClass()->name;
+    $cmpDecl= is_array($cmp->reflect) ? $cmp->reflect['holder'] : $cmp->reflect->getDeclaringClass()->name;
     return $cmp instanceof self && (
       $this->name === $cmp->name &&
-      $this->reflect->getDeclaringClass()->name === $cmp->reflect->getDeclaringClass()->name
+      $thisDecl === $cmpDecl
     );
   }
 

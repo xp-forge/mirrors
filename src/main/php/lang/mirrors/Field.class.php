@@ -21,17 +21,20 @@ class Field extends Member {
    * @throws lang.IllegalArgumentException If there is no such field
    */
   public function __construct($mirror, $arg) {
-    if ($arg instanceof \ReflectionProperty) {
+    if (is_array($arg)) {
       $reflect= $arg;
+    } else if ($arg instanceof \ReflectionProperty) {
+      $reflect= $arg;
+      $reflect->setAccessible(true);
     } else {
       try {
         $reflect= $mirror->reflect->getProperty($arg);
       } catch (\Exception $e) {
         throw new IllegalArgumentException('No field named $'.$arg.' in '.$mirror->name());
       }
+      $reflect->setAccessible(true);
     }
     parent::__construct($mirror, $reflect);
-    $reflect->setAccessible(true);
   }
 
   /**
@@ -58,6 +61,9 @@ class Field extends Member {
    * @throws lang.IllegalArgumentException
    */
   public function read(Generic $instance= null) {
+if (is_array($this->reflect)) {
+  return $this->mirror->reflect->readField($this->reflect['value'], $instance);
+}
     if ($this->reflect->isStatic()) {
       return $this->reflect->getValue(null);
     } else if ($instance && $this->reflect->getDeclaringClass()->isInstance($instance)) {
@@ -79,6 +85,9 @@ class Field extends Member {
    * @throws lang.IllegalArgumentException
    */
   public function modify(Generic $instance= null, $value) {
+if (is_array($this->reflect)) {
+  return $this->mirror->reflect->modifyField($this->reflect['value'], $instance, $value);
+}
     if ($this->reflect->isStatic()) {
       $this->reflect->setValue(null, $value);
       return;
@@ -95,6 +104,10 @@ class Field extends Member {
 
   /** @return string */
   public function __toString() {
+    try {
     return $this->modifiers()->names().' '.$this->type().' $'.$this->name();
+  } catch (\Exception $e) {
+    echo $e->getMessage();
+  }
   }
 }

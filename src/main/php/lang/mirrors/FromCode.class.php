@@ -66,6 +66,26 @@ class FromCode extends \lang\Object implements Source {
   /** @return bool */
   public function hasField($name) { return isset($this->decl['field']['$'.$name]); }
 
+  /** @return php.Generator */
+  public function allFields() {
+    $decl= $this->decl;
+    do {
+      foreach ($decl['field'] as $name => $field) {
+        yield substr($name, 1) => $field;
+      }
+
+      if (null === $decl['parent']) break;
+      $decl= (new ClassSyntax())->parse(new ClassSource($this->resolve0($decl['parent'])))->declaration();
+    } while ($decl);
+  }
+
+  /** @return php.Generator */
+  public function declaredFields() {
+    foreach ($this->decl['field'] as $name => $field) {
+      yield substr($name, 1) => $field;
+    }
+  }
+
   /** @return bool */
   public function hasConstant($name) { return isset($this->decl['const'][$name]); }
 

@@ -3,6 +3,7 @@
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
 use lang\Enum;
+use lang\IllegalArgumentException;
 
 class FromReflection extends \lang\Object implements Source {
   private $reflect;
@@ -83,6 +84,74 @@ class FromReflection extends \lang\Object implements Source {
 
   /** @return bool */
   public function hasField($name) { return $this->reflect->hasProperty($name); }
+
+  /**
+   * Maps a field
+   *
+   * @param  php.ReflectionProperty $reflect
+   * @return [:var]
+   */
+  private function field($reflect) {
+    $reflect->setAccessible(true);
+    return [
+      'name'    => $reflect->name,
+      'access'  => $reflect->getModifiers() & ~0x1fb7f008,
+      'holder'  => $reflect->getDeclaringClass()->name,
+      'comment' => function() use($reflect) { return $reflect->getDocComment(); },
+      'value'   => $reflect
+    ];
+  }
+
+  /**
+   * Reads a field
+   */
+  public function readField($reflect, $instance) {
+    if ($reflect->isStatic()) {
+      return $reflect->getValue(null);
+    } else if ($instance && $reflect->getDeclaringClass()->isInstance($instance)) {
+      return $reflect->getValue($instance);
+    }
+    throw new IllegalArgumentException(sprintf(
+      'Verifying %s(): Object passed is not an instance of the class declaring this field',
+      $reflect->name
+    ));
+  }
+
+  /**
+   * Modifies a field
+   */
+  public function modifyField($reflect, $instance, $value) {
+    if ($reflect->isStatic()) {
+      $reflect->setValue(null, $value);
+      return;
+    } else if ($instance && $reflect->getDeclaringClass()->isInstance($instance)) {
+      $reflect->setValue($instance, $value);
+      return;
+    }
+
+    throw new IllegalArgumentException(sprintf(
+      'Verifying %s(): Object passed is not an instance of the class declaring this field',
+      $reflect->name
+    ));
+  }
+
+  /** @return [:var] */
+  public function fieldNamed($name) { return $this->field($this->reflect->getProperty($name)); }
+
+  /** @return php.Generator */
+  public function allFields() {
+    foreach ($this->reflect->getProperties() as $field) {
+      yield $field->name => $this->field($field);
+    }
+  }
+
+  /** @return php.Generator */
+  public function declaredFields() {
+    foreach ($this->reflect->getProperties() as $field) {
+      if ($field->getDeclaringClass()->name !== $this->reflect->name) continue;
+      yield $field->name => $this->field($field);
+    }
+  }
 
   /** @return bool */
   public function hasConstant($name) { return $this->reflect->hasConstant($name); }

@@ -34,7 +34,7 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    */
   public function named($name) {
     if ($this->provides($name)) {
-      return new Field($this->mirror, $this->mirror->reflect->getProperty($name));
+      return new Field($this->mirror, $this->mirror->reflect->fieldNamed($name));
     }
     throw new ElementNotFoundException('No field $'.$name.' in '.$this->mirror->name());
   }
@@ -45,8 +45,8 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
-    foreach ($this->mirror->reflect->getProperties() as $field) {
-      if (0 === strncmp('__', $field->name, 2)) continue;
+    foreach ($this->mirror->reflect->allFields() as $name => $field) {
+      if (0 === strncmp('__', $name, 2)) continue;
       yield new Field($this->mirror, $field);
     }
   }
@@ -57,8 +57,8 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function declared() {
-    foreach ($this->mirror->reflect->getProperties() as $field) {
-      if (0 === strncmp('__', $field->name, 2) || $field->getDeclaringClass()->name !== $this->mirror->reflect->name) continue;
+    foreach ($this->mirror->reflect->declaredFields() as $name => $field) {
+      if (0 === strncmp('__', $name, 2)) continue;
       yield new Field($this->mirror, $field);
     }
   }

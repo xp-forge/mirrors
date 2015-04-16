@@ -139,4 +139,20 @@ abstract class SourceTest extends \unittest\TestCase {
   public function has_constant() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasConstant('CONSTANT'));
   }
+
+  #[@test]
+  public function fields() {
+    $this->assertEquals(
+      [
+        'publicInstanceField',
+        'protectedInstanceField',
+        'privateInstanceField',
+        'publicClassField',
+        'protectedClassField',
+        'privateClassField',
+        'inheritedField'
+      ],
+      array_keys(iterator_to_array($this->reflect(MemberFixture::class)->allFields()))
+    );
+  }
 }
