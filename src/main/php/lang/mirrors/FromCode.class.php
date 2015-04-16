@@ -60,6 +60,15 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
+  /** @return bool */
+  public function hasMethod($name) { return isset($this->decl['method'][$name]); }
+
+  /** @return bool */
+  public function hasField($name) { return isset($this->decl['field']['$'.$name]); }
+
+  /** @return bool */
+  public function hasConstant($name) { return isset($this->decl['const'][$name]); }
+
   /**
    * Resolves a type name in the context of this reflection source
    *

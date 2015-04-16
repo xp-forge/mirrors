@@ -114,4 +114,29 @@ abstract class SourceTest extends \unittest\TestCase {
   public function typeKind_of_interface() {
     $this->assertEquals(Kind::$INTERFACE, $this->reflect(FixtureInterface::class)->typeKind());
   }
+
+  #[@test]
+  public function has_instance_method() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicInstanceMethod'));
+  }
+
+  #[@test]
+  public function has_static_method() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicClassMethod'));
+  }
+
+  #[@test]
+  public function has_instance_field() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasField('publicInstanceField'));
+  }
+
+  #[@test]
+  public function has_static_field() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasField('publicClassField'));
+  }
+
+  #[@test]
+  public function has_constant() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasConstant('CONSTANT'));
+  }
 }

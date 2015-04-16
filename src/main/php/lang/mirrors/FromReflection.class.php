@@ -78,6 +78,15 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
+  /** @return bool */
+  public function hasMethod($name) { return $this->reflect->hasMethod($name); }
+
+  /** @return bool */
+  public function hasField($name) { return $this->reflect->hasProperty($name); }
+
+  /** @return bool */
+  public function hasConstant($name) { return $this->reflect->hasConstant($name); }
+
   /**
    * Resolves a type name in the context of this reflection source
    *
