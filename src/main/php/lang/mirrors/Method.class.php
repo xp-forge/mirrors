@@ -18,22 +18,17 @@ class Method extends Routine {
    * Creates a new method
    *
    * @param  lang.mirrors.TypeMirror $mirror
-   * @param  [:var] $reflect
+   * @param  var $arg A map returned from Source::methodNamed(), a ReflectionMethod or a string
    * @throws lang.IllegalArgumentException If there is no such method
    */
   public function __construct($mirror, $arg) {
     if (is_array($arg)) {
-      $reflect= $arg;
+      parent::__construct($mirror, $arg);
     } else if ($arg instanceof \ReflectionMethod) {
-      $reflect= $mirror->reflect->methodNamed($arg->name);
+      parent::__construct($mirror, $mirror->reflect->methodNamed($arg->name));
     } else {
-      try {
-        $reflect= $mirror->reflect->methodNamed($arg);
-      } catch (\Exception $e) {
-        throw new IllegalArgumentException('No method named '.$arg.'() in '.$mirror->name());
-      }
+      parent::__construct($mirror, $mirror->reflect->methodNamed($arg));
     }
-    parent::__construct($mirror, $reflect);
   }
 
   /**

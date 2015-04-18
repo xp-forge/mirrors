@@ -72,25 +72,13 @@ abstract class Member extends \lang\Object {
    * @return lang.mirrors.TypeMirror
    */
   public function declaredIn() { 
-    if (is_array($this->reflect)) {
-      return $this->mirror->resolve($this->reflect['holder']);
-    }
-    $declaring= $this->reflect->getDeclaringClass();
-    if ($declaring->name === $this->mirror->reflect->name) {
-      return $this->mirror;
-    } else {
-      return new TypeMirror($declaring);
-    }
+    return $this->mirror->resolve($this->reflect['holder']);
   }
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
     $lookup= $this->mirror->reflect->codeUnit()->declaration()[static::$kind];
-if (is_array($this->reflect)) {
     $name= $this->reflect['name'];
-} else {
-    $name= $this->reflect->name;
-}
     return new Annotations(
       $this->mirror,
       isset($lookup[$name]['annotations'][null]) ? (array)$lookup[$name]['annotations'][null] : []
@@ -104,11 +92,9 @@ if (is_array($this->reflect)) {
    * @return bool
    */
   public function equals($cmp) {
-    $thisDecl= is_array($this->reflect) ? $this->reflect['holder'] : $this->reflect->getDeclaringClass()->name;
-    $cmpDecl= is_array($cmp->reflect) ? $cmp->reflect['holder'] : $cmp->reflect->getDeclaringClass()->name;
     return $cmp instanceof self && (
       $this->name === $cmp->name &&
-      $thisDecl === $cmpDecl
+      $this->reflect['holder'] === $cmp->reflect['holder']
     );
   }
 

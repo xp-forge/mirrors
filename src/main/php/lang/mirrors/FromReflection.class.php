@@ -171,7 +171,13 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /** @return [:var] */
-  public function fieldNamed($name) { return $this->field($this->reflect->getProperty($name)); }
+  public function fieldNamed($name) {
+    try {
+      return $this->field($this->reflect->getProperty($name));
+    } catch (\Exception $e) {
+      throw new IllegalArgumentException('No field named $'.$name.' in '.$this->name);
+    }
+  }
 
   /** @return php.Generator */
   public function allFields() {
@@ -205,7 +211,13 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /** @return [:var] */
-  public function methodNamed($name) { return $this->method($this->reflect->getMethod($name)); }
+  public function methodNamed($name) { 
+    try {
+      return $this->method($this->reflect->getMethod($name));
+    } catch (\Exception $e) {
+      throw new IllegalArgumentException('No method named '.$name.'() in '.$this->name);
+    }
+  }
 
   /**
    * Maps a method
