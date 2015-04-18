@@ -116,6 +116,16 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function with_constructor() {
+    $this->assertEquals('__construct', $this->reflect(self::class)->constructor()['name']);
+  }
+
+  #[@test]
+  public function default_constructor() {
+    $this->assertEquals('__default', $this->reflect(MemberFixture::class)->constructor()['name']);
+  }
+
+  #[@test]
   public function has_instance_field() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasField('publicInstanceField'));
   }

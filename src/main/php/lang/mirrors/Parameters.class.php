@@ -12,7 +12,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    * Creates a new parameters instance
    *
    * @param  lang.mirrors.Method $mirror
-   * @param  php.ReflectionMethod $reflect
+   * @param  [:var] $reflect
    */
   public function __construct($mirror, $reflect) {
     $this->mirror= $mirror;
@@ -33,13 +33,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    */
   private function lookup() {
     if (null === $this->lookup) {
-
-if (is_array($this->reflect)) {
       $params= $this->reflect['params']();
-} else {
-      $params= $this->reflect->getParameters();
-}
-
       $this->lookup= [self::BY_ID => $params, self::BY_NAME => []];
       foreach ($params as $pos => $param) {
         $this->lookup[self::BY_NAME][$param->name]= $pos;

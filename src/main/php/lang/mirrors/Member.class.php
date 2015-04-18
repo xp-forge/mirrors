@@ -13,10 +13,10 @@ abstract class Member extends \lang\Object {
   private $tags= null;
 
   /**
-   * Creates a new method
+   * Creates a new member
    *
    * @param  lang.mirrors.TypeMirror $mirror The type this member belongs to.
-   * @param  var $reflect A reflection object
+   * @param  [:var] $reflect
    */
   public function __construct($mirror, $reflect) {
     $this->mirror= $mirror;
@@ -24,29 +24,15 @@ abstract class Member extends \lang\Object {
   }
 
   /** @return string */
-  public function name() {
-if (is_array($this->reflect)) {
-  return $this->reflect['name'];
-}
-    return $this->reflect->name; }
+  public function name() { return $this->reflect['name']; }
 
   /** @return lang.mirrors.Modifiers */
-  public function modifiers() {
-if (is_array($this->reflect)) {
-  return new Modifiers($this->reflect['access']);
-}
-   return new Modifiers($this->reflect->getModifiers() & ~0x1fb7f008); }
+  public function modifiers() { return new Modifiers($this->reflect['access']); }
 
   /** @return string */
   public function comment() {
-if (is_array($this->reflect)) {
     $raw= $this->reflect['comment']();
-} else {
-    $raw= $this->reflect->getDocComment();
-}
-    if (false === $raw) {
-      return null;
-    } else {
+    if ($raw) {
       $text= trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
         $raw,
         4,                          // "/**\n"
@@ -54,6 +40,7 @@ if (is_array($this->reflect)) {
       )));
       return '' === $text ? null : $text;
     }
+    return null;
   }
 
   /**
@@ -63,11 +50,7 @@ if (is_array($this->reflect)) {
    */
   public function tags() {
     if (null === $this->tags) {
-if (is_array($this->reflect)) {
-    $raw= $this->reflect['comment']();
-} else {
-    $raw= $this->reflect->getDocComment();
-}
+      $raw= $this->reflect['comment']();
       if ($raw) {
         $parsed= (new TagsSyntax())->parse(new TagsSource(preg_replace('/\n\s+\* ?/', "\n", substr(
           $raw,
@@ -75,6 +58,8 @@ if (is_array($this->reflect)) {
           - 2                         // "*/"
         ))));
         $this->tags= array_merge(static::$tags, $parsed);
+      } else {
+        $this->tags= static::$tags;
       }
     }
     return $this->tags;

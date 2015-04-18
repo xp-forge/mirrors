@@ -25,7 +25,7 @@ class Parameter extends \lang\Object {
       $this->reflect= $arg;
     } else {
       try {
-        $this->reflect= new \ReflectionParameter([$mirror->reflect->class, $mirror->reflect->name], $arg);
+        $this->reflect= new \ReflectionParameter([$mirror->reflect['holder'], $mirror->reflect['name']], $arg);
       } catch (\Exception $e) {
         throw new IllegalArgumentException('No parameter '.$arg.' in '.$mirror->name());
       }
@@ -90,7 +90,7 @@ class Parameter extends \lang\Object {
   public function annotations() {
     $declared= $this->mirror->declaredIn();
     $lookup= $declared->unit()->declaration()['method'];
-    $method= $this->mirror->reflect->name;
+    $method= $this->mirror->reflect['name'];
     $name= '$'.$this->reflect->name;
     return new Annotations(
       $declared,

@@ -75,6 +75,33 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
+  /** @return [:var] */
+  public function constructor() {
+    $decl= $this->decl;
+    do {
+      if (isset($decl['method']['__construct'])) return $decl['method']['__construct'];
+    } while ($decl= $this->declarationOf($decl['parent']));
+
+    return [
+      'name'    => '__default',
+      'access'  => Modifiers::IS_PUBLIC,
+      'holder'  => $this->decl['name'],
+      'comment' => function() { return null; },
+      'params'  => function() { return []; },
+      'value'   => null
+    ];
+  }
+
+  /**
+   * Creates a new instance
+   *
+   * @param  var[] $args
+   * @return lang.Generic
+   */
+  public function newInstance($args) {
+    throw new IllegalArgumentException('Verifying '.$this->name.': Cannot instantiate');
+  }
+
   /** @return bool */
   public function hasField($name) {
     $decl= $this->decl;

@@ -10,16 +10,6 @@ use lang\Throwable;
  * @test   xp://lang.mirrors.unittest.ConstructorTest
  */
 class Constructor extends Routine {
-  private static $DEFAULT;
-
-  static function __static() {
-    self::$DEFAULT= new \ReflectionMethod(self::class, '__default');
-  }
-
-  /** @return lang.Generic */
-  public function __default() {
-    return $this->reflect->newInstance();
-  }
 
   /**
    * Creates a new constructor
@@ -27,11 +17,11 @@ class Constructor extends Routine {
    * @param  lang.mirrors.TypeMirror $mirror
    */
   public function __construct($mirror) {
-    parent::__construct($mirror, $mirror->reflect->getConstructor() ?: self::$DEFAULT);
+    parent::__construct($mirror, $mirror->reflect->constructor());
   }
 
   /** @return bool */
-  public function present() { return self::$DEFAULT !== $this->reflect; }
+  public function present() { return '__default' !== $this->reflect['name']; }
 
   /**
    * Creates a new instance using this constructor
@@ -39,19 +29,7 @@ class Constructor extends Routine {
    * @param  var* $args
    * @return lang.Generic
    */
-  public function newInstance(... $args) {
-    if (!$this->mirror->reflect->isInstantiable()) {
-      throw new IllegalArgumentException('Verifying '.$this->mirror->name().': Cannot instantiate');
-    }
-
-    try {
-      return $this->mirror->reflect->newInstanceArgs($args);
-    } catch (Throwable $e) {
-      throw new TargetInvocationException('Creating a new instance of '.$this->mirror->name().' raised '.$e->getClassName(), $e);
-    } catch (\Exception $e) {
-      throw new IllegalArgumentException('Instantiating '.$this->mirror->name().': '.$e->getMessage());
-    }
-  }
+  public function newInstance(... $args) { return $this->mirror->reflect->newInstance($args); }
 
   /** @return string */
   public function __toString() {

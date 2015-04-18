@@ -10,10 +10,20 @@ class FromReflection extends \lang\Object implements Source {
   private $reflect;
   private $unit= null;
   public $name;
+  private static $DEFAULT;
+
+  static function __static() {
+    self::$DEFAULT= new \ReflectionMethod(self::class, '__default');
+  }
+
+  /** @return lang.Generic */
+  public function __default() {
+    return $this->reflect->newInstance();
+  }
 
   public function __construct(\ReflectionClass $reflect) {
     $this->reflect= $reflect;
-    $this->name= $reflect->getName();
+    $this->name= $reflect->name;
   }
 
   /** @return lang.mirrors.parse.CodeUnit */
@@ -77,6 +87,43 @@ class FromReflection extends \lang\Object implements Source {
       $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
       $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
       return new Modifiers($r);
+    }
+  }
+
+  /** @return [:var] */
+  public function constructor() {
+    $ctor= $this->reflect->getConstructor();
+    if (null === $ctor) {
+      return [
+        'name'    => '__default',
+        'access'  => Modifiers::IS_PUBLIC,
+        'holder'  => $this->reflect->name,
+        'comment' => function() { return null; },
+        'params'  => function() { return []; },
+        'value'   => self::$DEFAULT
+      ];
+    } else {
+      return $this->method($ctor);
+    }
+  }
+
+  /**
+   * Creates a new instance
+   *
+   * @param  var[] $args
+   * @return lang.Generic
+   */
+  public function newInstance($args) {
+    if (!$this->reflect->isInstantiable()) {
+      throw new IllegalArgumentException('Verifying '.$this->name.': Cannot instantiate');
+    }
+
+    try {
+      return $this->reflect->newInstanceArgs($args);
+    } catch (Throwable $e) {
+      throw new TargetInvocationException('Creating a new instance of '.$this->name.' raised '.$e->getClassName(), $e);
+    } catch (\Exception $e) {
+      throw new IllegalArgumentException('Instantiating '.$this->name.': '.$e->getMessage());
     }
   }
 
