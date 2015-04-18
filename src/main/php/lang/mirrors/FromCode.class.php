@@ -5,7 +5,7 @@ use lang\mirrors\parse\ClassSource;
 
 class FromCode extends \lang\Object implements Source {
   private $unit, $decl;
-  private static $syntax;
+  private static $syntax, $cache;
   public $name;
 
   static function __static() {
@@ -13,20 +13,10 @@ class FromCode extends \lang\Object implements Source {
   }
 
   public function __construct($name) {
-    $this->unit= $this->parse($name);
+    $this->unit= self::$syntax->codeUnitOf($name);
     $this->decl= $this->unit->declaration();
     $package= $this->unit->package();
     $this->name= ($package ? $package.'\\' : '').$this->decl['name'];
-  }
-
-  /**
-   * Parses class into a code unit
-   *
-   * @param  string $class Fully qualified class name
-   * @return lang.mirrors.parse.CodeUnit
-   */
-  private function parse($class) {
-    return self::$syntax->parse(new ClassSource(strtr($class, '\\', '.')));
   }
 
   /**
@@ -36,7 +26,7 @@ class FromCode extends \lang\Object implements Source {
    * @return [:var]
    */
   private function declarationOf($name) {
-    return $name ? $this->parse($this->resolve0($name))->declaration() : null;
+    return $name ? self::$syntax->codeUnitOf($this->resolve0($name))->declaration() : null;
   }
 
   /** @return lang.mirrors.parse.CodeUnit */

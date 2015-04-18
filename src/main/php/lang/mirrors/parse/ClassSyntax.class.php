@@ -13,6 +13,8 @@ use text\parse\rules\Collect;
 use text\parse\rules\OneOf;
 
 class ClassSyntax extends \text\parse\Syntax {
+  const CACHE_LIMIT = 20;
+  private static $cache= [];
 
   /** @return text.parse.Rules */
   protected function rules() {
@@ -198,5 +200,22 @@ class ClassSyntax extends \text\parse\Syntax {
         T_VARIABLE => function($values) { return $values[0]; },
       ])
     ]);
+  }
+
+  /**
+   * Parses a class
+   *
+   * @param  string $class Fully qualified class name
+   * @return lang.mirrors.parse.CodeUnit
+   */
+  public function codeUnitOf($class) {
+   $dotted= strtr($class, '\\', '.');
+   if (!isset(self::$cache[$dotted])) {
+      self::$cache[$dotted]= $this->parse(new ClassSource($dotted));
+      while (sizeof(self::$cache) > self::CACHE_LIMIT) {
+        unset(self::$cache[key(self::$cache)]);
+      }
+    }
+    return self::$cache[$dotted];
   }
 }

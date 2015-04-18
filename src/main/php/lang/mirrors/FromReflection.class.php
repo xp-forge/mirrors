@@ -19,7 +19,7 @@ class FromReflection extends \lang\Object implements Source {
   /** @return lang.mirrors.parse.CodeUnit */
   public function codeUnit() {
     if (null === $this->unit) {
-      $this->unit= (new ClassSyntax())->parse(new ClassSource($this->typeName()));
+      $this->unit= (new ClassSyntax())->codeUnitOf($this->name);
     }
     return $this->unit;
   }
