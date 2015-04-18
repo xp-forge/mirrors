@@ -78,9 +78,9 @@ class ClassSyntaxTest extends \unittest\TestCase {
           'comment'     => null, 
           'annotations' => null,
           'field' => [
-            '$fixture' => [
+            'fixture' => [
               'kind'        => 'field',
-              'name'        => '$fixture',
+              'name'        => 'fixture',
               'init'        => null,
               'access'      => ['private'],
               'annotations' => null

@@ -24,7 +24,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    *
    * @return bool
    */
-  public function present() { return $this->reflect->getNumberOfParameters() > 0; }
+  public function present() { return !empty($this->lookup()[self::BY_ID]); } 
 
   /**
    * Populates lookup maps BY_ID and BY_NAME lazily, then returns it.
@@ -33,7 +33,13 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    */
   private function lookup() {
     if (null === $this->lookup) {
+
+if (is_array($this->reflect)) {
+      $params= $this->reflect['params']();
+} else {
       $params= $this->reflect->getParameters();
+}
+
       $this->lookup= [self::BY_ID => $params, self::BY_NAME => []];
       foreach ($params as $pos => $param) {
         $this->lookup[self::BY_NAME][$param->name]= $pos;
@@ -57,9 +63,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    *
    * @return int
    */
-  public function length() {
-    return $this->reflect->getNumberOfParameters();
-  }
+  public function length() { return sizeof($this->lookup()[self::BY_ID]); }
 
   /**
    * Returns a given method if provided or raises an exception

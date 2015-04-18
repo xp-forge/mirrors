@@ -22,7 +22,9 @@ class Method extends Routine {
    * @throws lang.IllegalArgumentException If there is no such method
    */
   public function __construct($mirror, $arg) {
-    if ($arg instanceof \ReflectionMethod) {
+    if (is_array($arg)) {
+      $reflect= $arg;
+    } else if ($arg instanceof \ReflectionMethod) {
       $reflect= $arg;
     } else {
       try {
@@ -54,6 +56,9 @@ class Method extends Routine {
    * @throws lang.IllegalArgumentException
    */
   public function invoke(Generic $instance= null, $args= []) {
+if (is_array($this->reflect)) {
+  return $this->mirror->reflect->invokeMethod($this->reflect['value'], $instance, $args);
+}
     try {
       return $this->reflect->invokeArgs($instance, $args);
     } catch (Throwable $e) {

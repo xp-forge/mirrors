@@ -116,18 +116,13 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function has_instance_method() {
-    $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicInstanceMethod'));
-  }
-
-  #[@test]
-  public function has_static_method() {
-    $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicClassMethod'));
-  }
-
-  #[@test]
   public function has_instance_field() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasField('publicInstanceField'));
+  }
+
+  #[@test]
+  public function has_inherited_field() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasField('inheritedField'));
   }
 
   #[@test]
@@ -141,7 +136,7 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function fields() {
+  public function all_fields() {
     $this->assertEquals(
       [
         'publicInstanceField',
@@ -153,6 +148,110 @@ abstract class SourceTest extends \unittest\TestCase {
         'inheritedField'
       ],
       array_keys(iterator_to_array($this->reflect(MemberFixture::class)->allFields()))
+    );
+  }
+
+  #[@test]
+  public function declared_fields() {
+    $this->assertEquals(
+      [
+        'publicInstanceField',
+        'protectedInstanceField',
+        'privateInstanceField',
+        'publicClassField',
+        'protectedClassField',
+        'privateClassField'
+      ],
+      array_keys(iterator_to_array($this->reflect(MemberFixture::class)->declaredFields()))
+    );
+  }
+
+  #[@test]
+  public function instance_field() {
+    $this->assertEquals(
+      'publicInstanceField',
+      $this->reflect(MemberFixture::class)->fieldNamed('publicInstanceField')['name']
+    );
+  }
+
+  #[@test]
+  public function static_field() {
+    $this->assertEquals(
+      'publicClassField',
+      $this->reflect(MemberFixture::class)->fieldNamed('publicClassField')['name']
+    );
+  }
+
+  #[@test]
+  public function inherited_field() {
+    $this->assertEquals(
+      'inheritedField',
+      $this->reflect(MemberFixture::class)->fieldNamed('inheritedField')['name']
+    );
+  }
+
+  #[@test]
+  public function has_instance_method() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicInstanceMethod'));
+  }
+
+  #[@test]
+  public function has_static_method() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicClassMethod'));
+  }
+
+  #[@test]
+  public function all_methods() {
+    $this->assertEquals(
+      [
+        'publicInstanceMethod',
+        'protectedInstanceMethod',
+        'privateInstanceMethod',
+        'publicClassMethod',
+        'protectedClassMethod',
+        'privateClassMethod',
+        'inheritedMethod'
+      ],
+      array_keys(iterator_to_array($this->reflect(MemberFixture::class)->allMethods()))
+    );
+  }
+
+  #[@test]
+  public function declared_methods() {
+    $this->assertEquals(
+      [
+        'publicInstanceMethod',
+        'protectedInstanceMethod',
+        'privateInstanceMethod',
+        'publicClassMethod',
+        'protectedClassMethod',
+        'privateClassMethod'
+      ],
+      array_keys(iterator_to_array($this->reflect(MemberFixture::class)->declaredMethods()))
+    );
+  }
+
+  #[@test]
+  public function instance_method() {
+    $this->assertEquals(
+      'publicInstanceMethod',
+      $this->reflect(MemberFixture::class)->methodNamed('publicInstanceMethod')['name']
+    );
+  }
+
+  #[@test]
+  public function static_method() {
+    $this->assertEquals(
+      'publicClassMethod',
+      $this->reflect(MemberFixture::class)->methodNamed('publicClassMethod')['name']
+    );
+  }
+
+  #[@test]
+  public function inherited_method() {
+    $this->assertEquals(
+      'inheritedMethod',
+      $this->reflect(MemberFixture::class)->methodNamed('inheritedMethod')['name']
     );
   }
 }

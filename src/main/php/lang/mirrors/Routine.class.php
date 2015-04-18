@@ -19,7 +19,6 @@ abstract class Routine extends Member {
    */
   public function __construct($mirror, $reflect) {
     parent::__construct($mirror, $reflect);
-    $reflect->setAccessible(true);
     $this->parameters= new Parameters($this, $reflect);
   }
 

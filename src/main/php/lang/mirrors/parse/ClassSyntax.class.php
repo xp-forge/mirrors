@@ -113,7 +113,7 @@ class ClassSyntax extends \text\parse\Syntax {
               ),
               T_VARIABLE => new Sequence(
                 [new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; })), new Match([',' => null, ';' => null])],
-                function($values) { return ['kind' => 'field', 'name' => $values[0], 'init' => $values[2]]; }
+                function($values) { return ['kind' => 'field', 'name' => substr($values[0], 1), 'init' => $values[2]]; }
               ),
             ])
           ],

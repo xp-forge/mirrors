@@ -100,8 +100,12 @@ if (is_array($this->reflect)) {
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
-    $lookup= $this->mirror->unit()->declaration()[static::$kind];
+    $lookup= $this->mirror->reflect->codeUnit()->declaration()[static::$kind];
+if (is_array($this->reflect)) {
+    $name= $this->reflect['name'];
+} else {
     $name= $this->reflect->name;
+}
     return new Annotations(
       $this->mirror,
       isset($lookup[$name]['annotations'][null]) ? (array)$lookup[$name]['annotations'][null] : []

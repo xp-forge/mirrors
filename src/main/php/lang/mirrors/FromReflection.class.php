@@ -4,6 +4,7 @@ use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
 use lang\Enum;
 use lang\IllegalArgumentException;
+use lang\Throwable;
 
 class FromReflection extends \lang\Object implements Source {
   private $reflect;
@@ -80,9 +81,6 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /** @return bool */
-  public function hasMethod($name) { return $this->reflect->hasMethod($name); }
-
-  /** @return bool */
   public function hasField($name) { return $this->reflect->hasProperty($name); }
 
   /**
@@ -150,6 +148,58 @@ class FromReflection extends \lang\Object implements Source {
     foreach ($this->reflect->getProperties() as $field) {
       if ($field->getDeclaringClass()->name !== $this->reflect->name) continue;
       yield $field->name => $this->field($field);
+    }
+  }
+
+  /** @return bool */
+  public function hasMethod($name) { return $this->reflect->hasMethod($name); }
+
+  /**
+   * Invokes the method
+   */
+  public function invokeMethod($reflect, $instance, $args) {
+    try {
+      return $reflect->invokeArgs($instance, $args);
+    } catch (Throwable $e) {
+      throw new TargetInvocationException('Invoking '.$reflect->name.'() raised '.$e->getClassName(), $e);
+    } catch (\Exception $e) {
+      throw new IllegalArgumentException('Verifying '.$reflect->name.'(): '.$e->getMessage());
+    }
+  }
+
+  /** @return [:var] */
+  public function methodNamed($name) { return $this->method($this->reflect->getMethod($name)); }
+
+  /**
+   * Maps a method
+   *
+   * @param  php.ReflectionMethod $reflect
+   * @return [:var]
+   */
+  private function method($reflect) {
+    $reflect->setAccessible(true);
+    return [
+      'name'    => $reflect->name,
+      'access'  => $reflect->getModifiers() & ~0x1fb7f008,
+      'holder'  => $reflect->getDeclaringClass()->name,
+      'params'  => function() use($reflect) { return $reflect->getParameters(); },
+      'comment' => function() use($reflect) { return $reflect->getDocComment(); },
+      'value'   => $reflect
+    ];
+  }
+
+  /** @return php.Generator */
+  public function allMethods() {
+    foreach ($this->reflect->getMethods() as $method) {
+      yield $method->name => $this->method($method);
+    }
+  }
+
+  /** @return php.Generator */
+  public function declaredMethods() {
+    foreach ($this->reflect->getMethods() as $method) {
+      if ($method->getDeclaringClass()->name !== $this->reflect->name) continue;
+      yield $method->name => $this->method($method);
     }
   }
 

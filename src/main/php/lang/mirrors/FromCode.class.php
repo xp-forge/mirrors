@@ -5,10 +5,25 @@ use lang\mirrors\parse\ClassSource;
 
 class FromCode extends \lang\Object implements Source {
   private $unit, $decl;
+  private static $syntax;
+
+  static function __static() {
+    self::$syntax= new ClassSyntax();
+  }
 
   public function __construct($name) {
-    $this->unit= (new ClassSyntax())->parse(new ClassSource(strtr($name, '\\', '.')));
+    $this->unit= self::$syntax->parse(new ClassSource(strtr($name, '\\', '.')));
     $this->decl= $this->unit->declaration();
+  }
+
+  /**
+   * Fetches class declaration
+   *
+   * @param  string $class
+   * @return [:var]
+   */
+  private function declarationOf($class) {
+    return $class ? self::$syntax->parse(new ClassSource($this->resolve0($class)))->declaration() : null;
   }
 
   /** @return lang.mirrors.parse.CodeUnit */
@@ -61,28 +76,66 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /** @return bool */
-  public function hasMethod($name) { return isset($this->decl['method'][$name]); }
+  public function hasField($name) {
+    $decl= $this->decl;
+    do {
+      if (isset($decl['field'][$name])) return true;
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return false;
+  }
 
-  /** @return bool */
-  public function hasField($name) { return isset($this->decl['field']['$'.$name]); }
+  /** @return [:var] */
+  public function fieldNamed($name) {
+    $decl= $this->decl;
+    do {
+      if (isset($decl['field'][$name])) return $decl['field'][$name];
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return null;
+  }
 
   /** @return php.Generator */
   public function allFields() {
     $decl= $this->decl;
     do {
       foreach ($decl['field'] as $name => $field) {
-        yield substr($name, 1) => $field;
+        yield $name => $field;
       }
-
-      if (null === $decl['parent']) break;
-      $decl= (new ClassSyntax())->parse(new ClassSource($this->resolve0($decl['parent'])))->declaration();
-    } while ($decl);
+    } while ($decl= $this->declarationOf($decl['parent']));
   }
 
   /** @return php.Generator */
   public function declaredFields() {
     foreach ($this->decl['field'] as $name => $field) {
-      yield substr($name, 1) => $field;
+      yield $name => $field;
+    }
+  }
+
+  /** @return bool */
+  public function hasMethod($name) { return isset($this->decl['method'][$name]); }
+
+  /** @return [:var] */
+  public function methodNamed($name) {
+    $decl= $this->decl;
+    do {
+      if (isset($decl['method'][$name])) return $decl['method'][$name];
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return null;
+  }
+
+  /** @return php.Generator */
+  public function allMethods() {
+    $decl= $this->decl;
+    do {
+      foreach ($decl['method'] as $name => $method) {
+        yield $name => $method;
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+  }
+
+  /** @return php.Generator */
+  public function declaredMethods() {
+    foreach ($this->decl['method'] as $name => $method) {
+      yield $name => $method;
     }
   }
 
