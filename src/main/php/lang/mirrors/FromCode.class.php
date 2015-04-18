@@ -4,8 +4,8 @@ use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
 
 class FromCode extends \lang\Object implements Source {
+  private static $syntax;
   private $unit, $decl;
-  private static $syntax, $cache;
   public $name;
 
   static function __static() {
