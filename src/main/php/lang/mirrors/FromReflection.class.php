@@ -10,16 +10,6 @@ class FromReflection extends \lang\Object implements Source {
   private $reflect;
   private $unit= null;
   public $name;
-  private static $DEFAULT;
-
-  static function __static() {
-    self::$DEFAULT= new \ReflectionMethod(self::class, '__default');
-  }
-
-  /** @return lang.Generic */
-  public function __default() {
-    return $this->reflect->newInstance();
-  }
 
   public function __construct(\ReflectionClass $reflect) {
     $this->reflect= $reflect;
@@ -100,7 +90,7 @@ class FromReflection extends \lang\Object implements Source {
         'holder'  => $this->reflect->name,
         'comment' => function() { return null; },
         'params'  => function() { return []; },
-        'value'   => self::$DEFAULT
+        'value'   => null
       ];
     } else {
       return $this->method($ctor);
