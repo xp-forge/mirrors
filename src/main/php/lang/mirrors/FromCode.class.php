@@ -41,7 +41,7 @@ class FromCode extends \lang\Object implements Source {
   /** @return string */
   public function packageName() { return strtr($this->unit->package(), '\\', '.'); }
 
-  /** @return string */
+  /** @return self */
   public function typeParent() {
     $parent= $this->decl['parent'];
     return $parent ? $this->resolve($parent) : null;
@@ -94,6 +94,12 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
+  /**
+   * Returns whether this type implements a given interface
+   *
+   * @param  string $name
+   * @param  bool
+   */
   public function typeImplements($name) {
     $decl= $this->decl;
     do {
@@ -127,6 +133,12 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
+  /**
+   * Returns whether this type uses a given trait
+   *
+   * @param  string $name
+   * @param  bool
+   */
   public function typeUses($name) {
     $decl= $this->decl;
     do {
@@ -165,7 +177,12 @@ class FromCode extends \lang\Object implements Source {
     throw new IllegalArgumentException('Verifying '.$this->name.': Cannot instantiate');
   }
 
-  /** @return bool */
+  /**
+   * Checks whether a given field exists
+   *
+   * @param  string $name
+   * @return bool
+   */
   public function hasField($name) {
     $decl= $this->decl;
     do {
@@ -174,7 +191,12 @@ class FromCode extends \lang\Object implements Source {
     return false;
   }
 
-  /** @return [:var] */
+  /**
+   * Gets a field by its name
+   *
+   * @param  string $name
+   * @return var
+   */
   public function fieldNamed($name) {
     $decl= $this->decl;
     do {
@@ -200,10 +222,20 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
-  /** @return bool */
+  /**
+   * Checks whether a given method exists
+   *
+   * @param  string $name
+   * @return bool
+   */
   public function hasMethod($name) { return isset($this->decl['method'][$name]); }
 
-  /** @return [:var] */
+  /**
+   * Gets a method by its name
+   *
+   * @param  string $name
+   * @return var
+   */
   public function methodNamed($name) {
     $decl= $this->decl;
     do {
@@ -229,7 +261,12 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
-  /** @return bool */
+  /**
+   * Checks whether a given constant exists
+   *
+   * @param  string $name
+   * @return bool
+   */
   public function hasConstant($name) { return isset($this->decl['const'][$name]); }
 
   /**

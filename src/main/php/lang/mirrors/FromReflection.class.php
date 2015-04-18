@@ -80,6 +80,12 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
+  /**
+   * Returns whether this type implements a given interface
+   *
+   * @param  string $name
+   * @param  bool
+   */
   public function typeImplements($name) {
     return $this->reflect->implementsInterface($name);
   }
@@ -120,6 +126,12 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
+  /**
+   * Returns whether this type implements a given interface
+   *
+   * @param  string $name
+   * @param  bool
+   */
   public function typeUses($name) {
     $reflect= $this->reflect;
     do {
@@ -165,7 +177,12 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
-  /** @return bool */
+  /**
+   * Checks whether a given field exists
+   *
+   * @param  string $name
+   * @return bool
+   */
   public function hasField($name) { return $this->reflect->hasProperty($name); }
 
   /**
@@ -218,7 +235,12 @@ class FromReflection extends \lang\Object implements Source {
     ));
   }
 
-  /** @return [:var] */
+  /**
+   * Gets a field by its name
+   *
+   * @param  string $name
+   * @return var
+   */
   public function fieldNamed($name) {
     try {
       return $this->field($this->reflect->getProperty($name));
@@ -242,7 +264,12 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
-  /** @return bool */
+  /**
+   * Checks whether a given method exists
+   *
+   * @param  string $name
+   * @return bool
+   */
   public function hasMethod($name) { return $this->reflect->hasMethod($name); }
 
   /**
@@ -258,7 +285,12 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
-  /** @return [:var] */
+  /**
+   * Gets a method by its name
+   *
+   * @param  string $name
+   * @return var
+   */
   public function methodNamed($name) { 
     try {
       return $this->method($this->reflect->getMethod($name));
@@ -300,7 +332,12 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
-  /** @return bool */
+  /**
+   * Checks whether a given constant exists
+   *
+   * @param  string $name
+   * @return bool
+   */
   public function hasConstant($name) { return $this->reflect->hasConstant($name); }
 
   /**
