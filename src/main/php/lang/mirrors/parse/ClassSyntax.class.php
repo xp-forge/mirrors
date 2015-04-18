@@ -102,6 +102,9 @@ class ClassSyntax extends \text\parse\Syntax {
       ),
       'member' => new OneOf([
         new Match([
+          T_USE   => new Sequence([$typeName, new Token(';')], function($values) {
+            return ['kind' => 'use', 'name' => implode('', $values[1])];
+          }),
           T_CONST => new Sequence([new Token(T_STRING), new Token('='), new Apply('expr'), new Token(';')], function($values) {
             return ['kind' => 'const', 'name' => $values[1]];
           })

@@ -117,6 +117,11 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function typeImplements() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(FixtureInterface::class));
+  }
+
+  #[@test]
   public function all_interfaces() {
     $names= array_keys(iterator_to_array($this->reflect(FixtureImpl::class)->allInterfaces()));
     sort($names);
@@ -131,8 +136,22 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function typeImplements() {
-    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(FixtureInterface::class));
+  public function typeUses() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->typeUses(FixtureTrait::class));
+  }
+
+  #[@test]
+  public function all_traits() {
+    $names= array_keys(iterator_to_array($this->reflect(FixtureUses::class)->allTraits()));
+    sort($names);
+    $this->assertEquals([FixtureTrait::class, FixtureUsed::class], $names);
+  }
+
+  #[@test]
+  public function declared_traits() {
+    $names= array_keys(iterator_to_array($this->reflect(FixtureUses::class)->declaredTraits()));
+    sort($names);
+    $this->assertEquals([FixtureUsed::class], $names);
   }
 
   #[@test]

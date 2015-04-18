@@ -49,6 +49,16 @@ class ClassSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function creation_user() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null, 'use' => [
+        'Creation' => ['kind' => 'use', 'name' => 'Creation']
+      ]]),
+      $this->parse('<?php class Test { use Creation; }')
+    );
+  }
+
+  #[@test]
   public function abstract_class() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),

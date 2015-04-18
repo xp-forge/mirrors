@@ -101,6 +101,33 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
+  /** @return php.Generator */
+  public function allTraits() {
+    $reflect= $this->reflect;
+    do {
+      foreach ($reflect->getTraits() as $trait) {
+        if ('__xp' === $trait->name) continue;
+        yield $trait->name => new self($trait);
+      }
+    } while ($reflect= $reflect->getParentClass());
+  }
+
+  /** @return php.Generator */
+  public function declaredTraits() {
+    foreach ($this->reflect->getTraits() as $trait) {
+      if ('__xp' === $trait->name) continue;
+      yield $trait->name => new self($trait);
+    }
+  }
+
+  public function typeUses($name) {
+    $reflect= $this->reflect;
+    do {
+      if (in_array($name, $reflect->getTraitNames(), true)) return true;
+    } while ($reflect= $reflect->getParentClass());
+    return false;
+  }
+
   /** @return [:var] */
   public function constructor() {
     $ctor= $this->reflect->getConstructor();

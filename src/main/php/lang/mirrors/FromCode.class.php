@@ -107,6 +107,41 @@ class FromCode extends \lang\Object implements Source {
     return false;
   }
 
+  /** @return php.Generator */
+  public function allTraits() {
+    $decl= $this->decl;
+    do {
+      if (!isset($decl['use'])) continue;
+      foreach ($decl['use'] as $trait => $definition) {
+        if ('\__xp' === $trait) continue;
+        $name= $this->resolve0($trait);
+        yield strtr($name, '.', '\\') => new self($name);
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+  }
+
+  /** @return php.Generator */
+  public function declaredTraits() {
+    if (!isset($this->decl['use'])) return;
+    foreach ($this->decl['use'] as $trait => $definition) {
+      if ('\__xp' === $trait) continue;
+      $name= $this->resolve0($trait);
+      yield strtr($name, '.', '\\') => new self($name);
+    }
+  }
+
+  public function typeUses($name) {
+    $decl= $this->decl;
+    $name= strtr($name, '\\', '.');
+    do {
+      if (!isset($decl['use'])) continue;
+      foreach ($decl['use'] as $trait => $definition) {
+        if ($name === $this->resolve0($trait)) return true;
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return false;
+  }
+
   /** @return [:var] */
   public function constructor() {
     $decl= $this->decl;
