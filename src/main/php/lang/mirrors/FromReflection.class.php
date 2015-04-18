@@ -325,16 +325,6 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /**
-   * Returns whether this type is a subtype of a given argument
-   *
-   * @param  string $class
-   * @return bool
-   */
-  public function isSubtypeOf($class) {
-    return $this->reflect->isSubclassOf($class);
-  }
-
-  /**
    * Resolves a type name in the context of this reflection source
    *
    * @param  string $name
@@ -351,10 +341,21 @@ class FromReflection extends \lang\Object implements Source {
       return new self(new \ReflectionClass(strtr($name, '.', '\\')));
     } else {
       foreach ($this->codeUnit()->imports() as $imported) {
-        if (0 === substr_compare($imported, $name, strrpos($imported, '.') + 1)) return new self(new \ReflectionClass(strtr($imported, '.', '\\')));
+        if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return new self(new \ReflectionClass($imported));
       }
-      return new self(new \ReflectionClass($this->reflect->getNamespaceName().'\\'.$name));
+      $ns= $this->reflect->getNamespaceName();
+      return new self(new \ReflectionClass(($ns ? $ns.'\\' : '').$name));
     }
+  }
+
+  /**
+   * Returns whether this type is a subtype of a given argument
+   *
+   * @param  string $class
+   * @return bool
+   */
+  public function isSubtypeOf($class) {
+    return $this->reflect->isSubclassOf($class);
   }
 
   public function equals($cmp) {

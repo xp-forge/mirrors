@@ -43,11 +43,11 @@ class ClassSyntax extends \text\parse\Syntax {
         return new CodeUnit($values[1], $values[2], $values[3]);
       }),
       'package' => new Sequence([new Token(T_NAMESPACE), $typeName, new Token(';')], function($values) {
-        return strtr(implode('', $values[1]), '\\', '.');
+        return implode('', $values[1]);
       }),
       'import' => new Match([
         T_USE => new Sequence([$typeName, new Token(';')], function($values) {
-          return strtr(implode('', $values[1]), '\\', '.');
+          return implode('', $values[1]);
         }),
         T_NEW => new Sequence([new Token(T_STRING), new Token('('), new Token(T_CONSTANT_ENCAPSED_STRING), new Token(')'), new Token(';')], function($values) {
           return trim($values[3], '\'"');

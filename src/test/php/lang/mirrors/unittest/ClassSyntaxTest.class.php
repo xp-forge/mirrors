@@ -86,8 +86,8 @@ class ClassSyntaxTest extends \unittest\TestCase {
   public function test_class() {
     $this->assertEquals(
       new CodeUnit(
-        'de.thekid.test',
-        ['util.Objects'],
+        'de\thekid\test',
+        ['util\Objects'],
         [
           'kind'        => 'class',
           'name'        => 'IntegrationTest',

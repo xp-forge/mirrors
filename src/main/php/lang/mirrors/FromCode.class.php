@@ -13,20 +13,30 @@ class FromCode extends \lang\Object implements Source {
   }
 
   public function __construct($name) {
-    $this->unit= self::$syntax->parse(new ClassSource(strtr($name, '\\', '.')));
+    $this->unit= $this->parse($name);
     $this->decl= $this->unit->declaration();
     $package= $this->unit->package();
-    $this->name= ($package ? strtr($package, '.', '\\').'\\' : '').$this->decl['name'];
+    $this->name= ($package ? $package.'\\' : '').$this->decl['name'];
+  }
+
+  /**
+   * Parses class into a code unit
+   *
+   * @param  string $class Fully qualified class name
+   * @return lang.mirrors.parse.CodeUnit
+   */
+  private function parse($class) {
+    return self::$syntax->parse(new ClassSource(strtr($class, '\\', '.')));
   }
 
   /**
    * Fetches class declaration
    *
-   * @param  string $class
+   * @param  string $name
    * @return [:var]
    */
-  private function declarationOf($class) {
-    return $class ? self::$syntax->parse(new ClassSource($this->resolve0($class)))->declaration() : null;
+  private function declarationOf($name) {
+    return $name ? $this->parse($this->resolve0($name))->declaration() : null;
   }
 
   /** @return lang.mirrors.parse.CodeUnit */
@@ -39,7 +49,7 @@ class FromCode extends \lang\Object implements Source {
   public function typeDeclaration() { return $this->decl['name']; }
 
   /** @return string */
-  public function packageName() { return $this->unit->package(); }
+  public function packageName() { return strtr($this->unit->package(), '\\', '.'); }
 
   /** @return string */
   public function typeParent() {
@@ -68,7 +78,7 @@ class FromCode extends \lang\Object implements Source {
       return Kind::$TRAIT;
     } else if ('interface' === $this->decl['kind']) {
       return Kind::$INTERFACE;
-    } else if ('lang.Enum' === $this->resolve0($this->decl['parent'])) {
+    } else if ('lang\Enum' === $this->resolve0($this->decl['parent'])) {
       return Kind::$ENUM;
     } else {
       return Kind::$CLASS;
@@ -96,7 +106,6 @@ class FromCode extends \lang\Object implements Source {
 
   public function typeImplements($name) {
     $decl= $this->decl;
-    $name= strtr($name, '\\', '.');
     do {
       foreach ($decl['implements'] as $interface) {
         if ($name === $this->resolve0($interface)) return true;
@@ -130,7 +139,6 @@ class FromCode extends \lang\Object implements Source {
 
   public function typeUses($name) {
     $decl= $this->decl;
-    $name= strtr($name, '\\', '.');
     do {
       if (!isset($decl['use'])) continue;
       foreach ($decl['use'] as $trait => $definition) {
@@ -267,7 +275,6 @@ class FromCode extends \lang\Object implements Source {
    */
   public function isSubtypeOf($class) {
     $decl= $this->decl;
-    $class= strtr($class, '\\', '.');
     do {
       if ($class === $this->resolve0($decl['parent'])) return true;
       foreach ((array)$decl['implements'] as $interface) {
@@ -289,14 +296,15 @@ class FromCode extends \lang\Object implements Source {
     } else if ('parent' === $name) {
       return $this->resolve0($this->decl['parent']);
     } else if ('\\' === $name{0}) {
-      return strtr(substr($name, 1), '\\', '.');
+      return substr($name, 1);
     } else if (strstr($name, '\\') || strstr($name, '.')) {
       return strtr($name, '\\', '.');
     } else {
       foreach ($this->unit->imports() as $imported) {
-        if (0 === substr_compare($imported, $name, strrpos($imported, '.') + 1)) return $imported;
+        if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return $imported;
       }
-      return $this->unit->package().'.'.$name;
+      $package= $this->unit->package();
+      return ($package ? $package.'\\' : '').$name;
     }
   }
 
