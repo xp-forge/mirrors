@@ -15,7 +15,7 @@ use lang\XPClass;
  * @test   xp://lang.mirrors.unittest.TypeMirrorTest
  */
 class TypeMirror extends \lang\Object {
-  private $methods, $fields, $constants;
+  private $methods, $fields;
   public $reflect;
 
   /**
@@ -40,7 +40,6 @@ class TypeMirror extends \lang\Object {
 
     $this->methods= new Methods($this);
     $this->fields= new Fields($this);
-    $this->constants= new Constants($this);
   }
 
   /** @return string */
@@ -90,7 +89,7 @@ class TypeMirror extends \lang\Object {
   public function fields() { return $this->fields; }
 
   /** @return lang.mirrors.Constants */
-  public function constants() { return $this->constants; }
+  public function constants() { return new Constants($this); }
 
   /** @return lang.mirrors.Modifiers */
   public function modifiers() { return $this->reflect->typeModifiers(); }
