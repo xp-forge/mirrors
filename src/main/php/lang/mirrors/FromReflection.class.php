@@ -304,6 +304,37 @@ class FromReflection extends \lang\Object implements Source {
   public function hasConstant($name) { return $this->reflect->hasConstant($name); }
 
   /**
+   * Gets a constant by its name
+   *
+   * @param  string $name
+   * @return var
+   */
+  public function constantNamed($name) {
+    try {
+      return $this->reflect->getConstant($name);
+    } catch (\Exception $e) {
+      throw new IllegalArgumentException('No constant named $'.$name.' in '.$this->name);
+    }
+  }
+
+  /** @return php.Generator */
+  public function allConstants() {
+    foreach ($this->reflect->getConstants() as $name => $value) {
+      yield $name => $value;
+    }
+  }
+
+  /**
+   * Returns whether this type is a subtype of a given argument
+   *
+   * @param  string $class
+   * @return bool
+   */
+  public function isSubtypeOf($class) {
+    return $this->reflect->isSubclassOf($class);
+  }
+
+  /**
    * Resolves a type name in the context of this reflection source
    *
    * @param  string $name
@@ -324,10 +355,6 @@ class FromReflection extends \lang\Object implements Source {
       }
       return new self(new \ReflectionClass($this->reflect->getNamespaceName().'\\'.$name));
     }
-  }
-
-  public function __call($name, $args) {
-    return $this->reflect->{$name}(...$args);
   }
 
   public function equals($cmp) {

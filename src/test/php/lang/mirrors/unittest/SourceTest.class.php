@@ -180,11 +180,6 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function has_constant() {
-    $this->assertTrue($this->reflect(MemberFixture::class)->hasConstant('CONSTANT'));
-  }
-
-  #[@test]
   public function all_fields() {
     $this->assertEquals(
       [
@@ -302,5 +297,41 @@ abstract class SourceTest extends \unittest\TestCase {
       'inheritedMethod',
       $this->reflect(MemberFixture::class)->methodNamed('inheritedMethod')['name']
     );
+  }
+
+  #[@test]
+  public function has_constant() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasConstant('CONSTANT'));
+  }
+
+  #[@test]
+  public function all_constants() {
+    $this->assertEquals(
+      ['CONSTANT' => MemberFixture::CONSTANT, 'INHERITED' => MemberFixture::INHERITED],
+      iterator_to_array($this->reflect(MemberFixture::class)->allConstants())
+    );
+  }
+
+  #[@test]
+  public function constant_named() {
+    $this->assertEquals(
+      MemberFixture::CONSTANT,
+      $this->reflect(MemberFixture::class)->constantNamed('CONSTANT')
+    );
+  }
+
+  #[@test]
+  public function isSubtypeOf_returns_false_for_self() {
+    $this->assertFalse($this->reflect(FixtureImpl::class)->isSubtypeOf(FixtureImpl::class));
+  }
+
+  #[@test]
+  public function isSubtypeOf_parent() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->isSubtypeOf(FixtureBase::class));
+  }
+
+  #[@test]
+  public function isSubtypeOf_implemented_interface() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->isSubtypeOf(FixtureInterface::class));
   }
 }

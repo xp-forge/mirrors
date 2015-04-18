@@ -119,7 +119,7 @@ class TypeMirror extends \lang\Object {
    */
   public function isSubtypeOf($arg) {
     $type= $arg instanceof self ? $arg->reflect->name : strtr($arg, '.', '\\');
-    return $this->reflect->isSubclassOf($type);
+    return $this->reflect->isSubtypeOf($type);
   }
 
   /**

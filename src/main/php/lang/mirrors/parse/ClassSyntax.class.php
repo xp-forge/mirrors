@@ -106,7 +106,7 @@ class ClassSyntax extends \text\parse\Syntax {
             return ['kind' => 'use', 'name' => implode('', $values[1])];
           }),
           T_CONST => new Sequence([new Token(T_STRING), new Token('='), new Apply('expr'), new Token(';')], function($values) {
-            return ['kind' => 'const', 'name' => $values[1]];
+            return ['kind' => 'const', 'name' => $values[1], 'value' => $values[3]];
           })
         ]),
         new Sequence(

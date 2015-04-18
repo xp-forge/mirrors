@@ -237,6 +237,49 @@ class FromCode extends \lang\Object implements Source {
   public function hasConstant($name) { return isset($this->decl['const'][$name]); }
 
   /**
+   * Gets a constant by its name
+   *
+   * @param  string $name
+   * @return var
+   */
+  public function constantNamed($name) {
+    $decl= $this->decl;
+    do {
+      if (isset($decl['const'][$name])) return $decl['const'][$name]['value']->resolve($this->mirror);
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return null;
+  }
+
+  /** @return php.Generator */
+  public function allConstants() {
+    $decl= $this->decl;
+    do {
+      if (!isset($decl['const'])) continue;
+      foreach ($decl['const'] as $name => $const) {
+        yield $name => $const['value']->resolve($this->mirror);
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+  }
+
+  /**
+   * Returns whether this type is a subtype of a given argument
+   *
+   * @param  string $class
+   * @return bool
+   */
+  public function isSubtypeOf($class) {
+    $decl= $this->decl;
+    $class= strtr($class, '\\', '.');
+    do {
+      if ($class === $this->resolve0($decl['parent'])) return true;
+      foreach ((array)$decl['implements'] as $interface) {
+        if ($class === $this->resolve0($interface)) return true;
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return false;
+  }
+
+  /**
    * Resolves a type name in the context of this reflection source
    *
    * @param  string $name

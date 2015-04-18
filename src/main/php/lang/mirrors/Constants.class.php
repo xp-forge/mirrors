@@ -33,7 +33,7 @@ class Constants extends \lang\Object implements \IteratorAggregate {
    */
   public function named($name) {
     if ($this->provides($name)) {
-      return new Constant($this->mirror, $name, $this->mirror->reflect->getConstant($name));
+      return new Constant($this->mirror, $name, $this->mirror->reflect->constantNamed($name));
     }
     throw new ElementNotFoundException('No constant '.$name.' in '.$this->mirror->name());
   }
@@ -44,7 +44,7 @@ class Constants extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
-    foreach ($this->mirror->reflect->getConstants() as $name => $value) {
+    foreach ($this->mirror->reflect->allConstants() as $name => $value) {
       yield new Constant($this->mirror, $name, $value);
     }
   }
