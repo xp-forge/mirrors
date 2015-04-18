@@ -2,6 +2,7 @@
 
 use lang\mirrors\Modifiers;
 use lang\mirrors\Kind;
+use lang\Runnable;
 
 /**
  * Base class for source implementation testing
@@ -113,6 +114,25 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function typeKind_of_interface() {
     $this->assertEquals(Kind::$INTERFACE, $this->reflect(FixtureInterface::class)->typeKind());
+  }
+
+  #[@test]
+  public function all_interfaces() {
+    $names= array_keys(iterator_to_array($this->reflect(FixtureImpl::class)->allInterfaces()));
+    sort($names);
+    $this->assertEquals([Runnable::class, FixtureInterface::class], $names);
+  }
+
+  #[@test]
+  public function declared_interfaces() {
+    $names= array_keys(iterator_to_array($this->reflect(FixtureImpl::class)->declaredInterfaces()));
+    sort($names);
+    $this->assertEquals([Runnable::class], $names);
+  }
+
+  #[@test]
+  public function typeImplements() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(FixtureInterface::class));
   }
 
   #[@test]

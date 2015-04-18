@@ -50,19 +50,6 @@ class FromReflection extends \lang\Object implements Source {
     return $this->codeUnit()->declaration()['annotations'];
   }
 
-  /** @return lang.mirrors.Kind */
-  public function typeKind() {
-    if ($this->reflect->isTrait()) {
-      return Kind::$TRAIT;
-    } else if ($this->reflect->isInterface()) {
-      return Kind::$INTERFACE;
-    } else if ($this->reflect->isSubclassOf(Enum::class)) {
-      return Kind::$ENUM;
-    } else {
-      return Kind::$CLASS;
-    }
-  }
-
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
 
@@ -77,6 +64,40 @@ class FromReflection extends \lang\Object implements Source {
       $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
       $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
       return new Modifiers($r);
+    }
+  }
+
+  /** @return lang.mirrors.Kind */
+  public function typeKind() {
+    if ($this->reflect->isTrait()) {
+      return Kind::$TRAIT;
+    } else if ($this->reflect->isInterface()) {
+      return Kind::$INTERFACE;
+    } else if ($this->reflect->isSubclassOf(Enum::class)) {
+      return Kind::$ENUM;
+    } else {
+      return Kind::$CLASS;
+    }
+  }
+
+  public function typeImplements($name) {
+    return $this->reflect->implementsInterface($name);
+  }
+
+  /** @return php.Generator */
+  public function allInterfaces() {
+    foreach ($this->reflect->getInterfaces() as $interface) {
+      yield $interface->name => new self($interface);
+    }
+  }
+
+  /** @return php.Generator */
+  public function declaredInterfaces() {
+    $parent= $this->reflect->getParentClass();
+    $inherited= $parent ? array_flip($parent->getInterfaceNames()) : [];
+    foreach ($this->reflect->getInterfaces() as $interface) {
+      if (isset($inherited[$interface->getName()])) continue;
+      yield $interface->name => new self($interface);
     }
   }
 

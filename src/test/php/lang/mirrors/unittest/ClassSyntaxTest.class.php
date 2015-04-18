@@ -19,7 +19,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function object_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'name' => 'Object', 'modifiers' => [], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Object', 'modifiers' => [], 'annotations' => null]),
       $this->parse('<?php class Object { }')
     );
   }
@@ -29,6 +29,14 @@ class ClassSyntaxTest extends \unittest\TestCase {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'name' => 'Serializable', 'modifiers' => [], 'annotations' => null]),
       $this->parse('<?php interface Serializable { }')
+    );
+  }
+
+  #[@test]
+  public function runnable_impl() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => ['Runnable'], 'name' => 'Test', 'modifiers' => [], 'annotations' => null]),
+      $this->parse('<?php class Test implements Runnable { }')
     );
   }
 
@@ -43,7 +51,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function abstract_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),
       $this->parse('<?php abstract class Test { }')
     );
   }
@@ -51,7 +59,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function final_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'name' => 'Test', 'modifiers' => ['final'], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => ['final'], 'annotations' => null]),
       $this->parse('<?php final class Test { }')
     );
   }
@@ -59,7 +67,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function documented_class() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'class', 'comment' => '/** Doc */', 'parent' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => '/** Doc */', 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null]),
       $this->parse('<?php /** Doc */ class Test { }')
     );
   }
@@ -74,6 +82,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
           'kind'        => 'class',
           'name'        => 'IntegrationTest',
           'parent'      => '\unittest\TestCase',
+          'implements'  => null,
           'modifiers'   => [],
           'comment'     => null, 
           'annotations' => null,

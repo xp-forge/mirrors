@@ -77,6 +77,36 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
+  /** @return php.Generator */
+  public function allInterfaces() {
+    $decl= $this->decl;
+    do {
+      foreach ($decl['implements'] as $interface) {
+        $name= $this->resolve0($interface);
+        yield strtr($name, '.', '\\') => new self($name);
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+  }
+
+  /** @return php.Generator */
+  public function declaredInterfaces() {
+    foreach ($this->decl['implements'] as $interface) {
+      $name= $this->resolve0($interface);
+      yield strtr($name, '.', '\\') => new self($name);
+    }
+  }
+
+  public function typeImplements($name) {
+    $decl= $this->decl;
+    $name= strtr($name, '\\', '.');
+    do {
+      foreach ($decl['implements'] as $interface) {
+        if ($name === $this->resolve0($interface)) return true;
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return false;
+  }
+
   /** @return [:var] */
   public function constructor() {
     $decl= $this->decl;
