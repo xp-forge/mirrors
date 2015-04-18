@@ -20,7 +20,7 @@ class Traits extends \lang\Object implements \IteratorAggregate {
    */
   public function contains($arg) {
     if ($arg instanceof TypeMirror) {
-      $name= $arg->reflect->getName();
+      $name= $arg->reflect->name;
     } else {
       $name= strtr($arg, '.', '\\');
     }

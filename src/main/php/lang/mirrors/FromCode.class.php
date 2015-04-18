@@ -6,6 +6,7 @@ use lang\mirrors\parse\ClassSource;
 class FromCode extends \lang\Object implements Source {
   private $unit, $decl;
   private static $syntax;
+  public $name;
 
   static function __static() {
     self::$syntax= new ClassSyntax();
@@ -14,6 +15,7 @@ class FromCode extends \lang\Object implements Source {
   public function __construct($name) {
     $this->unit= self::$syntax->parse(new ClassSource(strtr($name, '\\', '.')));
     $this->decl= $this->unit->declaration();
+    $this->name= $this->decl['name'];
   }
 
   /**
