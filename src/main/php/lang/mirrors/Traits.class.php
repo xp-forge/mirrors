@@ -19,11 +19,10 @@ class Traits extends \lang\Object implements \IteratorAggregate {
    * @return bool
    */
   public function contains($arg) {
-    return $this->mirror->reflect->typeUses(strtr(
-      $arg instanceof TypeMirror ? $arg->name() : $arg,
-      '.',
-      '\\'
-    ));
+    return $this->mirror->reflect->typeUses($arg instanceof TypeMirror
+      ? $arg->reflect->name
+      : strtr($arg, '.', '\\')
+    );
   }
 
   /**

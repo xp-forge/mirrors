@@ -19,11 +19,10 @@ class Interfaces extends \lang\Object implements \IteratorAggregate {
    * @return bool
    */
   public function contains($arg) {
-    return $this->mirror->reflect->typeImplements(strtr(
-      $arg instanceof TypeMirror ? $arg->name() : $arg,
-      '.',
-      '\\'
-    ));
+    return $this->mirror->reflect->typeImplements($arg instanceof TypeMirror
+      ? $arg->reflect->name
+      : strtr($arg, '.', '\\')
+    );
   }
 
   /**
