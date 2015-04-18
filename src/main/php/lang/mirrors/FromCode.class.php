@@ -15,7 +15,8 @@ class FromCode extends \lang\Object implements Source {
   public function __construct($name) {
     $this->unit= self::$syntax->parse(new ClassSource(strtr($name, '\\', '.')));
     $this->decl= $this->unit->declaration();
-    $this->name= $this->decl['name'];
+    $package= $this->unit->package();
+    $this->name= ($package ? strtr($package, '.', '\\').'\\' : '').$this->decl['name'];
   }
 
   /**
@@ -32,10 +33,7 @@ class FromCode extends \lang\Object implements Source {
   public function codeUnit() { return $this->unit; }
 
   /** @return string */
-  public function typeName() { 
-    $package= $this->unit->package();
-    return ($package ? $package.'.' : '').$this->decl['name'];
-  }
+  public function typeName() { return strtr($this->name, '\\', '.'); }
 
   /** @return string */
   public function typeDeclaration() { return $this->decl['name']; }
