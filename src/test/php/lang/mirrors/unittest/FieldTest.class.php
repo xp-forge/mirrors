@@ -4,6 +4,7 @@ use lang\mirrors\Field;
 use lang\mirrors\Modifiers;
 use lang\mirrors\TypeMirror;
 use lang\IllegalArgumentException;
+use lang\ElementNotFoundException;
 
 class FieldTest extends AbstractFieldTest {
 
@@ -20,7 +21,7 @@ class FieldTest extends AbstractFieldTest {
     new Field($this->type, new \ReflectionProperty(self::class, 'fixture'));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function constructor_raises_exception_if_field_does_not_exist() {
     new Field($this->type, 'not.a.field');
   }

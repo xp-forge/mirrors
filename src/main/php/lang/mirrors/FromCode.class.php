@@ -4,6 +4,7 @@ use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
 use lang\Type;
 use lang\XPClass;
+use lang\ElementNotFoundException;
 
 class FromCode extends \lang\Object implements Source {
   private static $syntax;
@@ -215,13 +216,15 @@ class FromCode extends \lang\Object implements Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function fieldNamed($name) {
     $decl= $this->decl;
     do {
       if (isset($decl['field'][$name])) return $decl['field'][$name];
     } while ($decl= $this->declarationOf($decl['parent']));
-    return null;
+
+    throw new ElementNotFoundException('No field named $'.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
@@ -312,13 +315,15 @@ class FromCode extends \lang\Object implements Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function methodNamed($name) {
     $decl= $this->decl;
     do {
       if (isset($decl['method'][$name])) return $this->method($decl['name'], $decl['method'][$name]);
     } while ($decl= $this->declarationOf($decl['parent']));
-    return null;
+
+    throw new ElementNotFoundException('No method named '.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
@@ -351,13 +356,15 @@ class FromCode extends \lang\Object implements Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function constantNamed($name) {
     $decl= $this->decl;
     do {
       if (isset($decl['const'][$name])) return $decl['const'][$name]['value']->resolve($this->mirror);
     } while ($decl= $this->declarationOf($decl['parent']));
-    return null;
+
+    throw new ElementNotFoundException('No constant named '.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */

@@ -122,6 +122,7 @@ interface Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function fieldNamed($name);
 
@@ -130,6 +131,7 @@ interface Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function methodNamed($name);
 
@@ -138,6 +140,7 @@ interface Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function constantNamed($name);
 

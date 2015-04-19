@@ -1,7 +1,7 @@
 <?php namespace lang\mirrors;
 
 abstract class Sources extends \lang\Enum {
-  public static $CODE, $REFLECTION;
+  public static $REFLECTION, $CODE;
 
   static function __static() {
     self::$REFLECTION= newinstance(self::class, [0, 'REFLECTION'], '{

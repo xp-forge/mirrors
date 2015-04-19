@@ -5,6 +5,7 @@ use lang\mirrors\parse\ClassSource;
 use lang\XPClass;
 use lang\Type;
 use lang\Enum;
+use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use lang\Throwable;
 
@@ -252,12 +253,13 @@ class FromReflection extends \lang\Object implements Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function fieldNamed($name) {
     try {
       return $this->field($this->reflect->getProperty($name));
     } catch (\Exception $e) {
-      throw new IllegalArgumentException('No field named $'.$name.' in '.$this->name);
+      throw new ElementNotFoundException('No field named $'.$name.' in '.$this->name);
     }
   }
 
@@ -362,12 +364,13 @@ class FromReflection extends \lang\Object implements Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function methodNamed($name) { 
     try {
       return $this->method($this->reflect->getMethod($name));
     } catch (\Exception $e) {
-      throw new IllegalArgumentException('No method named '.$name.'() in '.$this->name);
+      throw new ElementNotFoundException('No method named '.$name.'() in '.$this->name);
     }
   }
 
@@ -399,13 +402,13 @@ class FromReflection extends \lang\Object implements Source {
    *
    * @param  string $name
    * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function constantNamed($name) {
-    try {
+    if ($this->reflect->hasConstant($name)) {
       return $this->reflect->getConstant($name);
-    } catch (\Exception $e) {
-      throw new IllegalArgumentException('No constant named $'.$name.' in '.$this->name);
     }
+    throw new ElementNotFoundException('No constant named '.$name.'() in '.$this->name);
   }
 
   /** @return php.Generator */

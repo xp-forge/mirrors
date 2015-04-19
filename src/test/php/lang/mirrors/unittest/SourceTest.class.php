@@ -5,6 +5,7 @@ use lang\mirrors\Kind;
 use lang\Closeable;
 use lang\XPClass;
 use lang\Type;
+use lang\ElementNotFoundException;
 
 /**
  * Base class for source implementation testing
@@ -243,6 +244,11 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
+  #[@test, @expect(ElementNotFoundException::class)]
+  public function non_existant_field() {
+    $this->reflect(MemberFixture::class)->fieldNamed('does.not.exist');
+  }
+
   #[@test]
   public function has_instance_method() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicInstanceMethod'));
@@ -306,6 +312,11 @@ abstract class SourceTest extends \unittest\TestCase {
       'inheritedMethod',
       $this->reflect(MemberFixture::class)->methodNamed('inheritedMethod')['name']
     );
+  }
+
+  #[@test, @expect(ElementNotFoundException::class)]
+  public function non_existant_method() {
+    $this->reflect(MemberFixture::class)->methodNamed('does.not.exist');
   }
 
   #[@test]
@@ -383,6 +394,11 @@ abstract class SourceTest extends \unittest\TestCase {
       ['CONSTANT' => MemberFixture::CONSTANT, 'INHERITED' => MemberFixture::INHERITED],
       iterator_to_array($this->reflect(MemberFixture::class)->allConstants())
     );
+  }
+
+  #[@test, @expect(ElementNotFoundException::class)]
+  public function non_existant_constant() {
+    $this->reflect(MemberFixture::class)->constantNamed('does.not.exist');
   }
 
   #[@test]
