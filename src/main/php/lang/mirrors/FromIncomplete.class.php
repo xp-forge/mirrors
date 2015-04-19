@@ -21,14 +21,14 @@ class FromIncomplete extends \lang\Object implements Source {
 
   /** @return string */
   public function typeDeclaration() {
-    $sep= strrpos($this->name, '\\');
-    return false === $ns ? $this->name : substr($this->name, 0, $sep + 1);
+    $ns= strrpos($this->name, '\\');
+    return false === $ns ? $this->name : substr($this->name, $ns + 1);
   }
 
   /** @return string */
   public function packageName() {
-    $sep= strrpos($this->name, '\\');
-    return false === $ns ? $this->name : substr($this->name, $sep + 1);
+    $ns= strrpos($this->name, '\\');
+    return false === $ns ? null : substr($this->name, 0, $ns);
   }
 
   /** @return self */
