@@ -51,7 +51,7 @@ class Method extends Routine {
    * @throws lang.IllegalArgumentException
    */
   public function invoke(Generic $instance= null, $args= []) {
-    return $this->mirror->reflect->invokeMethod($this->reflect['value'], $instance, $args);
+    return $this->reflect['invoke']($instance, $args);
   }
 
   /** @return string */

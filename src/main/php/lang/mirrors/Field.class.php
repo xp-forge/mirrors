@@ -53,7 +53,7 @@ class Field extends Member {
    * @throws lang.IllegalArgumentException
    */
   public function read(Generic $instance= null) {
-    return $this->mirror->reflect->readField($this->reflect['value'], $instance);
+    return $this->reflect['read']($instance);
   }
 
   /**
@@ -65,7 +65,7 @@ class Field extends Member {
    * @throws lang.IllegalArgumentException
    */
   public function modify(Generic $instance= null, $value) {
-    return $this->mirror->reflect->modifyField($this->reflect['value'], $instance, $value);
+    return $this->reflect['modify']($instance, $value);
   }
 
   /** @return string */

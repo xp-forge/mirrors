@@ -163,8 +163,7 @@ class FromReflection extends \lang\Object implements Source {
         'access'  => Modifiers::IS_PUBLIC,
         'holder'  => $this->reflect->name,
         'comment' => function() { return null; },
-        'params'  => function() { return []; },
-        'value'   => null
+        'params'  => function() { return []; }
       ];
     } else {
       return $this->method($ctor);
@@ -212,14 +211,19 @@ class FromReflection extends \lang\Object implements Source {
       'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
       'holder'  => $reflect->getDeclaringClass()->name,
       'comment' => function() use($reflect) { return $reflect->getDocComment(); },
-      'value'   => $reflect
+      'read'    => function($instance) use($reflect) { return $this->readField($reflect, $instance); },
+      'modify'  => function($instance, $value) use($reflect) { $this->modifyField($reflect, $instance, $value); }
     ];
   }
 
   /**
    * Reads a field
+   *
+   * @param  php.ReflectionProperty $reflect
+   * @param  lang.Generic $instance
+   * @return var
    */
-  public function readField($reflect, $instance) {
+  private function readField($reflect, $instance) {
     if ($reflect->isStatic()) {
       return $reflect->getValue(null);
     } else if ($instance && $reflect->getDeclaringClass()->isInstance($instance)) {
@@ -233,8 +237,13 @@ class FromReflection extends \lang\Object implements Source {
 
   /**
    * Modifies a field
+   *
+   * @param  php.ReflectionProperty $reflect
+   * @param  lang.Generic $instance
+   * @param  var $value
+   * @return voud
    */
-  public function modifyField($reflect, $instance, $value) {
+  private function modifyField($reflect, $instance, $value) {
     if ($reflect->isStatic()) {
       $reflect->setValue(null, $value);
       return;
@@ -335,7 +344,7 @@ class FromReflection extends \lang\Object implements Source {
         return $params;
       },
       'comment' => function() use($reflect) { return $reflect->getDocComment(); },
-      'value'   => $reflect
+      'invoke'  => function($instance, $args) use($reflect) { return $this->invokeMethod($reflect, $instance, $args); }
     ];
   }
 
@@ -349,8 +358,13 @@ class FromReflection extends \lang\Object implements Source {
 
   /**
    * Invokes the method
+   *
+   * @param  php.ReflectionMethod $reflect
+   * @param  lang.Generic $instance
+   * @param  var[] $args
+   * @return var
    */
-  public function invokeMethod($reflect, $instance, $args) {
+  private function invokeMethod($reflect, $instance, $args) {
     try {
       return $reflect->invokeArgs($instance, $args);
     } catch (Throwable $e) {
