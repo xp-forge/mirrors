@@ -7,15 +7,17 @@ abstract class Sources extends \lang\Enum {
     self::$DEFAULT= newinstance(self::class, [0, 'DEFAULT'], '{
       static function __static() { }
 
-      public function reflect($class) {
+      public function reflect($class, $source= null) {
         if ($class instanceof \ReflectionClass) {
-          return self::$REFLECTION->reflect($class, $this);
+          return new FromReflection($class, $source ?: $this);
         } else {
           $literal= strtr($class, ".", "\\\\");
           if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
-            return self::$REFLECTION->reflect($class, $this);
+            return self::$REFLECTION->reflect($class, $source ?: $this);
+          } else if (isset(\xp::$cl[strtr($class, "\\\\", ".")])) {
+            return new FromIncomplete($literal);
           } else {
-            return self::$CODE->reflect($class, $this);
+            return self::$CODE->reflect($class, $source ?: $this);
           }
         }
       }
@@ -23,11 +25,11 @@ abstract class Sources extends \lang\Enum {
     self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], '{
       static function __static() { }
 
-      public function reflect($class) {
+      public function reflect($class, $source= null) {
         try {
-          return new FromReflection($class instanceof \ReflectionClass
-            ? $class
-            : new \ReflectionClass(strtr($class, ".", "\\\\"))
+          return new FromReflection(
+            $class instanceof \ReflectionClass ? $class : new \ReflectionClass(strtr($class, ".", "\\\\")),
+            $source
           );
         } catch (\Exception $e) {
           throw new \lang\ClassNotFoundException($class.": ".$e->getMessage());
@@ -37,8 +39,8 @@ abstract class Sources extends \lang\Enum {
     self::$CODE= newinstance(self::class, [2, 'CODE'], '{
       static function __static() { }
 
-      public function reflect($class) {
-        return new FromCode($class);
+      public function reflect($class, $source= null) {
+        return new FromCode($class, $source);
       }
     }');
   }
@@ -47,8 +49,9 @@ abstract class Sources extends \lang\Enum {
    * Creates a reflection source for a given class
    *
    * @param  string $class
+   * @param  self $source
    * @return lang.mirrors.Source
    * @throws lang.ClassNotFoundException
    */
-  public abstract function reflect($class);
+  public abstract function reflect($class, $source= null);
 }
