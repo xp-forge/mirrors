@@ -16,7 +16,7 @@ abstract class Sources extends \lang\Enum {
           if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
             return self::$REFLECTION->reflect($class, $source ?: $this);
           } else if (\lang\ClassLoader::getDefault()->providesClass($dotted)) {
-            return self::$CODE->reflect($dotted, $source ?: $this);
+            return new FromCode($dotted, $source ?: $this);
           } else {
             return new FromIncomplete($literal);
           }
