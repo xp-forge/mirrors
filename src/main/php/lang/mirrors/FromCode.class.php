@@ -37,7 +37,7 @@ class FromCode extends \lang\Object implements Source {
    *
    * @param  bool $parent Whether to include parents
    * @param  bool $traits Whether to include traits
-   * @return [:var]
+   * @return php.Generator
    */
   private function declarations($parent, $traits) {
     yield $this->decl;
@@ -136,34 +136,32 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allInterfaces() {
-    $decl= $this->decl;
-    do {
-      foreach ($decl['implements'] as $interface) {
+    foreach ($this->declarations(true, false) as $decl) {
+      foreach ((array)$decl['implements'] as $interface) {
         $name= $this->resolve0($interface);
-        yield strtr($name, '.', '\\') => new self($name);
+        yield $name => new self($name);
       }
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
   }
 
   /** @return php.Generator */
   public function declaredInterfaces() {
     foreach ($this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
-      yield strtr($name, '.', '\\') => new self($name);
+      yield $name => new self($name);
     }
   }
 
   /** @return php.Generator */
   public function allTraits() {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, false) as $decl) {
       if (!isset($decl['use'])) continue;
       foreach ($decl['use'] as $trait => $definition) {
         if ('\__xp' === $trait) continue;
         $name= $this->resolve0($trait);
         yield $name => new self($name);
       }
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
   }
 
   /** @return php.Generator */
