@@ -89,8 +89,7 @@ class FromIncomplete extends \lang\Object implements Source {
       'access'  => Modifiers::IS_PUBLIC,
       'holder'  => $this->name,
       'comment' => function() { return null; },
-      'params'  => function() { return []; },
-      'value'   => null
+      'params'  => function() { return []; }
     ];
   }
 
