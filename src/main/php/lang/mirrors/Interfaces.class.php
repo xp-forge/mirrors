@@ -19,8 +19,8 @@ class Interfaces extends \lang\Object implements \IteratorAggregate {
    * @return bool
    */
   public function contains($arg) {
-    return $this->mirror->reflect->implementsInterface($arg instanceof TypeMirror
-      ? $arg->reflect
+    return $this->mirror->reflect->typeImplements($arg instanceof TypeMirror
+      ? $arg->reflect->name
       : strtr($arg, '.', '\\')
     );
   }
@@ -31,7 +31,7 @@ class Interfaces extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
-    foreach ($this->mirror->reflect->getInterfaces() as $interface) {
+    foreach ($this->mirror->reflect->allInterfaces() as $interface) {
       yield new TypeMirror($interface);
     }
   }
@@ -42,10 +42,7 @@ class Interfaces extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function declared() {
-    $parent= $this->mirror->reflect->getParentClass();
-    $inherited= $parent ? array_flip($parent->getInterfaceNames()) : [];
-    foreach ($this->mirror->reflect->getInterfaces() as $interface) {
-      if (isset($inherited[$interface->getName()])) continue;
+    foreach ($this->mirror->reflect->declaredInterfaces() as $interface) {
       yield new TypeMirror($interface);
     }
   }

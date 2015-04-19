@@ -7,16 +7,16 @@ use lang\mirrors\parse\TagsSource;
  * Base class for all type members: Fields, methods, constructors.
  */
 abstract class Member extends \lang\Object {
-  public static $STATIC= 0, $INSTANCE= 1;
+  public static $STATIC= 0x0001, $INSTANCE= 0x0002, $DECLARED= 0x0004;
   public $reflect;
   protected $mirror;
   private $tags= null;
 
   /**
-   * Creates a new method
+   * Creates a new member
    *
    * @param  lang.mirrors.TypeMirror $mirror The type this member belongs to.
-   * @param  var $reflect A reflection object
+   * @param  [:var] $reflect
    */
   public function __construct($mirror, $reflect) {
     $this->mirror= $mirror;
@@ -24,17 +24,15 @@ abstract class Member extends \lang\Object {
   }
 
   /** @return string */
-  public function name() { return $this->reflect->name; }
+  public function name() { return $this->reflect['name']; }
 
   /** @return lang.mirrors.Modifiers */
-  public function modifiers() { return new Modifiers($this->reflect->getModifiers() & ~0x1fb7f008); }
+  public function modifiers() { return $this->reflect['access']; }
 
   /** @return string */
   public function comment() {
-    $raw= $this->reflect->getDocComment();
-    if (false === $raw) {
-      return null;
-    } else {
+    $raw= $this->reflect['comment']();
+    if ($raw) {
       $text= trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
         $raw,
         4,                          // "/**\n"
@@ -42,6 +40,7 @@ abstract class Member extends \lang\Object {
       )));
       return '' === $text ? null : $text;
     }
+    return null;
   }
 
   /**
@@ -51,13 +50,16 @@ abstract class Member extends \lang\Object {
    */
   public function tags() {
     if (null === $this->tags) {
-      if ($raw= $this->reflect->getDocComment()) {
+      $raw= $this->reflect['comment']();
+      if ($raw) {
         $parsed= (new TagsSyntax())->parse(new TagsSource(preg_replace('/\n\s+\* ?/', "\n", substr(
           $raw,
           strpos($raw, '* @') + 2,    // position of first details token
           - 2                         // "*/"
         ))));
         $this->tags= array_merge(static::$tags, $parsed);
+      } else {
+        $this->tags= static::$tags;
       }
     }
     return $this->tags;
@@ -70,18 +72,13 @@ abstract class Member extends \lang\Object {
    * @return lang.mirrors.TypeMirror
    */
   public function declaredIn() { 
-    $declaring= $this->reflect->getDeclaringClass();
-    if ($declaring->name === $this->mirror->reflect->name) {
-      return $this->mirror;
-    } else {
-      return new TypeMirror($declaring);
-    }
+    return $this->mirror->resolve($this->reflect['holder']);
   }
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
-    $lookup= $this->mirror->unit()->declaration()[static::$kind];
-    $name= $this->reflect->name;
+    $lookup= $this->mirror->reflect->codeUnit()->declaration()[static::$kind];
+    $name= $this->reflect['name'];
     return new Annotations(
       $this->mirror,
       isset($lookup[$name]['annotations'][null]) ? (array)$lookup[$name]['annotations'][null] : []
@@ -97,7 +94,7 @@ abstract class Member extends \lang\Object {
   public function equals($cmp) {
     return $cmp instanceof self && (
       $this->name === $cmp->name &&
-      $this->reflect->getDeclaringClass()->name === $cmp->reflect->getDeclaringClass()->name
+      $this->reflect['holder'] === $cmp->reflect['holder']
     );
   }
 

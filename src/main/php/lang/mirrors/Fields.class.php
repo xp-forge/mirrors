@@ -22,7 +22,7 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    */
   public function provides($name) {
     if (0 === strncmp('__', $name, 2)) return false;
-    return $this->mirror->reflect->hasProperty($name);
+    return $this->mirror->reflect->hasField($name);
   }
 
   /**
@@ -34,7 +34,7 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    */
   public function named($name) {
     if ($this->provides($name)) {
-      return new Field($this->mirror, $this->mirror->reflect->getProperty($name));
+      return new Field($this->mirror, $this->mirror->reflect->fieldNamed($name));
     }
     throw new ElementNotFoundException('No field $'.$name.' in '.$this->mirror->name());
   }
@@ -45,8 +45,8 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
-    foreach ($this->mirror->reflect->getProperties() as $field) {
-      if (0 === strncmp('__', $field->name, 2)) continue;
+    foreach ($this->mirror->reflect->allFields() as $name => $field) {
+      if (0 === strncmp('__', $name, 2)) continue;
       yield new Field($this->mirror, $field);
     }
   }
@@ -57,8 +57,8 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function declared() {
-    foreach ($this->mirror->reflect->getProperties() as $field) {
-      if (0 === strncmp('__', $field->name, 2) || $field->getDeclaringClass()->name !== $this->mirror->reflect->name) continue;
+    foreach ($this->mirror->reflect->declaredFields() as $name => $field) {
+      if (0 === strncmp('__', $name, 2)) continue;
       yield new Field($this->mirror, $field);
     }
   }
@@ -66,12 +66,17 @@ class Fields extends \lang\Object implements \IteratorAggregate {
   /**
    * Iterates over fields.
    *
-   * @param  int $kind Either Member::$STATIC or Member::$INSTANCE
+   * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
    * @return php.Generator
    */
   public function of($kind) {
-    foreach ($this->mirror->reflect->getProperties() as $field) {
-      if (0 === strncmp('__', $field->name, 2) || $kind === ($field->getModifiers() & MODIFIER_STATIC)) continue;
+    $instance= ($kind & Member::$STATIC) === 0;
+    $fields= ($kind & Member::$DECLARED)
+      ? $this->mirror->reflect->declaredFields()
+      : $this->mirror->reflect->allFields()
+    ;
+    foreach ($fields as $name => $field) {
+      if (0 === strncmp('__', $name, 2) || $instance === $field['access']->isStatic()) continue;
       yield new Field($this->mirror, $field);
     }
   }

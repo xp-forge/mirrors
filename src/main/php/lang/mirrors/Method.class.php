@@ -18,20 +18,17 @@ class Method extends Routine {
    * Creates a new method
    *
    * @param  lang.mirrors.TypeMirror $mirror
-   * @param  var $arg Either a ReflectionMethod or a string
+   * @param  var $arg A map returned from Source::methodNamed(), a ReflectionMethod or a string
    * @throws lang.IllegalArgumentException If there is no such method
    */
   public function __construct($mirror, $arg) {
-    if ($arg instanceof \ReflectionMethod) {
-      $reflect= $arg;
+    if (is_array($arg)) {
+      parent::__construct($mirror, $arg);
+    } else if ($arg instanceof \ReflectionMethod) {
+      parent::__construct($mirror, $mirror->reflect->methodNamed($arg->name));
     } else {
-      try {
-        $reflect= $mirror->reflect->getMethod($arg);
-      } catch (\Exception $e) {
-        throw new IllegalArgumentException('No method named '.$arg.'() in '.$mirror->name());
-      }
+      parent::__construct($mirror, $mirror->reflect->methodNamed($arg));
     }
-    parent::__construct($mirror, $reflect);
   }
 
   /**
@@ -54,13 +51,7 @@ class Method extends Routine {
    * @throws lang.IllegalArgumentException
    */
   public function invoke(Generic $instance= null, $args= []) {
-    try {
-      return $this->reflect->invokeArgs($instance, $args);
-    } catch (Throwable $e) {
-      throw new TargetInvocationException('Invoking '.$this->name().'() raised '.$e->getClassName(), $e);
-    } catch (\Exception $e) {
-      throw new IllegalArgumentException('Verifying '.$this->name().'(): '.$e->getMessage());
-    }
+    return $this->reflect['invoke']($instance, $args);
   }
 
   /** @return string */

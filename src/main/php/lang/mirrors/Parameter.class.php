@@ -1,7 +1,6 @@
 <?php namespace lang\mirrors;
 
 use lang\Type;
-use lang\XPClass;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 
@@ -21,55 +20,48 @@ class Parameter extends \lang\Object {
    * @throws lang.IllegalArgumentException If there is no such parameter
    */
   public function __construct($mirror, $arg) {
-    if ($arg instanceof \ReflectionParameter) {
+    if (is_array($arg)) {
       $this->reflect= $arg;
+    } else if ($arg instanceof \ReflectionParameter) {
+      $params= $mirror->reflect['params']();
+      $this->reflect= $params[$arg->getPosition()];
     } else {
-      try {
-        $this->reflect= new \ReflectionParameter([$mirror->reflect->class, $mirror->reflect->name], $arg);
-      } catch (\Exception $e) {
+      $params= $mirror->reflect['params']();
+      if (!isset($params[$arg])) {
         throw new IllegalArgumentException('No parameter '.$arg.' in '.$mirror->name());
       }
+      $this->reflect= $params[$arg];
     }
     $this->mirror= $mirror;
   }
 
   /** @return string */
-  public function name() { return $this->reflect->name; }
+  public function name() { return $this->reflect['name']; }
 
   /** @return int */
-  public function position() { return $this->reflect->getPosition(); }
+  public function position() { return $this->reflect['pos']; }
 
   /** @return bool */
-  public function isOptional() { return $this->reflect->isOptional(); }
+  public function isVariadic() { return $this->reflect['var']; }
 
   /** @return bool */
-  public function isVariadic() { return $this->reflect->isVariadic(); }
+  public function isOptional() { return isset($this->reflect['default']); }
 
   /** @return bool */
-  public function isVerified() {
-    return (
-      $this->reflect->isArray() ||
-      $this->reflect->isCallable() ||
-      $this->reflect->getClass()
-    );
-  }
+  public function isVerified() { return isset($this->reflect['type']); }
 
   /** @return lang.Type */
   public function type() {
-    if ($this->reflect->isArray()) {
-      return Type::$ARRAY;
-    } else if ($this->reflect->isCallable()) {
-      return Type::$CALLABLE;
-    } else if (null === ($class= $this->reflect->getClass())) {
+    if (null === $this->reflect['type']) {
       $params= $this->mirror->tags()['param'];
-      $n= $this->reflect->getPosition();
+      $n= $this->reflect['pos'];
       if (isset($params[$n])) {
         return $params[$n]->resolve($this->mirror->declaredIn());
       } else {
         return Type::$VAR;
       }
     } else {
-      return new XPClass($class);
+      return $this->reflect['type']();
     }
   }
 
@@ -80,8 +72,8 @@ class Parameter extends \lang\Object {
    * @throws lang.IllegalStateException
    */
   public function defaultValue() {
-    if ($this->reflect->isOptional() && !$this->reflect->isVariadic()) {
-      return $this->reflect->getDefaultValue();
+    if (isset($this->reflect['default'])) {
+      return $this->reflect['default']();
     }
     throw new IllegalStateException('Parameter is not optional');
   }
@@ -90,8 +82,8 @@ class Parameter extends \lang\Object {
   public function annotations() {
     $declared= $this->mirror->declaredIn();
     $lookup= $declared->unit()->declaration()['method'];
-    $method= $this->mirror->reflect->name;
-    $name= '$'.$this->reflect->name;
+    $method= $this->mirror->reflect['name'];
+    $name= '$'.$this->reflect['name'];
     return new Annotations(
       $declared,
       isset($lookup[$method]['annotations'][$name]) ? $lookup[$method]['annotations'][$name] : []
@@ -109,6 +101,6 @@ class Parameter extends \lang\Object {
 
   /** @return string */
   public function __toString() {
-    return $this->type().' $'.$this->name();
+    return $this->type().($this->reflect['var'] ? '...' : '').' $'.$this->name();
   }
 }

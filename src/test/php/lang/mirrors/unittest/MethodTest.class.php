@@ -5,6 +5,7 @@ use lang\mirrors\Modifiers;
 use lang\mirrors\TypeMirror;
 use lang\IllegalArgumentException;
 use lang\IllegalAccessException;
+use lang\ElementNotFoundException;
 
 class MethodTest extends AbstractMethodTest {
 
@@ -33,7 +34,7 @@ class MethodTest extends AbstractMethodTest {
     new Method($this->type, new \ReflectionMethod(self::class, __FUNCTION__));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function constructor_raises_exception_if_method_does_not_exist() {
     new Method($this->type, 'not.a.method');
   }

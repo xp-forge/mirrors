@@ -8,6 +8,18 @@ use lang\ElementNotFoundException;
 class TypeMirrorMethodsTest extends \unittest\TestCase {
   private $fixture;
 
+  /**
+   * Returns the elements of an iterator on Method instances sorted by name
+   *
+   * @param  php.Traversable $iterator
+   * @return lang.mirrors.Method[]
+   */
+  private function sorted($iterator) {
+    $list= iterator_to_array($iterator);
+    usort($list, function($a, $b) { return strcmp($a->name(), $b->name()); });
+    return $list;
+  }
+
   public function setUp() {
     $this->fixture= new TypeMirror(MemberFixture::class);
   }
@@ -41,15 +53,16 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   public function all_methods() {
     $this->assertEquals(
       [
-        new Method($this->fixture, 'publicInstanceMethod'),
-        new Method($this->fixture, 'protectedInstanceMethod'),
-        new Method($this->fixture, 'privateInstanceMethod'),
-        new Method($this->fixture, 'publicClassMethod'),
-        new Method($this->fixture, 'protectedClassMethod'),
+        new Method($this->fixture, 'inheritedMethod'),
         new Method($this->fixture, 'privateClassMethod'),
-        new Method($this->fixture, 'inheritedMethod')
+        new Method($this->fixture, 'privateInstanceMethod'),
+        new Method($this->fixture, 'protectedClassMethod'),
+        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'publicClassMethod'),
+        new Method($this->fixture, 'publicInstanceMethod'),
+        new Method($this->fixture, 'traitMethod')
       ],
-      iterator_to_array($this->fixture->methods())
+      $this->sorted($this->fixture->methods())
     );
   }
 
@@ -57,14 +70,15 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   public function declared_methods() {
     $this->assertEquals(
       [
-        new Method($this->fixture, 'publicInstanceMethod'),
-        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'privateClassMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
-        new Method($this->fixture, 'publicClassMethod'),
         new Method($this->fixture, 'protectedClassMethod'),
-        new Method($this->fixture, 'privateClassMethod')
+        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'publicClassMethod'),
+        new Method($this->fixture, 'publicInstanceMethod'),
+        new Method($this->fixture, 'traitMethod')
       ],
-      iterator_to_array($this->fixture->methods()->declared())
+      $this->sorted($this->fixture->methods()->declared())
     );
   }
 
@@ -72,12 +86,13 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   public function instance_methods() {
     $this->assertEquals(
       [
-        new Method($this->fixture, 'publicInstanceMethod'),
-        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'inheritedMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
-        new Method($this->fixture, 'inheritedMethod')
+        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'publicInstanceMethod'),
+        new Method($this->fixture, 'traitMethod')
       ],
-      iterator_to_array($this->fixture->methods()->of(Member::$INSTANCE))
+      $this->sorted($this->fixture->methods()->of(Member::$INSTANCE))
     );
   }
 
@@ -85,11 +100,11 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   public function static_methods() {
     $this->assertEquals(
       [
-        new Method($this->fixture, 'publicClassMethod'),
+        new Method($this->fixture, 'privateClassMethod'),
         new Method($this->fixture, 'protectedClassMethod'),
-        new Method($this->fixture, 'privateClassMethod')
+        new Method($this->fixture, 'publicClassMethod')
       ],
-      iterator_to_array($this->fixture->methods()->of(Member::$STATIC))
+      $this->sorted($this->fixture->methods()->of(Member::$STATIC))
     );
   }
 }

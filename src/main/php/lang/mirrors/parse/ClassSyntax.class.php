@@ -13,6 +13,8 @@ use text\parse\rules\Collect;
 use text\parse\rules\OneOf;
 
 class ClassSyntax extends \text\parse\Syntax {
+  const CACHE_LIMIT = 20;
+  private static $cache= [];
 
   /** @return text.parse.Rules */
   protected function rules() {
@@ -43,11 +45,11 @@ class ClassSyntax extends \text\parse\Syntax {
         return new CodeUnit($values[1], $values[2], $values[3]);
       }),
       'package' => new Sequence([new Token(T_NAMESPACE), $typeName, new Token(';')], function($values) {
-        return strtr(implode('', $values[1]), '\\', '.');
+        return implode('', $values[1]);
       }),
       'import' => new Match([
         T_USE => new Sequence([$typeName, new Token(';')], function($values) {
-          return strtr(implode('', $values[1]), '\\', '.');
+          return implode('', $values[1]);
         }),
         T_NEW => new Sequence([new Token(T_STRING), new Token('('), new Token(T_CONSTANT_ENCAPSED_STRING), new Token(')'), new Token(';')], function($values) {
           return trim($values[3], '\'"');
@@ -55,16 +57,34 @@ class ClassSyntax extends \text\parse\Syntax {
       ]),
       'decl' => new Sequence(
         [
+          new Returns(function($values, $source) { return $source->lastComment(); }),
           new Optional(new Apply('annotations')),
+          new Apply('modifiers'),
           new Match([
-            T_CLASS     => new Sequence([new Token(T_STRING), new Tokens(T_STRING, T_NS_SEPARATOR, T_EXTENDS, T_IMPLEMENTS), new Apply('type')], function($values) {
-              return array_merge(['kind' => $values[0], 'name' => $values[1]], $values[3]);
+            T_CLASS     => new Sequence([new Token(T_STRING), new Optional(new Apply('parent')), new Optional(new Apply('implements')), new Apply('type')], function($values) {
+              return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => $values[2], 'implements' => $values[3]], $values[4]);
             }),
-            T_INTERFACE => new Returns(T_INTERFACE),
-            T_TRAIT     => new Returns(T_TRAIT)
+            T_INTERFACE => new Sequence([new Token(T_STRING), new Optional(new Apply('parents')), new Apply('type')], function($values) {
+              return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => null, 'implements' => $values[2]], $values[3]);
+            }),
+            T_TRAIT     => new Sequence([new Token(T_STRING), new Apply('type')], function($values) {
+              return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => null], $values[2]);
+            }),
           ])
         ],
-        function($values) { return array_merge($values[1], ['annotations' => $values[0]]); }
+        function($values) { return array_merge($values[3], ['comment' => $values[0], 'modifiers' => $values[2], 'annotations' => $values[1]]); }
+      ),
+      'parent' => new Sequence(
+        [new Token(T_EXTENDS), $typeName],
+        function($values) { return implode('', $values[1]); }
+      ),
+      'parents' => new Sequence(
+        [new Token(T_EXTENDS), new Repeated($typeName, new Token(','))],
+        function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
+      ),
+      'implements' => new Sequence(
+        [new Token(T_IMPLEMENTS), new Repeated($typeName, new Token(','))],
+        function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
       ),
       'annotations' => new Sequence(
         [new Token('['), new Repeated(new Apply('annotation'), new Token(','), $collectAnnotations), new Token(']')],
@@ -88,8 +108,11 @@ class ClassSyntax extends \text\parse\Syntax {
       ),
       'member' => new OneOf([
         new Match([
+          T_USE   => new Sequence([$typeName, new Apply('aliases')], function($values) {
+            return ['kind' => 'use', 'name' => implode('', $values[1])];
+          }),
           T_CONST => new Sequence([new Token(T_STRING), new Token('='), new Apply('expr'), new Token(';')], function($values) {
-            return ['kind' => 'const', 'name' => $values[1]];
+            return ['kind' => 'const', 'name' => $values[1], 'value' => $values[3]];
           })
         ]),
         new Sequence(
@@ -103,7 +126,7 @@ class ClassSyntax extends \text\parse\Syntax {
               ),
               T_VARIABLE => new Sequence(
                 [new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; })), new Match([',' => null, ';' => null])],
-                function($values) { return ['kind' => 'field', 'name' => $values[0], 'init' => $values[2]]; }
+                function($values) { return ['kind' => 'field', 'name' => substr($values[0], 1), 'init' => $values[2]]; }
               ),
             ])
           ],
@@ -113,13 +136,15 @@ class ClassSyntax extends \text\parse\Syntax {
       'modifiers' => new Tokens(T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC, T_FINAL, T_ABSTRACT),
       'param' => new Sequence(
         [
-          new Tokens(T_ARRAY, T_CALLABLE, T_STRING, T_NS_SEPARATOR, T_ELLIPSIS),
+          new Tokens(T_ARRAY, T_CALLABLE, T_STRING, T_NS_SEPARATOR),
+          new Optional(new Token(T_ELLIPSIS)),
           new Optional(new Token('&')),
           new Token(T_VARIABLE),
           new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; }))
         ],
-        function($values) { return ['name' => $values[2], 'type' => $values[0] ? implode('', $values[0]) : null, 'ref' => isset($values[1]), 'default' => $values[3]]; }
+        function($values) { return ['name' => substr($values[3], 1), 'type' => $values[0] ? implode('', $values[0]) : null, 'ref' => isset($values[2]), 'var' => isset($values[1]), 'default' => $values[4]]; }
       ),
+      'aliases' => new Match([';' => null, '{' => new Block(true)]), 
       'method' => new Match([';' => null, '{' => new Block(true)]),
       'expr' => new OneOf([
         new Match([
@@ -181,5 +206,21 @@ class ClassSyntax extends \text\parse\Syntax {
         T_VARIABLE => function($values) { return $values[0]; },
       ])
     ]);
+  }
+
+  /**
+   * Parses a class
+   *
+   * @param  string $class Fully qualified class name
+   * @return lang.mirrors.parse.CodeUnit
+   */
+  public function codeUnitOf($class) {
+    if (!isset(self::$cache[$class])) {
+      self::$cache[$class]= $this->parse(new ClassSource($class));
+      while (sizeof(self::$cache) > self::CACHE_LIMIT) {
+        unset(self::$cache[key(self::$cache)]);
+      }
+    }
+    return self::$cache[$class];
   }
 }

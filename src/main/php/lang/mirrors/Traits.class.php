@@ -19,21 +19,32 @@ class Traits extends \lang\Object implements \IteratorAggregate {
    * @return bool
    */
   public function contains($arg) {
-    if ($arg instanceof TypeMirror) {
-      $name= $arg->reflect->getName();
-    } else {
-      $name= strtr($arg, '.', '\\');
-    }
-    return in_array($name, $this->mirror->reflect->getTraitNames());
+    return $this->mirror->reflect->typeUses($arg instanceof TypeMirror
+      ? $arg->reflect->name
+      : strtr($arg, '.', '\\')
+    );
   }
 
   /**
-   * Iterates over all fields
+   * Iterates over all traits
    *
    * @return php.Generator
    */
   public function getIterator() {
-    foreach ($this->mirror->reflect->getTraits() as $trait) {
+    foreach ($this->mirror->reflect->allTraits() as $trait) {
+      if (0 === strncmp($trait->name, '__', 2)) continue;
+      yield new TypeMirror($trait);
+    }
+  }
+
+  /**
+   * Returns only traits this type uses directly
+   *
+   * @return php.Generator
+   */
+  public function declared() {
+    foreach ($this->mirror->reflect->declaredTraits() as $trait) {
+      if (0 === strncmp($trait->name, '__', 2)) continue;
       yield new TypeMirror($trait);
     }
   }

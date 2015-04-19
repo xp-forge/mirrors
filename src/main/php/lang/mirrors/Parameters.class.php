@@ -12,7 +12,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    * Creates a new parameters instance
    *
    * @param  lang.mirrors.Method $mirror
-   * @param  php.ReflectionMethod $reflect
+   * @param  [:var] $reflect
    */
   public function __construct($mirror, $reflect) {
     $this->mirror= $mirror;
@@ -24,7 +24,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    *
    * @return bool
    */
-  public function present() { return $this->reflect->getNumberOfParameters() > 0; }
+  public function present() { return !empty($this->lookup()[self::BY_ID]); } 
 
   /**
    * Populates lookup maps BY_ID and BY_NAME lazily, then returns it.
@@ -33,10 +33,10 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    */
   private function lookup() {
     if (null === $this->lookup) {
-      $params= $this->reflect->getParameters();
+      $params= $this->reflect['params']();
       $this->lookup= [self::BY_ID => $params, self::BY_NAME => []];
       foreach ($params as $pos => $param) {
-        $this->lookup[self::BY_NAME][$param->name]= $pos;
+        $this->lookup[self::BY_NAME][$param['name']]= $pos;
       }
     }
     return $this->lookup;
@@ -57,9 +57,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    *
    * @return int
    */
-  public function length() {
-    return $this->reflect->getNumberOfParameters();
-  }
+  public function length() { return sizeof($this->lookup()[self::BY_ID]); }
 
   /**
    * Returns a given method if provided or raises an exception

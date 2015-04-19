@@ -1,6 +1,5 @@
 <?php namespace lang\mirrors;
 
-use lang\IllegalArgumentException;
 use lang\Generic;
 use lang\Type;
 
@@ -17,21 +16,17 @@ class Field extends Member {
    * Creates a new field
    *
    * @param  lang.mirrors.TypeMirror $mirror
-   * @param  var $arg Either a ReflectionPropertsy or a string
+   * @param  var $arg A map returned from Source::fieldNamed(), a ReflectionProperty or a string
    * @throws lang.IllegalArgumentException If there is no such field
    */
   public function __construct($mirror, $arg) {
-    if ($arg instanceof \ReflectionProperty) {
-      $reflect= $arg;
+    if (is_array($arg)) {
+      parent::__construct($mirror, $arg);
+    } else if ($arg instanceof \ReflectionProperty) {
+      parent::__construct($mirror, $mirror->reflect->fieldNamed($arg->name));
     } else {
-      try {
-        $reflect= $mirror->reflect->getProperty($arg);
-      } catch (\Exception $e) {
-        throw new IllegalArgumentException('No field named $'.$arg.' in '.$mirror->name());
-      }
+      parent::__construct($mirror, $mirror->reflect->fieldNamed($arg));
     }
-    parent::__construct($mirror, $reflect);
-    $reflect->setAccessible(true);
   }
 
   /**
@@ -58,16 +53,7 @@ class Field extends Member {
    * @throws lang.IllegalArgumentException
    */
   public function read(Generic $instance= null) {
-    if ($this->reflect->isStatic()) {
-      return $this->reflect->getValue(null);
-    } else if ($instance && $this->reflect->getDeclaringClass()->isInstance($instance)) {
-      return $this->reflect->getValue($instance);
-    }
-
-    throw new IllegalArgumentException(sprintf(
-      'Verifying %s(): Object passed is not an instance of the class declaring this field',
-      $this->name()
-    ));
+    return $this->reflect['read']($instance);
   }
 
   /**
@@ -79,18 +65,7 @@ class Field extends Member {
    * @throws lang.IllegalArgumentException
    */
   public function modify(Generic $instance= null, $value) {
-    if ($this->reflect->isStatic()) {
-      $this->reflect->setValue(null, $value);
-      return;
-    } else if ($instance && $this->reflect->getDeclaringClass()->isInstance($instance)) {
-      $this->reflect->setValue($instance, $value);
-      return;
-    }
-
-    throw new IllegalArgumentException(sprintf(
-      'Verifying %s(): Object passed is not an instance of the class declaring this field',
-      $this->name()
-    ));
+    return $this->reflect['modify']($instance, $value);
   }
 
   /** @return string */

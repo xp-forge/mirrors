@@ -1,20 +1,33 @@
 <?php namespace lang\mirrors\parse;
 
 use lang\IllegalArgumentException;
+use lang\ClassLoader;
+use lang\IClassLoader;
+use lang\ClassNotFoundException;
 
 class ClassSource extends \text\parse\Tokens {
   protected $tokens;
+  private $comment;
 
+  /**
+   * Creates a new class source
+   *
+   * @param  string $class Dotted fully qualified name
+   * @throws lang.ClassNotFoundException If class can not be located
+   */
   public function __construct($class) {
-    if (!isset(\xp::$cl[$class])) {
-      throw new IllegalArgumentException('No source for '.$class);
+    $cl= ClassLoader::getDefault()->findClass($class);
+    if (!$cl instanceof IClassLoader) {
+      throw new ClassNotFoundException($class);
     }
 
-    sscanf(\xp::$cl[$class], '%[^:]://%[^$]', $loader, $argument);
-    $cl= call_user_func([literal($loader), 'instanceFor'], $argument);
     $this->tokens= token_get_all($cl->loadClassBytes($class));
   }
 
+  /** @return string */
+  public function lastComment() { return $this->comment; }
+
+  /** @return var */
   protected function next() {
     static $annotations= [T_COMMENT, T_WHITESPACE];
 
@@ -32,7 +45,7 @@ class ClassSource extends \text\parse\Tokens {
           $this->tokens= array_merge(array_slice(token_get_all($annotation), 1), [$token], $this->tokens);
         }
       } else if (T_DOC_COMMENT === $token[0]) {
-        // Skip
+        $this->comment= $token[1];
       } else {
         return $token;
       }

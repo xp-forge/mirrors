@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Sources;
 use lang\mirrors\Package;
 use lang\mirrors\Modifiers;
 use lang\ElementNotFoundException;
@@ -15,6 +16,16 @@ class TypeMirrorTest extends TestCase {
   #[@test]
   public function can_create() {
     new TypeMirror(self::class);
+  }
+
+  #[@test]
+  public function can_create_from_reflection() {
+    new TypeMirror(self::class, Sources::$REFLECTION);
+  }
+
+  #[@test]
+  public function can_create_from_parsed() {
+    new TypeMirror(self::class, Sources::$CODE);
   }
 
   #[@test]
