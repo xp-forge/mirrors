@@ -96,7 +96,7 @@ class FromReflection extends \lang\Object implements Source {
    * Returns whether this type implements a given interface
    *
    * @param  string $name
-   * @param  bool
+   * @return  bool
    */
   public function typeImplements($name) {
     return $this->reflect->implementsInterface($name);
@@ -142,7 +142,7 @@ class FromReflection extends \lang\Object implements Source {
    * Returns whether this type implements a given interface
    *
    * @param  string $name
-   * @param  bool
+   * @return bool
    */
   public function typeUses($name) {
     $reflect= $this->reflect;

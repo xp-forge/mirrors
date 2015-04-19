@@ -98,7 +98,7 @@ class FromCode extends \lang\Object implements Source {
    * Returns whether this type implements a given interface
    *
    * @param  string $name
-   * @param  bool
+   * @return bool
    */
   public function typeImplements($name) {
     $decl= $this->decl;
@@ -156,7 +156,7 @@ class FromCode extends \lang\Object implements Source {
    * Returns whether this type uses a given trait
    *
    * @param  string $name
-   * @param  bool
+   * @return bool
    */
   public function typeUses($name) {
     $decl= $this->decl;
