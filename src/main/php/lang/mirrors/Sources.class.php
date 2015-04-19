@@ -34,5 +34,12 @@ abstract class Sources extends \lang\Enum {
     }');
   }
 
+  /**
+   * Creates a reflection source for a given class
+   *
+   * @param  string $class
+   * @return lang.mirrors.Source
+   * @throws lang.ClassNotFoundException
+   */
   public abstract function reflect($class);
 }
