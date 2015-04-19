@@ -161,4 +161,27 @@ class ClassSyntaxTest extends \unittest\TestCase {
       ')
     );
   }
+
+  #[@test]
+  public function compact_field_syntax() {
+    $this->assertEquals(
+      [
+        'a' => [
+          'kind'        => 'field',
+          'name'        => 'a',
+          'init'        => null,
+          'access'      => ['private'],
+          'annotations' => null
+        ],
+        'b' => [
+          'kind'        => 'field',
+          'name'        => 'b',
+          'init'        => null,
+          'access'      => [],
+          'annotations' => null
+        ]
+      ],
+      $this->parse('<?php class Test { private $a, $b; }')->declaration()['field']
+    );
+  }
 }
