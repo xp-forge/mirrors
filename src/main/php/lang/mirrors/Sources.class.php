@@ -8,11 +8,15 @@ abstract class Sources extends \lang\Enum {
       static function __static() { }
 
       public function reflect($class) {
-        $literal= strtr($class, ".", "\\\\");
-        if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
-          return self::$REFLECTION->reflect($class);
+        if ($class instanceof \ReflectionClass) {
+          return new FromReflection($class);
         } else {
-          return self::$CODE->reflect($class);
+          $literal= strtr($class, ".", "\\\\");
+          if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
+            return self::$REFLECTION->reflect($class, $this);
+          } else {
+            return self::$CODE->reflect($class, $this);
+          }
         }
       }
     }');
@@ -21,7 +25,10 @@ abstract class Sources extends \lang\Enum {
 
       public function reflect($class) {
         try {
-          return new FromReflection(new \ReflectionClass(strtr($class, ".", "\\\\")));
+          return new FromReflection($class instanceof \ReflectionClass
+            ? $class
+            : new \ReflectionClass(strtr($class, ".", "\\\\"))
+          );
         } catch (\Exception $e) {
           throw new \lang\ClassNotFoundException($class.": ".$e->getMessage());
         }
@@ -30,7 +37,9 @@ abstract class Sources extends \lang\Enum {
     self::$CODE= newinstance(self::class, [2, 'CODE'], '{
       static function __static() { }
 
-      public function reflect($class) { return new FromCode($class); }
+      public function reflect($class) {
+        return new FromCode($class);
+      }
     }');
   }
 

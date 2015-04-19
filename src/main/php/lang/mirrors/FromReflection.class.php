@@ -10,13 +10,14 @@ use lang\IllegalArgumentException;
 use lang\Throwable;
 
 class FromReflection extends \lang\Object implements Source {
-  private $reflect;
+  private $reflect, $source;
   private $unit= null;
   public $name;
 
-  public function __construct(\ReflectionClass $reflect) {
+  public function __construct(\ReflectionClass $reflect, Sources $source= null) {
     $this->reflect= $reflect;
     $this->name= $reflect->name;
+    $this->source= $source ?: Sources::$REFLECTION;
   }
 
   /** @return lang.mirrors.parse.CodeUnit */
@@ -39,7 +40,7 @@ class FromReflection extends \lang\Object implements Source {
   /** @return self */
   public function typeParent() {
     $parent= $this->reflect->getParentClass();
-    return $parent ? new self($parent) : null;
+    return $parent ? $this->source->reflect($parent) : null;
   }
 
   /** @return string */
@@ -106,7 +107,7 @@ class FromReflection extends \lang\Object implements Source {
   /** @return php.Generator */
   public function allInterfaces() {
     foreach ($this->reflect->getInterfaces() as $interface) {
-      yield $interface->name => new self($interface);
+      yield $interface->name => $this->source->reflect($interface);
     }
   }
 
@@ -116,7 +117,7 @@ class FromReflection extends \lang\Object implements Source {
     $inherited= $parent ? array_flip($parent->getInterfaceNames()) : [];
     foreach ($this->reflect->getInterfaces() as $interface) {
       if (isset($inherited[$interface->getName()])) continue;
-      yield $interface->name => new self($interface);
+      yield $interface->name => $this->source->reflect($interface);
     }
   }
 
@@ -126,7 +127,7 @@ class FromReflection extends \lang\Object implements Source {
     do {
       foreach ($reflect->getTraits() as $trait) {
         if ('__xp' === $trait->name) continue;
-        yield $trait->name => new self($trait);
+        yield $trait->name => $this->source->reflect($trait);
       }
     } while ($reflect= $reflect->getParentClass());
   }
@@ -135,7 +136,7 @@ class FromReflection extends \lang\Object implements Source {
   public function declaredTraits() {
     foreach ($this->reflect->getTraits() as $trait) {
       if ('__xp' === $trait->name) continue;
-      yield $trait->name => new self($trait);
+      yield $trait->name => $this->source->reflect($trait);
     }
   }
 
@@ -426,19 +427,19 @@ class FromReflection extends \lang\Object implements Source {
    */
   public function resolve($name) {
     if ('self' === $name || $name === $this->reflect->getShortName()) {
-      return new self($this->reflect);
+      return $this->source->reflect($this->reflect);
     } else if ('parent' === $name) {
       return $this->reflect->getParentClass();
     } else if ('\\' === $name{0}) {
-      return new self(new \ReflectionClass(strtr(substr($name, 1), '.', '\\')));
+      return $this->source->reflect(new \ReflectionClass(strtr(substr($name, 1), '.', '\\')));
     } else if (strstr($name, '\\') || strstr($name, '.')) {
-      return new self(new \ReflectionClass(strtr($name, '.', '\\')));
+      return $this->source->reflect(new \ReflectionClass(strtr($name, '.', '\\')));
     } else {
       foreach ($this->codeUnit()->imports() as $imported) {
-        if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return new self(new \ReflectionClass($imported));
+        if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return $this->source->reflect(new \ReflectionClass($imported));
       }
       $ns= $this->reflect->getNamespaceName();
-      return new self(new \ReflectionClass(($ns ? $ns.'\\' : '').$name));
+      return $this->source->reflect(new \ReflectionClass(($ns ? $ns.'\\' : '').$name));
     }
   }
 

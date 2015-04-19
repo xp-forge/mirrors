@@ -15,11 +15,12 @@ class FromCode extends \lang\Object implements Source {
     self::$syntax= new ClassSyntax();
   }
 
-  public function __construct($name) {
+  public function __construct($name, Sources $source= null) {
     $this->unit= self::$syntax->codeUnitOf($name);
     $this->decl= $this->unit->declaration();
     $package= $this->unit->package();
     $this->name= ($package ? $package.'\\' : '').$this->decl['name'];
+    $this->source= $source ?: Sources::$CODE;
   }
 
   /**
@@ -139,7 +140,7 @@ class FromCode extends \lang\Object implements Source {
     foreach ($this->declarations(true, false) as $decl) {
       foreach ((array)$decl['implements'] as $interface) {
         $name= $this->resolve0($interface);
-        yield $name => new self($name);
+        yield $name => $this->source->reflect($name);
       }
     }
   }
@@ -148,7 +149,7 @@ class FromCode extends \lang\Object implements Source {
   public function declaredInterfaces() {
     foreach ($this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
-      yield $name => new self($name);
+      yield $name => $this->source->reflect($name);
     }
   }
 
@@ -159,7 +160,7 @@ class FromCode extends \lang\Object implements Source {
       foreach ($decl['use'] as $trait => $definition) {
         if ('\__xp' === $trait) continue;
         $name= $this->resolve0($trait);
-        yield $name => new self($name);
+        yield $name => $this->source->reflect($name);
       }
     }
   }
@@ -170,7 +171,7 @@ class FromCode extends \lang\Object implements Source {
     foreach ($this->decl['use'] as $trait => $definition) {
       if ('\__xp' === $trait) continue;
       $name= $this->resolve0($trait);
-      yield $name => new self($name);
+      yield $name => $this->source->reflect($name);
     }
   }
 
@@ -431,7 +432,7 @@ class FromCode extends \lang\Object implements Source {
    * @return self
    */
   public function resolve($name) {
-    return new self($this->resolve0($name));
+    return $this->source->reflect($this->resolve0($name));
   }
 
   /**
