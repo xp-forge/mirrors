@@ -205,7 +205,6 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   private function field($reflect) {
-    $reflect->setAccessible(true);
     return [
       'name'    => $reflect->name,
       'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
@@ -224,11 +223,13 @@ class FromReflection extends \lang\Object implements Source {
    * @return var
    */
   private function readField($reflect, $instance) {
+    $reflect->setAccessible(true);
     if ($reflect->isStatic()) {
       return $reflect->getValue(null);
     } else if ($instance && $reflect->getDeclaringClass()->isInstance($instance)) {
       return $reflect->getValue($instance);
     }
+
     throw new IllegalArgumentException(sprintf(
       'Verifying %s(): Object passed is not an instance of the class declaring this field',
       $reflect->name
@@ -244,6 +245,7 @@ class FromReflection extends \lang\Object implements Source {
    * @return voud
    */
   private function modifyField($reflect, $instance, $value) {
+    $reflect->setAccessible(true);
     if ($reflect->isStatic()) {
       $reflect->setValue(null, $value);
       return;
@@ -331,7 +333,6 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   private function method($reflect) {
-    $reflect->setAccessible(true);
     return [
       'name'    => $reflect->name,
       'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
@@ -365,6 +366,7 @@ class FromReflection extends \lang\Object implements Source {
    * @return var
    */
   private function invokeMethod($reflect, $instance, $args) {
+    $reflect->setAccessible(true);
     try {
       return $reflect->invokeArgs($instance, $args);
     } catch (Throwable $e) {
