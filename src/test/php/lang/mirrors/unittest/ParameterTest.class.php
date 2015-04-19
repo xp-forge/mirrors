@@ -12,41 +12,6 @@ use lang\ClassLoader;
 
 class ParameterTest extends \unittest\TestCase {
   private static $type= null;
-  const CONSTANT= 'Test';
-
-  private function noParam() { }
-
-  private function oneParam($arg) { }
-
-  private function oneOptionalParam($arg= null) { }
-
-  private function oneConstantOptionalParam($arg= self::CONSTANT) { }
-
-  private function oneArrayOptionalParam($arg= [1, 2, 3]) { }
-
-  private function oneVariadicParam(... $arg) { }
-
-  private function oneTypeHintedParam(Type $arg) { }
-
-  private function oneSelfTypeHintedParam(self $arg) { }
-
-  private function oneArrayTypeHintedParam(array $arg) { }
-
-  private function oneCallableTypeHintedParam(callable $arg) { }
-
-  /** @param lang.Type */
-  private function oneDocumentedTypeParam($arg) { }
-
-  /**
-   * Fixture
-   *
-   * @param var $a
-   * @param lang.Type $b
-   */
-  private function twoDocumentedTypeParams($a, $b) { }
-
-  #[@$arg: test]
-  private function oneAnnotatedParam($arg) { }
 
   /**
    * Creates a new parameter
@@ -57,9 +22,9 @@ class ParameterTest extends \unittest\TestCase {
   private function newFixture($method, $num) {
     if (null === self::$type) {
       if (NotOnHHVM::runtime()) {
-        self::$type= new TypeMirror(self::class);
+        self::$type= new TypeMirror(FixtureParams::class);
       } else {
-        $class= ClassLoader::defineClass('ParameterTestWithTypedVariadic', self::class, [], '{
+        $class= ClassLoader::defineClass('FixtureParamsWithTypedVariadic', FixtureParams::class, [], '{
           private function oneVariadicTypedParam(Type... $arg) { }
         }');
         self::$type= new TypeMirror($class);
@@ -71,14 +36,14 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_from_method_and_offset() {
-    new Parameter(new Method(new TypeMirror(self::class), 'oneParam'), 0);
+    new Parameter(new Method(new TypeMirror(FixtureParams::class), 'oneParam'), 0);
   }
 
   #[@test]
   public function can_create_from_method_and_parameter() {
     new Parameter(
-      new Method(new TypeMirror(self::class), 'oneParam'),
-      new \ReflectionParameter([__CLASS__, 'oneParam'], 0)
+      new Method(new TypeMirror(FixtureParams::class), 'oneParam'),
+      new \ReflectionParameter([FixtureParams::class, 'oneParam'], 0)
     );
   }
 
@@ -127,7 +92,7 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test]
   public function self_type_hint() {
-    $this->assertEquals(typeof($this), $this->newFixture('oneSelfTypeHintedParam', 0)->type());
+    $this->assertEquals(new XPClass(FixtureParams::class), $this->newFixture('oneSelfTypeHintedParam', 0)->type());
   }
 
   #[@test, @action(new NotOnHHVM())]
@@ -152,7 +117,7 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test]
   public function documented_type_hint_using_long_form() {
-    $this->assertEquals(new XPClass(Type::class), $this->newFixture('twoDocumentedTypeParams', 1)->type());
+    $this->assertEquals(new XPClass(Type::class), $this->newFixture('twoDocumentedTypeParams', 0)->type());
   }
 
   #[@test, @expect(IllegalStateException::class), @values([
@@ -170,7 +135,7 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test]
   public function constant_default_value_for_optional() {
-    $this->assertEquals(self::CONSTANT, $this->newFixture('oneConstantOptionalParam', 0)->defaultValue());
+    $this->assertEquals(FixtureParams::CONSTANT, $this->newFixture('oneConstantOptionalParam', 0)->defaultValue());
   }
 
   #[@test]

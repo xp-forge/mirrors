@@ -2,6 +2,8 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
+use lang\XPClass;
+use lang\Type;
 use lang\Enum;
 use lang\IllegalArgumentException;
 use lang\Throwable;
@@ -265,6 +267,66 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /**
+   * Maps a parameter
+   *
+   * @param  int $pos
+   * @param  php.ReflectionParameter $reflect
+   * @return [:var]
+   */
+  private function param($pos, $reflect) {
+    if ($reflect->isArray()) {
+      $type= function() { return Type::$ARRAY; };
+    } else if ($reflect->isCallable()) {
+      $type= function() { return Type::$CALLABLE; };
+    } else if ($class= $reflect->getClass()) {
+      $type= function() use($class) { return new XPClass($class); };
+    } else {
+      $type= null;
+    }
+
+    if ($var= $reflect->isVariadic()) {
+      $default= null;
+    } else if ($reflect->isOptional()) {
+      $default= function() use($reflect) { return $reflect->getDefaultValue(); };
+    } else {
+      $default= null;
+    }
+
+    return [
+      'pos'     => $pos,
+      'name'    => $reflect->name,
+      'type'    => $type,
+      'ref'     => $reflect->isPassedByReference(),
+      'default' => $default,
+      'var'     => $var
+    ];
+  }
+
+  /**
+   * Maps a method
+   *
+   * @param  php.ReflectionMethod $reflect
+   * @return [:var]
+   */
+  private function method($reflect) {
+    $reflect->setAccessible(true);
+    return [
+      'name'    => $reflect->name,
+      'access'  => $reflect->getModifiers() & ~0x1fb7f008,
+      'holder'  => $reflect->getDeclaringClass()->name,
+      'params'  => function() use($reflect) {
+        $params= [];
+        foreach ($reflect->getParameters() as $pos => $param) {
+          $params[]= $this->param($pos, $param);
+        }
+        return $params;
+      },
+      'comment' => function() use($reflect) { return $reflect->getDocComment(); },
+      'value'   => $reflect
+    ];
+  }
+
+  /**
    * Checks whether a given method exists
    *
    * @param  string $name
@@ -297,24 +359,6 @@ class FromReflection extends \lang\Object implements Source {
     } catch (\Exception $e) {
       throw new IllegalArgumentException('No method named '.$name.'() in '.$this->name);
     }
-  }
-
-  /**
-   * Maps a method
-   *
-   * @param  php.ReflectionMethod $reflect
-   * @return [:var]
-   */
-  private function method($reflect) {
-    $reflect->setAccessible(true);
-    return [
-      'name'    => $reflect->name,
-      'access'  => $reflect->getModifiers() & ~0x1fb7f008,
-      'holder'  => $reflect->getDeclaringClass()->name,
-      'params'  => function() use($reflect) { return $reflect->getParameters(); },
-      'comment' => function() use($reflect) { return $reflect->getDocComment(); },
-      'value'   => $reflect
-    ];
   }
 
   /** @return php.Generator */

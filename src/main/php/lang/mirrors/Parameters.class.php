@@ -36,7 +36,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
       $params= $this->reflect['params']();
       $this->lookup= [self::BY_ID => $params, self::BY_NAME => []];
       foreach ($params as $pos => $param) {
-        $this->lookup[self::BY_NAME][$param->name]= $pos;
+        $this->lookup[self::BY_NAME][$param['name']]= $pos;
       }
     }
     return $this->lookup;

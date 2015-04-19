@@ -136,12 +136,13 @@ class ClassSyntax extends \text\parse\Syntax {
       'modifiers' => new Tokens(T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC, T_FINAL, T_ABSTRACT),
       'param' => new Sequence(
         [
-          new Tokens(T_ARRAY, T_CALLABLE, T_STRING, T_NS_SEPARATOR, T_ELLIPSIS),
+          new Tokens(T_ARRAY, T_CALLABLE, T_STRING, T_NS_SEPARATOR),
+          new Optional(new Token(T_ELLIPSIS)),
           new Optional(new Token('&')),
           new Token(T_VARIABLE),
           new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; }))
         ],
-        function($values) { return ['name' => $values[2], 'type' => $values[0] ? implode('', $values[0]) : null, 'ref' => isset($values[1]), 'default' => $values[3]]; }
+        function($values) { return ['name' => substr($values[3], 1), 'type' => $values[0] ? implode('', $values[0]) : null, 'ref' => isset($values[2]), 'var' => isset($values[1]), 'default' => $values[4]]; }
       ),
       'method' => new Match([';' => null, '{' => new Block(true)]),
       'expr' => new OneOf([

@@ -126,10 +126,11 @@ class ClassSyntaxTest extends \unittest\TestCase {
               'kind'        => 'method',
               'name'        => 'connect',
               'params'      => [[
-                'name'    => '$arg',
+                'name'    => 'arg',
                 'type'    => null,
                 'ref'     => false,
-                'default' => null,
+                'var'     => false,
+                'default' => null
               ]],
               'access'      => ['private'],
               'annotations' => ['$arg' => ['inject' => new Value('db')]]

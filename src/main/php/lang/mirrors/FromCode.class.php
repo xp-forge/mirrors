@@ -2,6 +2,8 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
+use lang\Type;
+use lang\XPClass;
 
 class FromCode extends \lang\Object implements Source {
   private static $syntax;
@@ -223,6 +225,64 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /**
+   * Maps a parameter
+   *
+   * @param  int $pos
+   * @param  [:var] $param
+   * @return [:var]
+   */
+  private function param($pos, $param) {
+    if ($param['default']) {
+      $default= function() use($param) { return $param['default']->resolve($this->mirror); };
+    } else {
+      $default= null;
+    }
+
+    if ('array' === $param['type']) {
+      $type= function() { return Type::$ARRAY; };
+    } else if ('callable' === $param['type']) {
+      $type= function() { return Type::$CALLABLE; };
+    } else if ($param['type']) {
+      $type= function() use($param) { return new XPClass($this->resolve0($param['type'])); };
+    } else {
+      $type= null;
+    }
+
+    return [
+      'pos'     => $pos,
+      'name'    => $param['name'],
+      'type'    => $type,
+      'ref'     => $param['ref'],
+      'var'     => $param['var'],
+      'default' => $default
+    ];
+  }
+
+  /**
+   * Maps a method
+   *
+   * @param  string $holder
+   * @param  [:var] $method
+   * @return [:var]
+   */
+  private function method($holder, $method) {
+    return [
+      'name'    => $method['name'],
+      'access'  => $method['access'],
+      'holder'  => $holder,
+      'params'  => function() use($method) {
+        $params= [];
+        foreach ($method['params'] as $pos => $param) {
+          $params[]= $this->param($pos, $param);
+        }
+        return $params;
+      },
+      'comment' => function() use($method) { return $method['comment']; },
+      'value'   => null
+    ];
+  }
+
+  /**
    * Checks whether a given method exists
    *
    * @param  string $name
@@ -239,7 +299,7 @@ class FromCode extends \lang\Object implements Source {
   public function methodNamed($name) {
     $decl= $this->decl;
     do {
-      if (isset($decl['method'][$name])) return $decl['method'][$name];
+      if (isset($decl['method'][$name])) return $this->method($decl['name'], $decl['method'][$name]);
     } while ($decl= $this->declarationOf($decl['parent']));
     return null;
   }
@@ -249,7 +309,7 @@ class FromCode extends \lang\Object implements Source {
     $decl= $this->decl;
     do {
       foreach ($decl['method'] as $name => $method) {
-        yield $name => $method;
+        yield $name => $this->method($decl['name'], $method);
       }
     } while ($decl= $this->declarationOf($decl['parent']));
   }
@@ -257,7 +317,7 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function declaredMethods() {
     foreach ($this->decl['method'] as $name => $method) {
-      yield $name => $method;
+      yield $name => $this->method($this->decl['name'], $method);
     }
   }
 
@@ -319,13 +379,13 @@ class FromCode extends \lang\Object implements Source {
    */
   private function resolve0($name) {
     if ('self' === $name || $name === $this->decl['name']) {
-      return $this->typeName();
+      return $this->name;
     } else if ('parent' === $name) {
       return $this->resolve0($this->decl['parent']);
     } else if ('\\' === $name{0}) {
       return substr($name, 1);
     } else if (strstr($name, '\\') || strstr($name, '.')) {
-      return strtr($name, '\\', '.');
+      return strtr($name, '.', '\\');
     } else {
       foreach ($this->unit->imports() as $imported) {
         if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return $imported;

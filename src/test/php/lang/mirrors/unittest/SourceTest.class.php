@@ -3,6 +3,8 @@
 use lang\mirrors\Modifiers;
 use lang\mirrors\Kind;
 use lang\Closeable;
+use lang\XPClass;
+use lang\Type;
 
 /**
  * Base class for source implementation testing
@@ -304,6 +306,70 @@ abstract class SourceTest extends \unittest\TestCase {
       'inheritedMethod',
       $this->reflect(MemberFixture::class)->methodNamed('inheritedMethod')['name']
     );
+  }
+
+  #[@test]
+  public function no_params() {
+    $method= $this->reflect(FixtureParams::class)->methodNamed('noParam');
+    $this->assertEquals([], $method['params']());
+  }
+
+  #[@test]
+  public function one_param() {
+    $method= $this->reflect(FixtureParams::class)->methodNamed('oneParam');
+    $param= $method['params']()[0];
+    $this->assertEquals(
+      [0, 'arg', null, false, false, null],
+      [$param['pos'], $param['name'], $param['type'], $param['ref'], $param['var'], $param['default']]
+    );
+  }
+
+  #[@test]
+  public function one_optional_param() {
+    $method= $this->reflect(FixtureParams::class)->methodNamed('oneOptionalParam');
+    $param= $method['params']()[0];
+    $this->assertEquals(
+      [0, 'arg', null, false, false, null],
+      [$param['pos'], $param['name'], $param['type'], $param['ref'], $param['var'], $param['default']()]
+    );
+  }
+
+  #[@test]
+  public function one_variadic_param() {
+    $method= $this->reflect(FixtureParams::class)->methodNamed('oneVariadicParam');
+    $param= $method['params']()[0];
+    $this->assertEquals(
+      [0, 'arg', null, false, true, null],
+      [$param['pos'], $param['name'], $param['type'], $param['ref'], $param['var'], $param['default']]
+    );
+  }
+
+  #[@test]
+  public function typed_param() {
+    $method= $this->reflect(FixtureParams::class)->methodNamed('oneTypeHintedParam');
+    $param= $method['params']()[0];
+    $this->assertEquals(new XPClass(Type::class), $param['type']());
+  }
+
+  #[@test]
+  public function self_typehinted_param() {
+    $method= $this->reflect(FixtureParams::class)->methodNamed('oneSelfTypeHintedParam');
+    $param= $method['params']()[0];
+    $this->assertEquals(new XPClass(FixtureParams::class), $param['type']());
+  }
+
+  #[@test]
+  public function array_typehinted_param() {
+    $method= $this->reflect(FixtureParams::class)->methodNamed('oneArrayTypeHintedParam');
+    $param= $method['params']()[0];
+    $this->assertEquals(Type::$ARRAY, $param['type']());
+  }
+
+  #[@test]
+  public function callable_typehinted_param() {
+    $method= $this->reflect(FixtureParams::class)->methodNamed('oneCallableTypeHintedParam');
+    $param= $method['params']()[0];
+    $this->assertEquals(Type::$CALLABLE, $param['type']());
   }
 
   #[@test]

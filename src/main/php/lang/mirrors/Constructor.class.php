@@ -1,8 +1,5 @@
 <?php namespace lang\mirrors;
 
-use lang\IllegalArgumentException;
-use lang\Throwable;
-
 /**
  * Represents a constructor. If no constructor is present, a default 
  * no-arg constructor is used.
