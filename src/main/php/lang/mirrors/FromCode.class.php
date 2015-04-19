@@ -37,7 +37,6 @@ class FromCode extends \lang\Object implements Source {
 
     if ($traits && isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
-        if ('\__xp' === $trait) continue;
         yield $this->resolve($trait);
       }
     }
@@ -125,7 +124,6 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function allInterfaces() {
     foreach ($this->decl['implements'] as $interface) {
-      if ('\__xp' === $interface) continue;
       $name= $this->resolve0($interface);
       yield $name => $this->source->reflect($name);
     }
@@ -139,7 +137,6 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function declaredInterfaces() {
     foreach ($this->decl['implements'] as $interface) {
-      if ('\__xp' === $interface) continue;
       $name= $this->resolve0($interface);
       yield $name => $this->source->reflect($name);
     }
@@ -149,7 +146,6 @@ class FromCode extends \lang\Object implements Source {
   public function allTraits() {
     if (isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
-        if ('\__xp' === $trait) continue;
         $name= $this->resolve0($trait);
         yield $name => $this->source->reflect($name);
       }
@@ -165,7 +161,6 @@ class FromCode extends \lang\Object implements Source {
   public function declaredTraits() {
     if (isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
-        if ('\__xp' === $trait) continue;
         $name= $this->resolve0($trait);
         yield $name => $this->source->reflect($name);
       }
@@ -181,7 +176,6 @@ class FromCode extends \lang\Object implements Source {
   public function typeUses($name) {
     if (isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
-        if ('\__xp' === $trait) continue;
         if ($name === $this->resolve0($trait)) return true;
       }
     }
