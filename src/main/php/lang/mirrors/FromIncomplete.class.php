@@ -63,16 +63,16 @@ class FromIncomplete extends \lang\Object implements Source {
   public function typeImplements($name) { return false; }
 
   /** @return php.Generator */
-  public function allInterfaces() { yield; }
+  public function allInterfaces() { return []; }
 
   /** @return php.Generator */
-  public function declaredInterfaces() { yield; }
+  public function declaredInterfaces() { return []; }
 
   /** @return php.Generator */
-  public function allTraits() { yield; }
+  public function allTraits() { return []; }
 
   /** @return php.Generator */
-  public function declaredTraits() { yield; }
+  public function declaredTraits() { return []; }
 
   /**
    * Returns whether this type uses a given trait
@@ -124,10 +124,10 @@ class FromIncomplete extends \lang\Object implements Source {
   }
 
   /** @return php.Generator */
-  public function allFields() { yield; }
+  public function allFields() { return []; }
 
   /** @return php.Generator */
-  public function declaredFields() { yield; }
+  public function declaredFields() { return []; }
 
   /**
    * Checks whether a given method exists
@@ -149,10 +149,10 @@ class FromIncomplete extends \lang\Object implements Source {
   }
 
   /** @return php.Generator */
-  public function allMethods() { yield; }
+  public function allMethods() { return []; }
 
   /** @return php.Generator */
-  public function declaredMethods() { yield; }
+  public function declaredMethods() { return []; }
 
   /**
    * Checks whether a given constant exists
@@ -174,7 +174,7 @@ class FromIncomplete extends \lang\Object implements Source {
   }
 
   /** @return php.Generator */
-  public function allConstants() { yield; }
+  public function allConstants() { return []; }
 
   /**
    * Resolves a type name in the context of this reflection source

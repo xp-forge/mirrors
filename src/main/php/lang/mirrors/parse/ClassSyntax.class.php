@@ -214,13 +214,12 @@ class ClassSyntax extends \text\parse\Syntax {
    * @return lang.mirrors.parse.CodeUnit
    */
   public function codeUnitOf($class) {
-    $dotted= strtr($class, '\\', '.');
-    if (!isset(self::$cache[$dotted])) {
-      self::$cache[$dotted]= $this->parse(new ClassSource($dotted));
+    if (!isset(self::$cache[$class])) {
+      self::$cache[$class]= $this->parse(new ClassSource($class));
       while (sizeof(self::$cache) > self::CACHE_LIMIT) {
         unset(self::$cache[key(self::$cache)]);
       }
     }
-    return self::$cache[$dotted];
+    return self::$cache[$class];
   }
 }

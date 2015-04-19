@@ -12,12 +12,13 @@ abstract class Sources extends \lang\Enum {
           return new FromReflection($class, $source ?: $this);
         } else {
           $literal= strtr($class, ".", "\\\\");
+          $dotted= strtr($class, "\\\\", ".");
           if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
             return self::$REFLECTION->reflect($class, $source ?: $this);
-          } else if (isset(\xp::$cl[strtr($class, "\\\\", ".")])) {
-            return new FromIncomplete($literal);
+          } else if (\lang\ClassLoader::getDefault()->providesClass($dotted)) {
+            return self::$CODE->reflect($dotted, $source ?: $this);
           } else {
-            return self::$CODE->reflect($class, $source ?: $this);
+            return new FromIncomplete($literal);
           }
         }
       }
@@ -40,7 +41,7 @@ abstract class Sources extends \lang\Enum {
       static function __static() { }
 
       public function reflect($class, $source= null) {
-        return new FromCode($class, $source);
+        return new FromCode(strtr($class, "\\\\", "."), $source);
       }
     }');
   }
