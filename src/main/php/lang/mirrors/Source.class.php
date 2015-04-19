@@ -20,7 +20,7 @@ interface Source {
   /** @return string */
   public function typeComment();
 
-  /** @return var */
+  /** @return [:var] */
   public function typeAnnotations();
 
   /** @return lang.mirrors.Modifiers */
@@ -41,9 +41,32 @@ interface Source {
    * Returns whether this type implements a given interface
    *
    * @param  string $name
-   * @param  bool
+   * @return bool
    */
   public function typeImplements($name);
+
+  /**
+   * Returns whether this type implements a given interface
+   *
+   * @param  string $name
+   * @return bool
+   */
+  public function typeUses($name);
+
+  /** @return php.Generator */
+  public function allFields();
+
+  /** @return php.Generator */
+  public function declaredFields();
+
+  /** @return php.Generator */
+  public function allMethods();
+
+  /** @return php.Generator */
+  public function declaredMethods();
+
+  /** @return php.Generator */
+  public function allConstants();
 
   /** @return php.Generator */
   public function allInterfaces();
@@ -57,15 +80,7 @@ interface Source {
   /** @return php.Generator */
   public function declaredTraits();
 
-  /**
-   * Returns whether this type implements a given interface
-   *
-   * @param  string $name
-   * @param  bool
-   */
-  public function typeUses($name);
-
-  /** @return [:var] */
+  /** @return var */
   public function constructor();
 
   /**
@@ -85,40 +100,12 @@ interface Source {
   public function hasField($name);
 
   /**
-   * Gets a field by its name
-   *
-   * @param  string $name
-   * @return var
-   */
-  public function fieldNamed($name);
-
-  /** @return php.Generator */
-  public function allFields();
-
-  /** @return php.Generator */
-  public function declaredFields();
-
-  /**
    * Checks whether a given method exists
    *
    * @param  string $name
    * @return bool
    */
   public function hasMethod($name);
-
-  /**
-   * Gets a method by its name
-   *
-   * @param  string $name
-   * @return var
-   */
-  public function methodNamed($name);
-
-  /** @return php.Generator */
-  public function allMethods();
-
-  /** @return php.Generator */
-  public function declaredMethods();
 
   /**
    * Checks whether a given constant exists
@@ -129,15 +116,28 @@ interface Source {
   public function hasConstant($name);
 
   /**
+   * Gets a field by its name
+   *
+   * @param  string $name
+   * @return var
+   */
+  public function fieldNamed($name);
+
+  /**
+   * Gets a method by its name
+   *
+   * @param  string $name
+   * @return var
+   */
+  public function methodNamed($name);
+
+  /**
    * Gets a constant by its name
    *
    * @param  string $name
    * @return var
    */
   public function constantNamed($name);
-
-  /** @return php.Generator */
-  public function allConstants();
 
   /**
    * Resolves a type name in the context of this reflection source
