@@ -205,8 +205,7 @@ class FromCode extends \lang\Object implements Source {
       'access'  => Modifiers::IS_PUBLIC,
       'holder'  => $this->decl['name'],
       'comment' => function() { return null; },
-      'params'  => function() { return []; },
-      'value'   => null
+      'params'  => function() { return []; }
     ];
   }
 
@@ -232,8 +231,7 @@ class FromCode extends \lang\Object implements Source {
       'name'    => $field['name'],
       'access'  => new Modifiers($field['access']),
       'holder'  => $holder,
-      'comment' => function() use($field) { return $field['comment']; },
-      'value'   => null
+      'comment' => function() use($field) { return $field['comment']; }
     ];
   }
 
@@ -355,8 +353,7 @@ class FromCode extends \lang\Object implements Source {
         }
         return $params;
       },
-      'comment' => function() use($method) { return $method['comment']; },
-      'value'   => null
+      'comment' => function() use($method) { return $method['comment']; }
     ];
   }
 
