@@ -8,6 +8,18 @@ use lang\ElementNotFoundException;
 class TypeMirrorFieldsTest extends \unittest\TestCase {
   private $fixture;
 
+  /**
+   * Returns the elements of an iterator on Field instances sorted by name
+   *
+   * @param  php.Traversable $iterator
+   * @return lang.mirrors.Field[]
+   */
+  private function sorted($iterator) {
+    $list= iterator_to_array($iterator);
+    usort($list, function($a, $b) { return strcmp($a->name(), $b->name()); });
+    return $list;
+  }
+
   public function setUp() {
     $this->fixture= new TypeMirror(MemberFixture::class);
   }
@@ -36,16 +48,16 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function all_fields() {
     $this->assertEquals(
       [
-        new Field($this->fixture, 'publicInstanceField'),
-        new Field($this->fixture, 'protectedInstanceField'),
-        new Field($this->fixture, 'privateInstanceField'),
-        new Field($this->fixture, 'publicClassField'),
-        new Field($this->fixture, 'protectedClassField'),
-        new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'inheritedField'),
+        new Field($this->fixture, 'privateClassField'),
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'protectedClassField'),
+        new Field($this->fixture, 'protectedInstanceField'),
+        new Field($this->fixture, 'publicClassField'),
+        new Field($this->fixture, 'publicInstanceField'),
         new Field($this->fixture, 'traitField')
       ],
-      iterator_to_array($this->fixture->fields())
+      $this->sorted($this->fixture->fields())
     );
   }
 
@@ -53,15 +65,15 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function declared_fields() {
     $this->assertEquals(
       [
-        new Field($this->fixture, 'publicInstanceField'),
-        new Field($this->fixture, 'protectedInstanceField'),
-        new Field($this->fixture, 'privateInstanceField'),
-        new Field($this->fixture, 'publicClassField'),
-        new Field($this->fixture, 'protectedClassField'),
         new Field($this->fixture, 'privateClassField'),
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'protectedClassField'),
+        new Field($this->fixture, 'protectedInstanceField'),
+        new Field($this->fixture, 'publicClassField'),
+        new Field($this->fixture, 'publicInstanceField'),
         new Field($this->fixture, 'traitField')
       ],
-      iterator_to_array($this->fixture->fields()->declared())
+      $this->sorted($this->fixture->fields()->declared())
     );
   }
 
@@ -69,13 +81,13 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function instance_fields() {
     $this->assertEquals(
       [
-        new Field($this->fixture, 'publicInstanceField'),
-        new Field($this->fixture, 'protectedInstanceField'),
-        new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'inheritedField'),
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'protectedInstanceField'),
+        new Field($this->fixture, 'publicInstanceField'),
         new Field($this->fixture, 'traitField')
       ],
-      iterator_to_array($this->fixture->fields()->of(Member::$INSTANCE))
+      $this->sorted($this->fixture->fields()->of(Member::$INSTANCE))
     );
   }
 
@@ -83,11 +95,11 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function static_fields() {
     $this->assertEquals(
       [
-        new Field($this->fixture, 'publicClassField'),
+        new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'protectedClassField'),
-        new Field($this->fixture, 'privateClassField')
+        new Field($this->fixture, 'publicClassField')
       ],
-      iterator_to_array($this->fixture->fields()->of(Member::$STATIC))
+      $this->sorted($this->fixture->fields()->of(Member::$STATIC))
     );
   }
 }

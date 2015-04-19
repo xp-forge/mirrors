@@ -14,6 +14,18 @@ use lang\ElementNotFoundException;
 abstract class SourceTest extends \unittest\TestCase {
 
   /**
+   * Returns the keys of an iterator on a map sorted alphabetically
+   *
+   * @param  php.Traversable $iterator
+   * @return lang.mirrors.Field[]
+   */
+  private function sorted($iterator) {
+    $keys= array_keys(iterator_to_array($iterator));
+    sort($keys);
+    return $keys;
+  }
+
+  /**
    * Creates a new reflection source
    *
    * @param  string $name
@@ -126,23 +138,26 @@ abstract class SourceTest extends \unittest\TestCase {
 
   #[@test]
   public function all_interfaces() {
-    $names= array_keys(iterator_to_array($this->reflect(FixtureImpl::class)->allInterfaces()));
-    sort($names);
-    $this->assertEquals([Closeable::class, FixtureInterface::class], $names);
+    $this->assertEquals(
+      [Closeable::class, FixtureInterface::class],
+      $this->sorted($this->reflect(FixtureImpl::class)->allInterfaces())
+    );
   }
 
   #[@test]
   public function declared_interfaces() {
-    $names= array_keys(iterator_to_array($this->reflect(FixtureImpl::class)->declaredInterfaces()));
-    sort($names);
-    $this->assertEquals([Closeable::class], $names);
+    $this->assertEquals(
+      [Closeable::class],
+      $this->sorted($this->reflect(FixtureImpl::class)->declaredInterfaces())
+    );
   }
 
   #[@test]
   public function parent_interfaces() {
-    $names= array_keys(iterator_to_array($this->reflect(FixtureCloseable::class)->allInterfaces()));
-    sort($names);
-    $this->assertEquals([Closeable::class, FixtureInterface::class], $names);
+    $this->assertEquals(
+      [Closeable::class, FixtureInterface::class],
+      $this->sorted($this->reflect(FixtureCloseable::class)->allInterfaces())
+    );
   }
 
   #[@test]
@@ -152,16 +167,18 @@ abstract class SourceTest extends \unittest\TestCase {
 
   #[@test]
   public function all_traits() {
-    $names= array_keys(iterator_to_array($this->reflect(FixtureUses::class)->allTraits()));
-    sort($names);
-    $this->assertEquals([FixtureTrait::class, FixtureUsed::class], $names);
+    $this->assertEquals(
+      [FixtureTrait::class, FixtureUsed::class],
+      $this->sorted($this->reflect(FixtureUses::class)->allTraits())
+    );
   }
 
   #[@test]
   public function declared_traits() {
-    $names= array_keys(iterator_to_array($this->reflect(FixtureUses::class)->declaredTraits()));
-    sort($names);
-    $this->assertEquals([FixtureUsed::class], $names);
+    $this->assertEquals(
+      [FixtureUsed::class],
+      $this->sorted($this->reflect(FixtureUses::class)->declaredTraits())
+    );
   }
 
   #[@test]
@@ -198,16 +215,16 @@ abstract class SourceTest extends \unittest\TestCase {
   public function all_fields() {
     $this->assertEquals(
       [
-        'publicInstanceField',
-        'protectedInstanceField',
-        'privateInstanceField',
-        'publicClassField',
-        'protectedClassField',
-        'privateClassField',
         'inheritedField',
+        'privateClassField',
+        'privateInstanceField',
+        'protectedClassField',
+        'protectedInstanceField',
+        'publicClassField',
+        'publicInstanceField',
         'traitField'
       ],
-      array_keys(iterator_to_array($this->reflect(MemberFixture::class)->allFields()))
+      $this->sorted($this->reflect(MemberFixture::class)->allFields())
     );
   }
 
@@ -215,15 +232,15 @@ abstract class SourceTest extends \unittest\TestCase {
   public function declared_fields() {
     $this->assertEquals(
       [
-        'publicInstanceField',
-        'protectedInstanceField',
-        'privateInstanceField',
-        'publicClassField',
-        'protectedClassField',
         'privateClassField',
+        'privateInstanceField',
+        'protectedClassField',
+        'protectedInstanceField',
+        'publicClassField',
+        'publicInstanceField',
         'traitField'
       ],
-      array_keys(iterator_to_array($this->reflect(MemberFixture::class)->declaredFields()))
+      $this->sorted($this->reflect(MemberFixture::class)->declaredFields())
     );
   }
 
@@ -231,7 +248,7 @@ abstract class SourceTest extends \unittest\TestCase {
   public function trait_fields() {
     $this->assertEquals(
       ['traitField'],
-      array_keys(iterator_to_array($this->reflect(FixtureTrait::class)->allFields()))
+      $this->sorted($this->reflect(FixtureTrait::class)->allFields())
     );
   }
 
@@ -278,16 +295,16 @@ abstract class SourceTest extends \unittest\TestCase {
   public function all_methods() {
     $this->assertEquals(
       [
-        'publicInstanceMethod',
-        'protectedInstanceMethod',
-        'privateInstanceMethod',
-        'publicClassMethod',
-        'protectedClassMethod',
-        'privateClassMethod',
         'inheritedMethod',
+        'privateClassMethod',
+        'privateInstanceMethod',
+        'protectedClassMethod',
+        'protectedInstanceMethod',
+        'publicClassMethod',
+        'publicInstanceMethod',
         'traitMethod'
       ],
-      array_keys(iterator_to_array($this->reflect(MemberFixture::class)->allMethods()))
+      $this->sorted($this->reflect(MemberFixture::class)->allMethods())
     );
   }
 
@@ -295,15 +312,15 @@ abstract class SourceTest extends \unittest\TestCase {
   public function declared_methods() {
     $this->assertEquals(
       [
-        'publicInstanceMethod',
-        'protectedInstanceMethod',
-        'privateInstanceMethod',
-        'publicClassMethod',
-        'protectedClassMethod',
         'privateClassMethod',
+        'privateInstanceMethod',
+        'protectedClassMethod',
+        'protectedInstanceMethod',
+        'publicClassMethod',
+        'publicInstanceMethod',
         'traitMethod'
       ],
-      array_keys(iterator_to_array($this->reflect(MemberFixture::class)->declaredMethods()))
+      $this->sorted($this->reflect(MemberFixture::class)->declaredMethods())
     );
   }
 
