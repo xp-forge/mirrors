@@ -71,7 +71,7 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    */
   public function of($kind) {
     foreach ($this->mirror->reflect->allFields() as $name => $field) {
-      if (0 === strncmp('__', $name, 2) || $kind === ($field['access'] & MODIFIER_STATIC)) continue;
+      if (0 === strncmp('__', $name, 2) || $kind === ($field['access']->isStatic())) continue;
       yield new Field($this->mirror, $field);
     }
   }

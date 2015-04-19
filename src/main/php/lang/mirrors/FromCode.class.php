@@ -221,6 +221,23 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /**
+   * Maps a field
+   *
+   * @param  string $holder
+   * @param  [:var] $field
+   * @return [:var]
+   */
+  private function field($holder, $field) {
+    return [
+      'name'    => $field['name'],
+      'access'  => new Modifiers($field['access']),
+      'holder'  => $holder,
+      'comment' => function() use($field) { return $field['comment']; },
+      'value'   => null
+    ];
+  }
+
+  /**
    * Checks whether a given field exists
    *
    * @param  string $name
@@ -245,7 +262,7 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function fieldNamed($name) {
-    if (isset($this->decl['field'][$name])) return $this->decl['field'][$name];
+    if (isset($this->decl['field'][$name])) return $this->field($this->decl['name'], $this->decl['field'][$name]);
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $cmp => $field) {
         if ($cmp === $name) return $field;
@@ -258,7 +275,7 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function allFields() {
     foreach ($this->decl['field'] as $name => $field) {
-      yield $name => $field;
+      yield $name => $this->field($this->decl['name'], $field);
     }
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $name => $field) {
@@ -271,7 +288,7 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function declaredFields() {
     foreach ($this->decl['field'] as $name => $field) {
-      yield $name => $field;
+      yield $name => $this->field($this->decl['name'], $field);
     }
     foreach ($this->merge(false, true) as $reflect) {
       foreach ($reflect->allFields() as $name => $field) {
@@ -325,7 +342,7 @@ class FromCode extends \lang\Object implements Source {
   private function method($holder, $method) {
     return [
       'name'    => $method['name'],
-      'access'  => $method['access'],
+      'access'  => new Modifiers($method['access']),
       'holder'  => $holder,
       'params'  => function() use($method) {
         $params= [];

@@ -70,7 +70,7 @@ class Methods extends \lang\Object implements \IteratorAggregate {
    */
   public function of($kind) {
     foreach ($this->mirror->reflect->allMethods() as $name => $method) {
-      if (0 === strncmp('__', $name, 2) || $kind === ($method['access'] & MODIFIER_STATIC)) continue;
+      if (0 === strncmp('__', $name, 2) || $kind === ($method['access']->isStatic())) continue;
       yield new Method($this->mirror, $method);
     }
   }

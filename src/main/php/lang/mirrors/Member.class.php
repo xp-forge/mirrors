@@ -7,7 +7,7 @@ use lang\mirrors\parse\TagsSource;
  * Base class for all type members: Fields, methods, constructors.
  */
 abstract class Member extends \lang\Object {
-  public static $STATIC= 0, $INSTANCE= 1;
+  public static $STATIC= false, $INSTANCE= true;
   public $reflect;
   protected $mirror;
   private $tags= null;
@@ -27,7 +27,7 @@ abstract class Member extends \lang\Object {
   public function name() { return $this->reflect['name']; }
 
   /** @return lang.mirrors.Modifiers */
-  public function modifiers() { return new Modifiers($this->reflect['access']); }
+  public function modifiers() { return $this->reflect['access']; }
 
   /** @return string */
   public function comment() {

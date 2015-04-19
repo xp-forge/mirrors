@@ -209,7 +209,7 @@ class FromReflection extends \lang\Object implements Source {
     $reflect->setAccessible(true);
     return [
       'name'    => $reflect->name,
-      'access'  => $reflect->getModifiers() & ~0x1fb7f008,
+      'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
       'holder'  => $reflect->getDeclaringClass()->name,
       'comment' => function() use($reflect) { return $reflect->getDocComment(); },
       'value'   => $reflect
@@ -325,7 +325,7 @@ class FromReflection extends \lang\Object implements Source {
     $reflect->setAccessible(true);
     return [
       'name'    => $reflect->name,
-      'access'  => $reflect->getModifiers() & ~0x1fb7f008,
+      'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
       'holder'  => $reflect->getDeclaringClass()->name,
       'params'  => function() use($reflect) {
         $params= [];
