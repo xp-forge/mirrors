@@ -18,7 +18,7 @@ class ClassSource extends \text\parse\Tokens {
   public function __construct($class) {
     $cl= ClassLoader::getDefault()->findClass($class);
     if (!$cl instanceof IClassLoader) {
-      throw new ClassNotFoundException('No source for '.$class);
+      throw new ClassNotFoundException($class);
     }
 
     $this->tokens= token_get_all($cl->loadClassBytes($class));
