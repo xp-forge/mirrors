@@ -274,8 +274,10 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allFields() {
-    foreach ($this->decl['field'] as $name => $field) {
-      yield $name => $this->field($this->decl['name'], $field);
+    if (isset($this->decl['field'])) {
+      foreach ($this->decl['field'] as $name => $field) {
+        yield $name => $this->field($this->decl['name'], $field);
+      }
     }
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $name => $field) {
@@ -287,8 +289,10 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function declaredFields() {
-    foreach ($this->decl['field'] as $name => $field) {
-      yield $name => $this->field($this->decl['name'], $field);
+    if (isset($this->decl['field'])) {
+      foreach ($this->decl['field'] as $name => $field) {
+        yield $name => $this->field($this->decl['name'], $field);
+      }
     }
     foreach ($this->merge(false, true) as $reflect) {
       foreach ($reflect->allFields() as $name => $field) {
@@ -393,8 +397,10 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allMethods() {
-    foreach ($this->decl['method'] as $name => $method) {
-      yield $name => $this->method($this->decl['name'], $method);
+    if (isset($this->decl['method'])) {
+      foreach ($this->decl['method'] as $name => $method) {
+        yield $name => $this->method($this->decl['name'], $method);
+      }
     }
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allMethods() as $name => $method) {
@@ -406,8 +412,10 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function declaredMethods() {
-    foreach ($this->decl['method'] as $name => $method) {
-      yield $name => $this->method($this->decl['name'], $method);
+    if (isset($this->decl['method'])) {
+      foreach ($this->decl['method'] as $name => $method) {
+        yield $name => $this->method($this->decl['name'], $method);
+      }
     }
     foreach ($this->merge(false, true) as $reflect) {
       foreach ($reflect->allMethods() as $name => $method) {
