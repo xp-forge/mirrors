@@ -1,18 +1,26 @@
 <?php namespace lang\mirrors\parse;
 
 use lang\IllegalArgumentException;
+use lang\ClassLoader;
+use lang\IClassLoader;
+use lang\ClassNotFoundException;
 
 class ClassSource extends \text\parse\Tokens {
   protected $tokens;
   private $comment;
 
+  /**
+   * Creates a new class source
+   *
+   * @param  string $class Dotted fully qualified name
+   * @throws lang.ClassNotFoundException If class can not be located
+   */
   public function __construct($class) {
-    if (!isset(\xp::$cl[$class])) {
-      throw new IllegalArgumentException('No source for '.$class);
+    $cl= ClassLoader::getDefault()->findClass($class);
+    if (!$cl instanceof IClassLoader) {
+      throw new ClassNotFoundException('No source for '.$class);
     }
 
-    sscanf(\xp::$cl[$class], '%[^:]://%[^$]', $loader, $argument);
-    $cl= call_user_func([literal($loader), 'instanceFor'], $argument);
     $this->tokens= token_get_all($cl->loadClassBytes($class));
   }
 
