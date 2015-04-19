@@ -9,7 +9,7 @@ abstract class Sources extends \lang\Enum {
 
       public function reflect($class) {
         if ($class instanceof \ReflectionClass) {
-          return new FromReflection($class);
+          return self::$REFLECTION->reflect($class, $this);
         } else {
           $literal= strtr($class, ".", "\\\\");
           if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
