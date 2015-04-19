@@ -75,6 +75,29 @@ class ClassSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function class_using_trait_with_alias() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null, 'use' => [
+        'Creation' => ['kind' => 'use', 'name' => 'Creation']
+      ]]),
+      $this->parse('<?php class Test { use Creation { value as name; } }')
+    );
+  }
+
+  #[@test]
+  public function class_using_trait_with_aliases() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null, 'use' => [
+        'Creation' => ['kind' => 'use', 'name' => 'Creation']
+      ]]),
+      $this->parse('<?php class Test { use Creation {
+        a as b;
+        c as d;
+      } }')
+    );
+  }
+
+  #[@test]
   public function abstract_class() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),

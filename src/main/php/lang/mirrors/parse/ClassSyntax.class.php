@@ -108,7 +108,7 @@ class ClassSyntax extends \text\parse\Syntax {
       ),
       'member' => new OneOf([
         new Match([
-          T_USE   => new Sequence([$typeName, new Token(';')], function($values) {
+          T_USE   => new Sequence([$typeName, new Apply('aliases')], function($values) {
             return ['kind' => 'use', 'name' => implode('', $values[1])];
           }),
           T_CONST => new Sequence([new Token(T_STRING), new Token('='), new Apply('expr'), new Token(';')], function($values) {
@@ -144,6 +144,7 @@ class ClassSyntax extends \text\parse\Syntax {
         ],
         function($values) { return ['name' => substr($values[3], 1), 'type' => $values[0] ? implode('', $values[0]) : null, 'ref' => isset($values[2]), 'var' => isset($values[1]), 'default' => $values[4]]; }
       ),
+      'aliases' => new Match([';' => null, '{' => new Block(true)]), 
       'method' => new Match([';' => null, '{' => new Block(true)]),
       'expr' => new OneOf([
         new Match([
