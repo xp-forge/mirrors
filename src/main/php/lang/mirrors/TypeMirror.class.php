@@ -122,13 +122,13 @@ class TypeMirror extends \lang\Object {
   }
 
   /**
-   * Returns whether a given value is equal to this code unit
+   * Returns whether a given value is equal to this type mirror
    *
    * @param  var $cmp
    * @return bool
    */
   public function equals($cmp) {
-    return $cmp instanceof self && $this->reflect->name === $cmp->reflect->name;
+    return $cmp instanceof self && $this->reflect->equals($cmp->reflect);
   }
 
   /**

@@ -77,6 +77,39 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
+  /**
+   * Returns whether this type is a subtype of a given argument
+   *
+   * @param  string $class
+   * @return bool
+   */
+  public function isSubtypeOf($class) {
+    $decl= $this->decl;
+    do {
+      if ($class === $this->resolve0($decl['parent'])) return true;
+      foreach ((array)$decl['implements'] as $interface) {
+        if ($class === $this->resolve0($interface)) return true;
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return false;
+  }
+
+  /**
+   * Returns whether this type implements a given interface
+   *
+   * @param  string $name
+   * @param  bool
+   */
+  public function typeImplements($name) {
+    $decl= $this->decl;
+    do {
+      foreach ($decl['implements'] as $interface) {
+        if ($name === $this->resolve0($interface)) return true;
+      }
+    } while ($decl= $this->declarationOf($decl['parent']));
+    return false;
+  }
+
   /** @return php.Generator */
   public function allInterfaces() {
     $decl= $this->decl;
@@ -94,22 +127,6 @@ class FromCode extends \lang\Object implements Source {
       $name= $this->resolve0($interface);
       yield strtr($name, '.', '\\') => new self($name);
     }
-  }
-
-  /**
-   * Returns whether this type implements a given interface
-   *
-   * @param  string $name
-   * @param  bool
-   */
-  public function typeImplements($name) {
-    $decl= $this->decl;
-    do {
-      foreach ($decl['implements'] as $interface) {
-        if ($name === $this->resolve0($interface)) return true;
-      }
-    } while ($decl= $this->declarationOf($decl['parent']));
-    return false;
   }
 
   /** @return php.Generator */
@@ -355,23 +372,6 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /**
-   * Returns whether this type is a subtype of a given argument
-   *
-   * @param  string $class
-   * @return bool
-   */
-  public function isSubtypeOf($class) {
-    $decl= $this->decl;
-    do {
-      if ($class === $this->resolve0($decl['parent'])) return true;
-      foreach ((array)$decl['implements'] as $interface) {
-        if ($class === $this->resolve0($interface)) return true;
-      }
-    } while ($decl= $this->declarationOf($decl['parent']));
-    return false;
-  }
-
-  /**
    * Resolves a type name in the context of this reflection source
    *
    * @param  string $name
@@ -405,7 +405,13 @@ class FromCode extends \lang\Object implements Source {
     return new self($this->resolve0($name));
   }
 
+  /**
+   * Returns whether a given value is equal to this reflection source
+   *
+   * @param  var $cmp
+   * @return bool
+   */
   public function equals($cmp) {
-    return $cmp instanceof self && $this->typeName() === $cmp->typeName();
+    return $cmp instanceof self && $this->name === $cmp->name;
   }
 }

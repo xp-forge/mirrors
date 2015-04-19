@@ -83,6 +83,16 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /**
+   * Returns whether this type is a subtype of a given argument
+   *
+   * @param  string $class
+   * @return bool
+   */
+  public function isSubtypeOf($class) {
+    return $this->reflect->isSubclassOf($class);
+  }
+
+  /**
    * Returns whether this type implements a given interface
    *
    * @param  string $name
@@ -430,15 +440,11 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /**
-   * Returns whether this type is a subtype of a given argument
+   * Returns whether a given value is equal to this reflection source
    *
-   * @param  string $class
+   * @param  var $cmp
    * @return bool
    */
-  public function isSubtypeOf($class) {
-    return $this->reflect->isSubclassOf($class);
-  }
-
   public function equals($cmp) {
     return $cmp instanceof self && $this->name === $cmp->name;
   }
