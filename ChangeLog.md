@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.3.0 / 2015-04-20
+
 * Merged PR #10: Reflection sources. Types can now be reflected both via
   the reflection classes or directly from the source code. The latter is
   important in cases we want to reflect classes during class loading.
