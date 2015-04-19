@@ -54,6 +54,18 @@ interface Source {
   public function typeUses($name);
 
   /** @return php.Generator */
+  public function declaredInterfaces();
+
+  /** @return php.Generator */
+  public function allTraits();
+
+  /** @return php.Generator */
+  public function declaredTraits();
+
+  /** @return var */
+  public function constructor();
+
+  /** @return php.Generator */
   public function allFields();
 
   /** @return php.Generator */
@@ -71,23 +83,13 @@ interface Source {
   /** @return php.Generator */
   public function allInterfaces();
 
-  /** @return php.Generator */
-  public function declaredInterfaces();
-
-  /** @return php.Generator */
-  public function allTraits();
-
-  /** @return php.Generator */
-  public function declaredTraits();
-
-  /** @return var */
-  public function constructor();
-
   /**
    * Creates a new instance
    *
    * @param  var[] $args
    * @return lang.Generic
+   * @throws lang.IllegalArgumentException
+   * @throws lang.mirrors.TargetInvocationException
    */
   public function newInstance($args);
 
