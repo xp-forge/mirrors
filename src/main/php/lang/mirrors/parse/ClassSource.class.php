@@ -19,6 +19,7 @@ class ClassSource extends \text\parse\Tokens {
   /** @return string */
   public function lastComment() { return $this->comment; }
 
+  /** @return var */
   protected function next() {
     static $annotations= [T_COMMENT, T_WHITESPACE];
 

@@ -32,6 +32,31 @@ class FromCode extends \lang\Object implements Source {
     return $name ? self::$syntax->codeUnitOf($this->resolve0($name))->declaration() : null;
   }
 
+  /**
+   * Fetches all declarations
+   *
+   * @param  bool $parent Whether to include parents
+   * @param  bool $traits Whether to include traits
+   * @return [:var]
+   */
+  private function declarations($parent, $traits) {
+    yield $this->decl;
+
+    if ($parent) {
+      $decl= $this->decl;
+      while ($decl= $this->declarationOf($decl['parent'])) {
+        yield $decl;
+      }
+    }
+
+    if ($traits && isset($this->decl['use'])) {
+      foreach ($this->decl['use'] as $trait => $definition) {
+        if ('\__xp' === $trait) continue;
+        yield $this->declarationOf($trait);
+      }
+    }
+  }
+
   /** @return lang.mirrors.parse.CodeUnit */
   public function codeUnit() { return $this->unit; }
 
@@ -85,13 +110,12 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function isSubtypeOf($class) {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, false) as $decl) {
       if ($class === $this->resolve0($decl['parent'])) return true;
       foreach ((array)$decl['implements'] as $interface) {
         if ($class === $this->resolve0($interface)) return true;
       }
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
     return false;
   }
 
@@ -102,12 +126,11 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function typeImplements($name) {
-    $decl= $this->decl;
-    do {
-      foreach ($decl['implements'] as $interface) {
+    foreach ($this->declarations(true, false) as $decl) {
+      foreach ((array)$decl['implements'] as $interface) {
         if ($name === $this->resolve0($interface)) return true;
       }
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
     return false;
   }
 
@@ -138,7 +161,7 @@ class FromCode extends \lang\Object implements Source {
       foreach ($decl['use'] as $trait => $definition) {
         if ('\__xp' === $trait) continue;
         $name= $this->resolve0($trait);
-        yield strtr($name, '.', '\\') => new self($name);
+        yield $name => new self($name);
       }
     } while ($decl= $this->declarationOf($decl['parent']));
   }
@@ -149,7 +172,7 @@ class FromCode extends \lang\Object implements Source {
     foreach ($this->decl['use'] as $trait => $definition) {
       if ('\__xp' === $trait) continue;
       $name= $this->resolve0($trait);
-      yield strtr($name, '.', '\\') => new self($name);
+      yield $name => new self($name);
     }
   }
 
@@ -160,22 +183,20 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function typeUses($name) {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, false) as $decl) {
       if (!isset($decl['use'])) continue;
       foreach ($decl['use'] as $trait => $definition) {
         if ($name === $this->resolve0($trait)) return true;
       }
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
     return false;
   }
 
   /** @return [:var] */
   public function constructor() {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, true) as $decl) {
       if (isset($decl['method']['__construct'])) return $decl['method']['__construct'];
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
 
     return [
       'name'    => '__default',
@@ -204,10 +225,9 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function hasField($name) {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, true) as $decl) {
       if (isset($decl['field'][$name])) return true;
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
     return false;
   }
 
@@ -219,28 +239,27 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function fieldNamed($name) {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, true) as $decl) {
       if (isset($decl['field'][$name])) return $decl['field'][$name];
-    } while ($decl= $this->declarationOf($decl['parent']));
-
+    }
     throw new ElementNotFoundException('No field named $'.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
   public function allFields() {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, true) as $decl) {
       foreach ($decl['field'] as $name => $field) {
         yield $name => $field;
       }
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
   }
 
   /** @return php.Generator */
   public function declaredFields() {
-    foreach ($this->decl['field'] as $name => $field) {
-      yield $name => $field;
+    foreach ($this->declarations(false, true) as $decl) {
+      foreach ($decl['field'] as $name => $field) {
+        yield $name => $field;
+      }
     }
   }
 
@@ -308,7 +327,12 @@ class FromCode extends \lang\Object implements Source {
    * @param  string $name
    * @return bool
    */
-  public function hasMethod($name) { return isset($this->decl['method'][$name]); }
+  public function hasMethod($name) {
+    foreach ($this->declarations(true, true) as $decl) {
+      if (isset($decl['method'][$name])) return true;
+    }
+    return false;
+  }
 
   /**
    * Gets a method by its name
@@ -318,28 +342,27 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function methodNamed($name) {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, true) as $decl) {
       if (isset($decl['method'][$name])) return $this->method($decl['name'], $decl['method'][$name]);
-    } while ($decl= $this->declarationOf($decl['parent']));
-
+    }
     throw new ElementNotFoundException('No method named '.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
   public function allMethods() {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, true) as $decl) {
       foreach ($decl['method'] as $name => $method) {
         yield $name => $this->method($decl['name'], $method);
       }
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
   }
 
   /** @return php.Generator */
   public function declaredMethods() {
-    foreach ($this->decl['method'] as $name => $method) {
-      yield $name => $this->method($this->decl['name'], $method);
+    foreach ($this->declarations(false, true) as $decl) {
+      foreach ($decl['method'] as $name => $method) {
+        yield $name => $this->method($decl['name'], $method);
+      }
     }
   }
 
@@ -349,7 +372,12 @@ class FromCode extends \lang\Object implements Source {
    * @param  string $name
    * @return bool
    */
-  public function hasConstant($name) { return isset($this->decl['const'][$name]); }
+  public function hasConstant($name) {
+    foreach ($this->declarations(true, false) as $decl) {
+      if (isset($decl['const'][$name])) return true;
+    }
+    return false;
+  }
 
   /**
    * Gets a constant by its name
@@ -359,23 +387,19 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function constantNamed($name) {
-    $decl= $this->decl;
-    do {
+    foreach ($this->declarations(true, false) as $decl) {
       if (isset($decl['const'][$name])) return $decl['const'][$name]['value']->resolve($this->mirror);
-    } while ($decl= $this->declarationOf($decl['parent']));
-
+    }
     throw new ElementNotFoundException('No constant named '.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
   public function allConstants() {
-    $decl= $this->decl;
-    do {
-      if (!isset($decl['const'])) continue;
+    foreach ($this->declarations(true, false) as $decl) {
       foreach ($decl['const'] as $name => $const) {
         yield $name => $const['value']->resolve($this->mirror);
       }
-    } while ($decl= $this->declarationOf($decl['parent']));
+    }
   }
 
   /**

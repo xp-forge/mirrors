@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 class MemberFixture extends AbstractMemberFixture {
+  use FixtureTrait;
   const CONSTANT= 1;
 
   public $publicInstanceField;

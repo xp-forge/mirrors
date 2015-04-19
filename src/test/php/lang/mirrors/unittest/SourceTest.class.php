@@ -185,6 +185,11 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function has_trait_field() {
+    $this->assertTrue($this->reflect(MemberFixture::class)->hasField('traitField'));
+  }
+
+  #[@test]
   public function has_static_field() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasField('publicClassField'));
   }
@@ -199,7 +204,8 @@ abstract class SourceTest extends \unittest\TestCase {
         'publicClassField',
         'protectedClassField',
         'privateClassField',
-        'inheritedField'
+        'inheritedField',
+        'traitField'
       ],
       array_keys(iterator_to_array($this->reflect(MemberFixture::class)->allFields()))
     );
@@ -214,9 +220,18 @@ abstract class SourceTest extends \unittest\TestCase {
         'privateInstanceField',
         'publicClassField',
         'protectedClassField',
-        'privateClassField'
+        'privateClassField',
+        'traitField'
       ],
       array_keys(iterator_to_array($this->reflect(MemberFixture::class)->declaredFields()))
+    );
+  }
+
+  #[@test]
+  public function trait_fields() {
+    $this->assertEquals(
+      ['traitField'],
+      array_keys(iterator_to_array($this->reflect(FixtureTrait::class)->allFields()))
     );
   }
 
@@ -269,7 +284,8 @@ abstract class SourceTest extends \unittest\TestCase {
         'publicClassMethod',
         'protectedClassMethod',
         'privateClassMethod',
-        'inheritedMethod'
+        'inheritedMethod',
+        'traitMethod'
       ],
       array_keys(iterator_to_array($this->reflect(MemberFixture::class)->allMethods()))
     );
@@ -284,7 +300,8 @@ abstract class SourceTest extends \unittest\TestCase {
         'privateInstanceMethod',
         'publicClassMethod',
         'protectedClassMethod',
-        'privateClassMethod'
+        'privateClassMethod',
+        'traitMethod'
       ],
       array_keys(iterator_to_array($this->reflect(MemberFixture::class)->declaredMethods()))
     );

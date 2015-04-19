@@ -47,7 +47,8 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
         new Method($this->fixture, 'publicClassMethod'),
         new Method($this->fixture, 'protectedClassMethod'),
         new Method($this->fixture, 'privateClassMethod'),
-        new Method($this->fixture, 'inheritedMethod')
+        new Method($this->fixture, 'inheritedMethod'),
+        new Method($this->fixture, 'traitMethod')
       ],
       iterator_to_array($this->fixture->methods())
     );
@@ -62,7 +63,8 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
         new Method($this->fixture, 'privateInstanceMethod'),
         new Method($this->fixture, 'publicClassMethod'),
         new Method($this->fixture, 'protectedClassMethod'),
-        new Method($this->fixture, 'privateClassMethod')
+        new Method($this->fixture, 'privateClassMethod'),
+        new Method($this->fixture, 'traitMethod')
       ],
       iterator_to_array($this->fixture->methods()->declared())
     );
@@ -75,7 +77,8 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
         new Method($this->fixture, 'publicInstanceMethod'),
         new Method($this->fixture, 'protectedInstanceMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
-        new Method($this->fixture, 'inheritedMethod')
+        new Method($this->fixture, 'inheritedMethod'),
+        new Method($this->fixture, 'traitMethod')
       ],
       iterator_to_array($this->fixture->methods()->of(Member::$INSTANCE))
     );
