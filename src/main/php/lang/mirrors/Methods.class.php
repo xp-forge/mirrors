@@ -65,12 +65,17 @@ class Methods extends \lang\Object implements \IteratorAggregate {
   /**
    * Iterates over methods.
    *
-   * @param  int $kind Either Member::$STATIC or Member::$INSTANCE
+   * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
    * @return php.Generator
    */
   public function of($kind) {
-    foreach ($this->mirror->reflect->allMethods() as $name => $method) {
-      if (0 === strncmp('__', $name, 2) || $kind === ($method['access']->isStatic())) continue;
+    $instance= ($kind & Member::$STATIC) === 0;
+    $methods= ($kind & Member::$DECLARED)
+      ? $this->mirror->reflect->declaredMethods()
+      : $this->mirror->reflect->allMethods()
+    ;
+    foreach ($methods as $name => $method) {
+      if (0 === strncmp('__', $name, 2) || $instance === $method['access']->isStatic()) continue;
       yield new Method($this->mirror, $method);
     }
   }
