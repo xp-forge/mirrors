@@ -32,6 +32,7 @@ class Traits extends \lang\Object implements \IteratorAggregate {
    */
   public function getIterator() {
     foreach ($this->mirror->reflect->allTraits() as $trait) {
+      if (0 === strncmp($trait->name, '__', 2)) continue;
       yield new TypeMirror($trait);
     }
   }
@@ -43,6 +44,7 @@ class Traits extends \lang\Object implements \IteratorAggregate {
    */
   public function declared() {
     foreach ($this->mirror->reflect->declaredTraits() as $trait) {
+      if (0 === strncmp($trait->name, '__', 2)) continue;
       yield new TypeMirror($trait);
     }
   }

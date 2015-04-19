@@ -126,7 +126,6 @@ class FromReflection extends \lang\Object implements Source {
     $reflect= $this->reflect;
     do {
       foreach ($reflect->getTraits() as $trait) {
-        if ('__xp' === $trait->name) continue;
         yield $trait->name => $this->source->reflect($trait);
       }
     } while ($reflect= $reflect->getParentClass());
@@ -135,7 +134,6 @@ class FromReflection extends \lang\Object implements Source {
   /** @return php.Generator */
   public function declaredTraits() {
     foreach ($this->reflect->getTraits() as $trait) {
-      if ('__xp' === $trait->name) continue;
       yield $trait->name => $this->source->reflect($trait);
     }
   }
