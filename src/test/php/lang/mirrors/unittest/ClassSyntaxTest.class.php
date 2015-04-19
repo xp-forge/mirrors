@@ -25,10 +25,26 @@ class ClassSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function serializable_interface() {
+  public function interface_without_parent() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'name' => 'Serializable', 'modifiers' => [], 'annotations' => null]),
-      $this->parse('<?php interface Serializable { }')
+      new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'A', 'modifiers' => [], 'annotations' => null]),
+      $this->parse('<?php interface A { }')
+    );
+  }
+
+  #[@test]
+  public function interface_with_parent() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'parent' => null, 'implements' => ['B'], 'name' => 'A', 'modifiers' => [], 'annotations' => null]),
+      $this->parse('<?php interface A extends B { }')
+    );
+  }
+
+  #[@test]
+  public function interface_with_multiple_parents() {
+    $this->assertEquals(
+      new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'parent' => null, 'implements' => ['B', 'C'], 'name' => 'A', 'modifiers' => [], 'annotations' => null]),
+      $this->parse('<?php interface A extends B, C { }')
     );
   }
 
@@ -43,7 +59,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function creation_trait() {
     $this->assertEquals(
-      new CodeUnit(null, [], ['kind' => 'trait', 'comment' => null, 'name' => 'Creation', 'modifiers' => [], 'annotations' => null]),
+      new CodeUnit(null, [], ['kind' => 'trait', 'comment' => null, 'parent' => null, 'name' => 'Creation', 'modifiers' => [], 'annotations' => null]),
       $this->parse('<?php trait Creation { }')
     );
   }

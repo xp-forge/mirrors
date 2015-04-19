@@ -62,13 +62,13 @@ class ClassSyntax extends \text\parse\Syntax {
           new Apply('modifiers'),
           new Match([
             T_CLASS     => new Sequence([new Token(T_STRING), new Optional(new Apply('parent')), new Optional(new Apply('implements')), new Apply('type')], function($values) {
-              return array_merge(['kind' => $values[0], 'parent' => $values[2], 'implements' => $values[3], 'name' => $values[1]], $values[4]);
+              return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => $values[2], 'implements' => $values[3]], $values[4]);
             }),
-            T_INTERFACE => new Sequence([new Token(T_STRING), new Apply('type')], function($values) {
-              return array_merge(['kind' => $values[0], 'name' => $values[1]], $values[2]);
+            T_INTERFACE => new Sequence([new Token(T_STRING), new Optional(new Apply('parents')), new Apply('type')], function($values) {
+              return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => null, 'implements' => $values[2]], $values[3]);
             }),
             T_TRAIT     => new Sequence([new Token(T_STRING), new Apply('type')], function($values) {
-              return array_merge(['kind' => $values[0], 'name' => $values[1]], $values[2]);
+              return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => null], $values[2]);
             }),
           ])
         ],
@@ -77,6 +77,10 @@ class ClassSyntax extends \text\parse\Syntax {
       'parent' => new Sequence(
         [new Token(T_EXTENDS), $typeName],
         function($values) { return implode('', $values[1]); }
+      ),
+      'parents' => new Sequence(
+        [new Token(T_EXTENDS), new Repeated($typeName, new Token(','))],
+        function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
       ),
       'implements' => new Sequence(
         [new Token(T_IMPLEMENTS), new Repeated($typeName, new Token(','))],

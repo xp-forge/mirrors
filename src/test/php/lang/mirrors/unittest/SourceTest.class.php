@@ -2,7 +2,7 @@
 
 use lang\mirrors\Modifiers;
 use lang\mirrors\Kind;
-use lang\Runnable;
+use lang\Closeable;
 
 /**
  * Base class for source implementation testing
@@ -125,14 +125,21 @@ abstract class SourceTest extends \unittest\TestCase {
   public function all_interfaces() {
     $names= array_keys(iterator_to_array($this->reflect(FixtureImpl::class)->allInterfaces()));
     sort($names);
-    $this->assertEquals([Runnable::class, FixtureInterface::class], $names);
+    $this->assertEquals([Closeable::class, FixtureInterface::class], $names);
   }
 
   #[@test]
   public function declared_interfaces() {
     $names= array_keys(iterator_to_array($this->reflect(FixtureImpl::class)->declaredInterfaces()));
     sort($names);
-    $this->assertEquals([Runnable::class], $names);
+    $this->assertEquals([Closeable::class], $names);
+  }
+
+  #[@test]
+  public function parent_interfaces() {
+    $names= array_keys(iterator_to_array($this->reflect(FixtureCloseable::class)->allInterfaces()));
+    sort($names);
+    $this->assertEquals([Closeable::class, FixtureInterface::class], $names);
   }
 
   #[@test]

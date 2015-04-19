@@ -1,4 +1,4 @@
 <?php namespace lang\mirrors\unittest;
 
-abstract class FixtureImpl extends FixtureBase implements \lang\Runnable {
+abstract class FixtureImpl extends FixtureBase implements \lang\Closeable {
 }
