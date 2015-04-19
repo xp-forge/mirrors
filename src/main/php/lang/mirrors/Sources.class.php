@@ -1,26 +1,38 @@
 <?php namespace lang\mirrors;
 
 abstract class Sources extends \lang\Enum {
-  public static $REFLECTION, $CODE;
+  public static $DEFAULT, $REFLECTION, $CODE;
 
   static function __static() {
-    self::$REFLECTION= newinstance(self::class, [0, 'REFLECTION'], '{
+    self::$DEFAULT= newinstance(self::class, [0, 'DEFAULT'], '{
       static function __static() { }
 
-      public function reflect($name) {
-        try {
-          return new FromReflection(new \ReflectionClass(strtr($name, ".", "\\\\")));
-        } catch (\Exception $e) {
-          throw new \lang\ClassNotFoundException($name.": ".$e->getMessage());
+      public function reflect($class) {
+        $literal= strtr($class, ".", "\\\\");
+        if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
+          return self::$REFLECTION->reflect($class);
+        } else {
+          return self::$CODE->reflect($class);
         }
       }
     }');
-    self::$CODE= newinstance(self::class, [1, 'CODE'], '{
+    self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], '{
       static function __static() { }
 
-      public function reflect($name) { return new FromCode($name); }
+      public function reflect($class) {
+        try {
+          return new FromReflection(new \ReflectionClass(strtr($class, ".", "\\\\")));
+        } catch (\Exception $e) {
+          throw new \lang\ClassNotFoundException($class.": ".$e->getMessage());
+        }
+      }
+    }');
+    self::$CODE= newinstance(self::class, [2, 'CODE'], '{
+      static function __static() { }
+
+      public function reflect($class) { return new FromCode($class); }
     }');
   }
 
-  public abstract function reflect($name);
+  public abstract function reflect($class);
 }

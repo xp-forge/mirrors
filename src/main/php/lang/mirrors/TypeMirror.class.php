@@ -33,7 +33,7 @@ class TypeMirror extends \lang\Object {
     } else if ($arg instanceof Source) {
       $this->reflect= $arg;
     } else if (null === $source) {
-      $this->reflect= Sources::$REFLECTION->reflect($arg);
+      $this->reflect= Sources::$DEFAULT->reflect($arg);
     } else {
       $this->reflect= $source->reflect($arg);
     }
