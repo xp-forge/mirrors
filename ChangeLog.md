@@ -3,6 +3,11 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #10: Reflection sources. Types can now be reflected both via
+  the reflection classes or directly from the source code. The latter is
+  important in cases we want to reflect classes during class loading.
+  (@thekid)
+
 ## 0.2.1 / 2015-04-13
 
 * Fixed `new T(...)` inside annotations not creating instances - @thekid
