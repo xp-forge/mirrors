@@ -24,36 +24,21 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /**
-   * Fetches class declaration
-   *
-   * @param  string $name
-   * @return [:var]
-   */
-  private function declarationOf($name) {
-    return $name ? self::$syntax->codeUnitOf($this->resolve0($name))->declaration() : null;
-  }
-
-  /**
-   * Fetches all declarations
+   * Fetches all types to merge with
    *
    * @param  bool $parent Whether to include parents
    * @param  bool $traits Whether to include traits
    * @return php.Generator
    */
-  private function declarations($parent, $traits) {
-    yield $this->decl;
-
-    if ($parent) {
-      $decl= $this->decl;
-      while ($decl= $this->declarationOf($decl['parent'])) {
-        yield $decl;
-      }
+  private function merge($parent, $traits) {
+    if ($parent && isset($this->decl['parent'])) {
+      yield $this->resolve($this->decl['parent']);
     }
 
     if ($traits && isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
         if ('\__xp' === $trait) continue;
-        yield $this->declarationOf($trait);
+        yield $this->resolve($trait);
       }
     }
   }
@@ -111,11 +96,12 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function isSubtypeOf($class) {
-    foreach ($this->declarations(true, false) as $decl) {
-      if ($class === $this->resolve0($decl['parent'])) return true;
-      foreach ((array)$decl['implements'] as $interface) {
-        if ($class === $this->resolve0($interface)) return true;
-      }
+    if ($class === $this->resolve0($this->decl['parent'])) return true;
+    foreach ((array)$this->decl['implements'] as $interface) {
+      if ($class === $this->resolve0($interface)) return true;
+    }
+    foreach ($this->merge(true, false) as $reflect) {
+      if ($reflect->isSubtypeOf($class)) return true;
     }
     return false;
   }
@@ -127,20 +113,25 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function typeImplements($name) {
-    foreach ($this->declarations(true, false) as $decl) {
-      foreach ((array)$decl['implements'] as $interface) {
-        if ($name === $this->resolve0($interface)) return true;
-      }
+    foreach ($this->decl['implements'] as $interface) {
+      if ($name === $this->resolve0($interface)) return true;
+    }
+    foreach ($this->merge(true, false) as $reflect) {
+      if ($reflect->typeImplements($name)) return true;
     }
     return false;
   }
 
   /** @return php.Generator */
   public function allInterfaces() {
-    foreach ($this->declarations(true, false) as $decl) {
-      foreach ((array)$decl['implements'] as $interface) {
-        $name= $this->resolve0($interface);
-        yield $name => $this->source->reflect($name);
+    foreach ($this->decl['implements'] as $interface) {
+      if ('\__xp' === $interface) continue;
+      $name= $this->resolve0($interface);
+      yield $name => $this->source->reflect($name);
+    }
+    foreach ($this->merge(true, false) as $reflect) {
+      foreach ($reflect->allInterfaces($name) as $name => $reflect) {
+        yield $name => $reflect;
       }
     }
   }
@@ -148,6 +139,7 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function declaredInterfaces() {
     foreach ($this->decl['implements'] as $interface) {
+      if ('\__xp' === $interface) continue;
       $name= $this->resolve0($interface);
       yield $name => $this->source->reflect($name);
     }
@@ -155,23 +147,28 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allTraits() {
-    foreach ($this->declarations(true, false) as $decl) {
-      if (!isset($decl['use'])) continue;
-      foreach ($decl['use'] as $trait => $definition) {
+    if (isset($this->decl['use'])) {
+      foreach ($this->decl['use'] as $trait => $definition) {
         if ('\__xp' === $trait) continue;
         $name= $this->resolve0($trait);
         yield $name => $this->source->reflect($name);
+      }
+    }
+    foreach ($this->merge(true, false) as $reflect) {
+      foreach ($reflect->allTraits($name) as $name => $reflect) {
+        yield $name => $reflect;
       }
     }
   }
 
   /** @return php.Generator */
   public function declaredTraits() {
-    if (!isset($this->decl['use'])) return;
-    foreach ($this->decl['use'] as $trait => $definition) {
-      if ('\__xp' === $trait) continue;
-      $name= $this->resolve0($trait);
-      yield $name => $this->source->reflect($name);
+    if (isset($this->decl['use'])) {
+      foreach ($this->decl['use'] as $trait => $definition) {
+        if ('\__xp' === $trait) continue;
+        $name= $this->resolve0($trait);
+        yield $name => $this->source->reflect($name);
+      }
     }
   }
 
@@ -182,19 +179,25 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function typeUses($name) {
-    foreach ($this->declarations(true, false) as $decl) {
-      if (!isset($decl['use'])) continue;
-      foreach ($decl['use'] as $trait => $definition) {
+    if (isset($this->decl['use'])) {
+      foreach ($this->decl['use'] as $trait => $definition) {
+        if ('\__xp' === $trait) continue;
         if ($name === $this->resolve0($trait)) return true;
       }
+    }
+    foreach ($this->merge(true, false) as $reflect) {
+      if ($reflect->typeUses($name)) return true;
     }
     return false;
   }
 
   /** @return [:var] */
   public function constructor() {
-    foreach ($this->declarations(true, true) as $decl) {
-      if (isset($decl['method']['__construct'])) return $decl['method']['__construct'];
+    if (isset($this->decl['method']['__construct'])) {
+      return $this->method($this->decl['name'], $this->decl['method']['__construct']);
+    }
+    foreach ($this->merge(true, true) as $reflect) {
+      if ($reflect->hasMethod('__construct')) return $reflect->constructor();
     }
 
     return [
@@ -224,9 +227,13 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function hasField($name) {
-    foreach ($this->declarations(true, true) as $decl) {
-      if (isset($decl['field'][$name])) return true;
+    if (isset($this->decl['field'][$name])) return true;
+    foreach ($this->merge(true, true) as $reflect) {
+      foreach ($reflect->allFields() as $cmp => $field) {
+        if ($cmp === $name) return true;
+      }
     }
+
     return false;
   }
 
@@ -238,16 +245,24 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function fieldNamed($name) {
-    foreach ($this->declarations(true, true) as $decl) {
-      if (isset($decl['field'][$name])) return $decl['field'][$name];
+    if (isset($this->decl['field'][$name])) return $this->decl['field'][$name];
+    foreach ($this->merge(true, true) as $reflect) {
+      foreach ($reflect->allFields() as $cmp => $field) {
+        if ($cmp === $name) return $field;
+      }
     }
+
     throw new ElementNotFoundException('No field named $'.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
   public function allFields() {
-    foreach ($this->declarations(true, true) as $decl) {
-      foreach ($decl['field'] as $name => $field) {
+    foreach ($this->decl['field'] as $name => $field) {
+      yield $name => $field;
+    }
+    foreach ($this->merge(true, true) as $reflect) {
+      foreach ($reflect->allFields() as $name => $field) {
+        if (isset($this->decl['field'][$name])) continue;
         yield $name => $field;
       }
     }
@@ -255,8 +270,12 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function declaredFields() {
-    foreach ($this->declarations(false, true) as $decl) {
-      foreach ($decl['field'] as $name => $field) {
+    foreach ($this->decl['field'] as $name => $field) {
+      yield $name => $field;
+    }
+    foreach ($this->merge(false, true) as $reflect) {
+      foreach ($reflect->allFields() as $name => $field) {
+        if (isset($this->decl['field'][$name])) continue;
         yield $name => $field;
       }
     }
@@ -327,9 +346,13 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function hasMethod($name) {
-    foreach ($this->declarations(true, true) as $decl) {
-      if (isset($decl['method'][$name])) return true;
+    if (isset($this->decl['method'][$name])) return true;
+    foreach ($this->merge(true, true) as $reflect) {
+      foreach ($reflect->allMethods() as $cmp => $field) {
+        if ($cmp === $name) return true;
+      }
     }
+
     return false;
   }
 
@@ -341,26 +364,38 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function methodNamed($name) {
-    foreach ($this->declarations(true, true) as $decl) {
-      if (isset($decl['method'][$name])) return $this->method($decl['name'], $decl['method'][$name]);
+    if (isset($this->decl['method'][$name])) return $this->method($this->decl['name'], $this->decl['method'][$name]);
+    foreach ($this->merge(true, true) as $reflect) {
+      foreach ($reflect->allMethods() as $cmp => $method) {
+        if ($cmp === $name) return $method;
+      }
     }
+
     throw new ElementNotFoundException('No method named '.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
   public function allMethods() {
-    foreach ($this->declarations(true, true) as $decl) {
-      foreach ($decl['method'] as $name => $method) {
-        yield $name => $this->method($decl['name'], $method);
+    foreach ($this->decl['method'] as $name => $method) {
+      yield $name => $this->method($this->decl['name'], $method);
+    }
+    foreach ($this->merge(true, true) as $reflect) {
+      foreach ($reflect->allMethods() as $name => $method) {
+        if (isset($this->decl['method'][$name])) continue;
+        yield $name => $method;
       }
     }
   }
 
   /** @return php.Generator */
   public function declaredMethods() {
-    foreach ($this->declarations(false, true) as $decl) {
-      foreach ($decl['method'] as $name => $method) {
-        yield $name => $this->method($decl['name'], $method);
+    foreach ($this->decl['method'] as $name => $method) {
+      yield $name => $this->method($this->decl['name'], $method);
+    }
+    foreach ($this->merge(false, true) as $reflect) {
+      foreach ($reflect->allMethods() as $name => $method) {
+        if (isset($this->decl['method'][$name])) continue;
+        yield $name => $method;
       }
     }
   }
@@ -372,9 +407,13 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function hasConstant($name) {
-    foreach ($this->declarations(true, false) as $decl) {
-      if (isset($decl['const'][$name])) return true;
+    if (isset($this->decl['const'][$name])) return true;
+    foreach ($this->merge(true, false) as $reflect) {
+      foreach ($reflect->allFields() as $cmp => $const) {
+        if ($cmp === $name) return true;
+      }
     }
+
     return false;
   }
 
@@ -386,17 +425,25 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function constantNamed($name) {
-    foreach ($this->declarations(true, false) as $decl) {
-      if (isset($decl['const'][$name])) return $decl['const'][$name]['value']->resolve($this->mirror);
+    if (isset($this->decl['const'][$name])) return $this->decl['const'][$name]['value']->resolve($this->mirror);
+    foreach ($this->merge(true, true) as $reflect) {
+      foreach ($reflect->allFields() as $cmp => $const) {
+        if ($cmp === $name) return $const;
+      }
     }
+
     throw new ElementNotFoundException('No constant named '.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
   public function allConstants() {
-    foreach ($this->declarations(true, false) as $decl) {
-      foreach ($decl['const'] as $name => $const) {
-        yield $name => $const['value']->resolve($this->mirror);
+    foreach ($this->decl['const'] as $name => $const) {
+      yield $name => $const['value']->resolve($this->mirror);
+    }
+    foreach ($this->merge(true, false) as $reflect) {
+      foreach ($reflect->allConstants() as $name => $const) {
+        if (isset($this->decl['const'][$name])) continue;
+        yield $name => $const;
       }
     }
   }
