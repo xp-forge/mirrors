@@ -2,14 +2,14 @@
 
 use lang\mirrors\TypeMirror;
 use lang\ElementNotFoundException;
-use lang\mirrors\unittest\fixture\FixtureHHVMAnnotations;
+use lang\mirrors\unittest\fixture\FixtureHackAnnotations;
 
 #[@action(new OnlyOnHHVM())]
-class HHVMAnnotationsTest extends \unittest\TestCase {
+class HackAnnotationsTest extends \unittest\TestCase {
 
   /** @return var[][] */
   private function targets() {
-    $mirror= new TypeMirror(FixtureHHVMAnnotations::class);
+    $mirror= new TypeMirror(FixtureHackAnnotations::class);
     return [
       [$mirror],
       [$mirror->constructor()],
