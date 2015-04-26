@@ -86,9 +86,19 @@ class ClassSyntax extends \text\parse\Syntax {
         [new Token(T_IMPLEMENTS), new Repeated($typeName, new Token(','))],
         function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
       ),
-      'annotations' => new Sequence(
-        [new Token('['), new Repeated(new Apply('annotation'), new Token(','), $collectAnnotations), new Token(']')],
-        function($values) { return $values[1]; }
+      'annotations' => new Match([
+        '[' => new Sequence(
+          [new Repeated(new Apply('annotation'), new Token(','), $collectAnnotations), new Token(']')],
+          function($values) { return $values[1]; }
+        ),
+        T_SL => new Sequence(
+          [new Repeated(new Apply('attribute'), new Token(','), $collectAnnotations), new Token(T_SR)],
+          function($values) { return $values[1]; }
+        ),
+      ]),
+      'attribute' => new Sequence(
+        [new Token(T_STRING), new Optional(new Apply('value'))],
+        function($values) { return ['target' => $values[0], 'value' => $values[1]]; }
       ),
       'annotation' => new Sequence(
         [new Token('@'), new Apply('annotation_target'), new Optional(new Apply('value'))],
