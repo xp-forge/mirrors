@@ -2,6 +2,7 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
+use lang\mirrors\parse\Value;
 use lang\XPClass;
 use lang\Type;
 use lang\Enum;
@@ -13,6 +14,11 @@ class FromReflection extends \lang\Object implements Source {
   private $reflect, $source;
   private $unit= null;
   public $name;
+  private static $HHVM;
+
+  static function __static() {
+    self::$HHVM= defined('HHVM_VERSION');
+  }
 
   public function __construct(\ReflectionClass $reflect, Sources $source= null) {
     $this->reflect= $reflect;
@@ -51,7 +57,18 @@ class FromReflection extends \lang\Object implements Source {
 
   /** @return var */
   public function typeAnnotations() {
-    return $this->codeUnit()->declaration()['annotations'];
+    $annotations= [];
+    if (self::$HHVM) {
+      foreach ($this->reflect->getAttributes() as $name => $value) {
+        $annotations[null][$name]= empty($value) ? null : new Value($value[0]);
+      }
+    }
+
+    if (empty($annotations)) {
+      return $this->codeUnit()->declaration()['annotations'];
+    } else {
+      return $annotations;
+    }
   }
 
   /** @return lang.mirrors.Modifiers */
@@ -152,16 +169,40 @@ class FromReflection extends \lang\Object implements Source {
     return false;
   }
 
+  /**
+   * Maps annotations
+   *
+   * @param  var $reflect
+   * @param  string $member
+   * @param  string $kind Either "method" or "field"
+   * @return [:var]
+   */
+  private function memberAnnotations($reflect, $member, $kind) {
+    $annotations= [];
+    if (self::$HHVM && method_exists($reflect, 'getAttributes')) {
+      foreach ($reflect->getAttributes() as $name => $value) {
+        $annotations[null][$name]= empty($value) ? null : new Value($value[0]);
+      }
+    }
+
+    if (empty($annotations)) {
+      return $this->codeUnit()->declaration()[$kind][$member]['annotations'];
+    } else {
+      return $annotations;
+    }
+  }
+
   /** @return [:var] */
   public function constructor() {
     $ctor= $this->reflect->getConstructor();
     if (null === $ctor) {
       return [
-        'name'    => '__default',
-        'access'  => Modifiers::IS_PUBLIC,
-        'holder'  => $this->reflect->name,
-        'comment' => function() { return null; },
-        'params'  => function() { return []; }
+        'name'        => '__default',
+        'access'      => Modifiers::IS_PUBLIC,
+        'holder'      => $this->reflect->name,
+        'comment'     => function() { return null; },
+        'params'      => function() { return []; },
+        'annotations' => function() { return []; },
       ];
     } else {
       return $this->method($ctor);
@@ -204,12 +245,13 @@ class FromReflection extends \lang\Object implements Source {
    */
   private function field($reflect) {
     return [
-      'name'    => $reflect->name,
-      'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
-      'holder'  => $reflect->getDeclaringClass()->name,
-      'comment' => function() use($reflect) { return $reflect->getDocComment(); },
-      'read'    => function($instance) use($reflect) { return $this->readField($reflect, $instance); },
-      'modify'  => function($instance, $value) use($reflect) { $this->modifyField($reflect, $instance, $value); }
+      'name'        => $reflect->name,
+      'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
+      'holder'      => $reflect->getDeclaringClass()->name,
+      'annotations' => function() use($reflect) { return $this->memberAnnotations($reflect, $reflect->name, 'field'); },
+      'comment'     => function() use($reflect) { return $reflect->getDocComment(); },
+      'read'        => function($instance) use($reflect) { return $this->readField($reflect, $instance); },
+      'modify'      => function($instance, $value) use($reflect) { $this->modifyField($reflect, $instance, $value); }
     ];
   }
 
@@ -332,18 +374,19 @@ class FromReflection extends \lang\Object implements Source {
    */
   private function method($reflect) {
     return [
-      'name'    => $reflect->name,
-      'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
-      'holder'  => $reflect->getDeclaringClass()->name,
-      'params'  => function() use($reflect) {
+      'name'        => $reflect->name,
+      'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
+      'holder'      => $reflect->getDeclaringClass()->name,
+      'params'      => function() use($reflect) {
         $params= [];
         foreach ($reflect->getParameters() as $pos => $param) {
           $params[]= $this->param($pos, $param);
         }
         return $params;
       },
-      'comment' => function() use($reflect) { return $reflect->getDocComment(); },
-      'invoke'  => function($instance, $args) use($reflect) { return $this->invokeMethod($reflect, $instance, $args); }
+      'annotations' => function() use($reflect) { return $this->memberAnnotations($reflect, $reflect->name, 'method'); },
+      'comment'     => function() use($reflect) { return $reflect->getDocComment(); },
+      'invoke'      => function($instance, $args) use($reflect) { return $this->invokeMethod($reflect, $instance, $args); }
     ];
   }
 

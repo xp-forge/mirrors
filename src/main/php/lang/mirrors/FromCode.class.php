@@ -195,11 +195,12 @@ class FromCode extends \lang\Object implements Source {
     }
 
     return [
-      'name'    => '__default',
-      'access'  => Modifiers::IS_PUBLIC,
-      'holder'  => $this->decl['name'],
-      'comment' => function() { return null; },
-      'params'  => function() { return []; }
+      'name'        => '__default',
+      'access'      => Modifiers::IS_PUBLIC,
+      'holder'      => $this->decl['name'],
+      'comment'     => function() { return null; },
+      'annotations' => function() { return []; },
+      'params'      => function() { return []; }
     ];
   }
 
@@ -222,10 +223,11 @@ class FromCode extends \lang\Object implements Source {
    */
   private function field($holder, $field) {
     return [
-      'name'    => $field['name'],
-      'access'  => new Modifiers($field['access']),
-      'holder'  => $holder,
-      'comment' => function() use($field) { return $field['comment']; }
+      'name'        => $field['name'],
+      'access'      => new Modifiers($field['access']),
+      'holder'      => $holder,
+      'annotations' => function() use($field) { return $field['annotations']; },
+      'comment'     => function() use($field) { return $field['comment']; }
     ];
   }
 
@@ -337,17 +339,18 @@ class FromCode extends \lang\Object implements Source {
    */
   private function method($holder, $method) {
     return [
-      'name'    => $method['name'],
-      'access'  => new Modifiers($method['access']),
-      'holder'  => $holder,
-      'params'  => function() use($method) {
+      'name'         => $method['name'],
+      'access'      => new Modifiers($method['access']),
+      'holder'      => $holder,
+      'params'      => function() use($method) {
         $params= [];
         foreach ($method['params'] as $pos => $param) {
           $params[]= $this->param($pos, $param);
         }
         return $params;
       },
-      'comment' => function() use($method) { return $method['comment']; }
+      'annotations' => function() use($method) { return $method['annotations']; },
+      'comment'     => function() use($method) { return $method['comment']; }
     ];
   }
 

@@ -77,12 +77,8 @@ abstract class Member extends \lang\Object {
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
-    $lookup= $this->mirror->reflect->codeUnit()->declaration()[static::$kind];
-    $name= $this->reflect['name'];
-    return new Annotations(
-      $this->mirror,
-      isset($lookup[$name]['annotations'][null]) ? (array)$lookup[$name]['annotations'][null] : []
-    );
+    $annotations= $this->reflect['annotations']();
+    return new Annotations($this->mirror, isset($annotations[null]) ? $annotations[null] : []);
   }
 
   /**
