@@ -59,7 +59,7 @@ class FromHHVM extends FromReflection {
    * @return [:var]
    */
   protected function param($pos, $reflect) {
-    $hint= $reflect->info['type_hint'];
+    $hint= $reflect->getTypeText();
     if ('' === $hint) {
       $type= null;
     } else if ('array' === $hint) {
