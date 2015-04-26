@@ -63,6 +63,11 @@ class HackTypingTest extends \unittest\TestCase {
     $this->assertEquals(new FunctionType([Primitive::$STRING, Primitive::$INT], Type::$VOID), $target);
   }
 
+  #[@test, @values(source= 'targets', args= ['nullableTyped'])]
+  public function nullable_typed($target) {
+    $this->assertEquals(Primitive::$INT, $target);
+  }
+
   #[@test, @values(source= 'targets', args= ['mixedTyped'])]
   public function mixed_typed($target) {
     $this->assertEquals(Type::$VAR, $target);

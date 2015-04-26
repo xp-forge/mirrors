@@ -41,7 +41,7 @@ class FromHHVM extends FromReflection {
         $this->mapType(trim(substr($type, $p+ 1, -1)))
       );
     }
-    return Type::forName(strtr($type, ['HH\\' => '']));
+    return Type::forName(ltrim(strtr($type, ['HH\\' => '']), '?'));
   }
 
   /** @return var */

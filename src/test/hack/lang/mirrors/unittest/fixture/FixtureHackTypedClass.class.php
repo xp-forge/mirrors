@@ -7,6 +7,7 @@
  * @see    http://docs.hhvm.com/manual/en/hack.annotations.this.php
  * @see    http://docs.hhvm.com/manual/en/hack.annotations.mixedtypes.php
  * @see    http://docs.hhvm.com/manual/en/hack.annotations.functiontypes.php
+ * @see    http://docs.hhvm.com/manual/en/hack.nullable.php
  */
 class FixtureHackTypedClass extends \lang\Object {
   public int $typed;
@@ -16,7 +17,8 @@ class FixtureHackTypedClass extends \lang\Object {
   public array<string, self> $mapTyped;
   public array $unTypedArrayTyped;
   public (function (string, int): void) $funcTyped;
-  public $mixedTyped;
+  public ?int $nullableTyped;
+  public mixed $mixedTyped;
   public $unTyped;
 
   public function typed(): int { }
@@ -26,7 +28,8 @@ class FixtureHackTypedClass extends \lang\Object {
   public function mapTyped(): array<string, self> { }
   public function unTypedArrayTyped(): array { }
   public function funcTyped(): (function (string, int): void) { }
-  public function mixedTyped() { }
+  public function nullableTyped(): ?int { }
+  public function mixedTyped(): mixed { }
   public function unTyped() { }
 
   public function parameters(
@@ -37,6 +40,7 @@ class FixtureHackTypedClass extends \lang\Object {
     array<string, self> $mapTyped,
     array $unTypedArrayTyped,
     (function (string, int): void) $funcTyped,
+    ?int $nullableTyped,
     mixed $mixedTyped,
     $unTyped
   ) { }
