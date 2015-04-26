@@ -217,7 +217,7 @@ class FromReflection extends \lang\Object implements Source {
    * @param  php.ReflectionProperty $reflect
    * @return [:var]
    */
-  private function field($reflect) {
+  protected function field($reflect) {
     return [
       'name'        => $reflect->name,
       'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
@@ -378,7 +378,7 @@ class FromReflection extends \lang\Object implements Source {
    * @param  php.ReflectionMethod $reflect
    * @return [:var]
    */
-  private function method($reflect) {
+  protected function method($reflect) {
     return [
       'name'        => $reflect->name,
       'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
