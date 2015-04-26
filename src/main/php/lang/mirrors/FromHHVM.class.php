@@ -16,7 +16,7 @@ class FromHHVM extends FromReflection {
    * @return string
    */
   private function mapType($type) {
-    if ('self' === $type) {
+    if ('self' === $type || 'HH\\this' === $type) {
       return new XPClass($this->reflect);
     } else if ('parent' === $type) {
       return new XPClass($this->reflect->getParentClass());
@@ -24,6 +24,8 @@ class FromHHVM extends FromReflection {
       return Type::$ARRAY;
     } else if ('callable' === $type) {
       return Type::$CALLABLE;
+    } else if ('HH\\mixed' === $type) {
+      return Type::$VAR;
     } else if (0 === strncmp($type, 'array<', 6)) {
       $components= explode(',', substr($type, 6, -1));
       if (2 === sizeof($components)) {

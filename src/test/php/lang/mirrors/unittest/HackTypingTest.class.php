@@ -38,6 +38,11 @@ class HackTypingTest extends \unittest\TestCase {
     $this->assertEquals(new XPClass(Object::class), $target);
   }
 
+  #[@test, @values(source= 'targets', args= ['thisTyped'])]
+  public function this_typed($target) {
+    $this->assertEquals(new XPClass(FixtureHackTypedClass::class), $target);
+  }
+
   #[@test, @values(source= 'targets', args= ['arrayTyped'])]
   public function array_typed($target) {
     $this->assertEquals(new ArrayType(Primitive::$STRING), $target);
@@ -56,6 +61,11 @@ class HackTypingTest extends \unittest\TestCase {
   #[@test, @values(source= 'targets', args= ['funcTyped'])]
   public function func_typed($target) {
     $this->assertEquals(new FunctionType([Primitive::$STRING, Primitive::$INT], Type::$VOID), $target);
+  }
+
+  #[@test, @values(source= 'targets', args= ['mixedTyped'])]
+  public function mixed_typed($target) {
+    $this->assertEquals(Type::$VAR, $target);
   }
 
   #[@test, @values(source= 'targets', args= ['unTyped'])]
