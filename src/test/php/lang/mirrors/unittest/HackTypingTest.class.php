@@ -12,11 +12,6 @@ use lang\mirrors\unittest\fixture\FixtureHackTypedClass;
 
 #[@action(new OnlyOnHHVM())]
 class HackTypingTest extends \unittest\TestCase {
-  private $fixture;
-
-  public function setUp() {
-    $this->fixture= new TypeMirror(FixtureHackTypedClass::class);
-  }
 
   /** @return var[][] */
   private function targets($name) {
