@@ -70,7 +70,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
     $lookup= $this->lookup();
     if (isset($lookup[self::BY_NAME][$name])) {
       $pos= $lookup[self::BY_NAME][$name];
-      return new Parameter($this, $lookup[self::BY_ID][$pos]);
+      return new Parameter($this->mirror, $lookup[self::BY_ID][$pos]);
     }
     throw new ElementNotFoundException('No parameter '.$name.' in '.$this->mirror->name());
   }
