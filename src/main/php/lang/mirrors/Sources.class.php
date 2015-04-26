@@ -12,14 +12,16 @@
  */
 abstract class Sources extends \lang\Enum {
   public static $DEFAULT, $REFLECTION, $CODE;
+  private static $HHVM;
 
   static function __static() {
-    self::$DEFAULT= newinstance(self::class, [0, 'DEFAULT'], '{
+    $reflect= defined('HHVM_VERSION') ? 'HHVM' : 'Reflection';
+    self::$DEFAULT= newinstance(self::class, [0, 'DEFAULT'], sprintf('{
       static function __static() { }
 
       public function reflect($class, $source= null) {
         if ($class instanceof \ReflectionClass) {
-          return new FromReflection($class, $source ?: $this);
+          return new From%1$s($class, $source ?: $this);
         }
 
         $literal= strtr($class, ".", "\\\\");
@@ -32,22 +34,22 @@ abstract class Sources extends \lang\Enum {
           return new FromIncomplete($literal);
         }
       }
-    }');
-    self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], '{
+    }', $reflect));
+    self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], sprintf('{
       static function __static() { }
 
       public function reflect($class, $source= null) {
         if ($class instanceof \ReflectionClass) {
-          return new FromReflection($class, $source);
+          return new From%1$s($class, $source);
         }
 
         try {
-          return new FromReflection(new \ReflectionClass(strtr($class, ".", "\\\\")), $source);
+          return new From%1$s(new \ReflectionClass(strtr($class, ".", "\\\\")), $source);
         } catch (\Exception $e) {
           throw new \lang\ClassNotFoundException($class.": ".$e->getMessage());
         }
       }
-    }');
+    }', $reflect));
     self::$CODE= newinstance(self::class, [2, 'CODE'], '{
       static function __static() { }
 

@@ -2,7 +2,6 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
-use lang\mirrors\parse\Value;
 use lang\XPClass;
 use lang\Type;
 use lang\Enum;
@@ -11,14 +10,10 @@ use lang\IllegalArgumentException;
 use lang\Throwable;
 
 class FromReflection extends \lang\Object implements Source {
-  private $reflect, $source;
+  protected $reflect;
+  private $source;
   private $unit= null;
   public $name;
-  private static $HHVM;
-
-  static function __static() {
-    self::$HHVM= defined('HHVM_VERSION');
-  }
 
   public function __construct(\ReflectionClass $reflect, Sources $source= null) {
     $this->reflect= $reflect;
@@ -56,20 +51,7 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /** @return var */
-  public function typeAnnotations() {
-    $annotations= [];
-    if (self::$HHVM) {
-      foreach ($this->reflect->getAttributes() as $name => $value) {
-        $annotations[null][$name]= empty($value) ? null : new Value($value[0]);
-      }
-    }
-
-    if (empty($annotations)) {
-      return $this->codeUnit()->declaration()['annotations'];
-    } else {
-      return $annotations;
-    }
-  }
+  public function typeAnnotations() { return $this->codeUnit()->declaration()['annotations']; }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
@@ -177,19 +159,8 @@ class FromReflection extends \lang\Object implements Source {
    * @param  string $kind Either "method" or "field"
    * @return [:var]
    */
-  private function memberAnnotations($reflect, $member, $kind) {
-    $annotations= [];
-    if (self::$HHVM && method_exists($reflect, 'getAttributes')) {
-      foreach ($reflect->getAttributes() as $name => $value) {
-        $annotations[null][$name]= empty($value) ? null : new Value($value[0]);
-      }
-    }
-
-    if (empty($annotations)) {
-      return $this->codeUnit()->declaration()[$kind][$member]['annotations'];
-    } else {
-      return $annotations;
-    }
+  protected function memberAnnotations($reflect, $member, $kind) {
+    return $this->codeUnit()->declaration()[$kind][$member]['annotations'];
   }
 
   /** @return [:var] */
