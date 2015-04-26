@@ -1,4 +1,4 @@
-<?php namespace lang\mirrors\unittest;
+<?php namespace lang\mirrors\unittest\parse;
 
 class StringInput extends \lang\mirrors\parse\ClassSource {
 
