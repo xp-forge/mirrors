@@ -327,7 +327,7 @@ class FromReflection extends \lang\Object implements Source {
    * @param  php.ReflectionParameter $reflect
    * @return [:var]
    */
-  private function param($pos, $reflect) {
+  protected function param($pos, $reflect) {
     if ($reflect->isArray()) {
       $type= function() { return Type::$ARRAY; };
     } else if ($reflect->isCallable()) {

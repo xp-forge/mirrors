@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors;
 
 use lang\mirrors\parse\Value;
+use lang\Type;
 
 class FromHHVM extends FromReflection {
 
@@ -48,6 +49,44 @@ class FromHHVM extends FromReflection {
       $field['type']= $this->mapType($type);
     }
     return $field;
+  }
+
+  /**
+   * Maps a parameter
+   *
+   * @param  int $pos
+   * @param  php.ReflectionParameter $reflect
+   * @return [:var]
+   */
+  protected function param($pos, $reflect) {
+    $hint= $reflect->info['type_hint'];
+    if ('' === $hint) {
+      $type= null;
+    } else if ('array' === $hint) {
+      $type= function() { return Type::$ARRAY; };
+    } else if ('callable' === $hint) {
+      $type= function() { return Type::$CALLABLE; };
+    } else {
+      $type= function() use ($hint) { return Type::forName($this->mapType($hint)); };
+    }
+
+    if ($var= $reflect->isVariadic()) {
+      $default= null;
+    } else if ($reflect->isOptional()) {
+      $default= function() use($reflect) { return $reflect->getDefaultValue(); };
+    } else {
+      $default= null;
+    }
+
+    return [
+      'pos'         => $pos,
+      'name'        => $reflect->name,
+      'type'        => $type,
+      'ref'         => $reflect->isPassedByReference(),
+      'default'     => $default,
+      'var'         => $var,
+      'annotations' => function() use($reflect) { return $this->paramAnnotations($reflect); }
+    ];
   }
 
   /**
