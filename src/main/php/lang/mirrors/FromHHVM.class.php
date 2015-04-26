@@ -15,21 +15,17 @@ class FromHHVM extends FromReflection {
   }
 
   /**
-   * Maps annotations
+   * Maps method annotations
    *
-   * @param  var $reflect
-   * @param  string $member
-   * @param  string $kind Either "method" or "field"
+   * @param  php.ReflectionMethod $reflect
    * @return [:var]
    */
-  protected function memberAnnotations($reflect, $member, $kind) {
+  protected function methodAnnotations($reflect) {
     $annotations= [];
-    if (method_exists($reflect, 'getAttributes')) {
-      foreach ($reflect->getAttributes() as $name => $value) {
-        $annotations[null][$name]= empty($value) ? null : new Value($value[0]);
-      }
+    foreach ($reflect->getAttributes() as $name => $value) {
+      $annotations[null][$name]= empty($value) ? null : new Value($value[0]);
     }
 
-    return empty($annotations) ? parent::memberAnnotations($reflect, $member, $kind) : $annotations;
+    return empty($annotations) ? parent::methodAnnotations($reflect) : $annotations;
   }
 }
