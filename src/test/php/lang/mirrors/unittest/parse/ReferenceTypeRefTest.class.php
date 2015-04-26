@@ -1,4 +1,4 @@
-<?php namespace lang\mirrors\unittest;
+<?php namespace lang\mirrors\unittest\parse;
 
 use lang\mirrors\parse\ReferenceTypeRef;
 use lang\XPClass;
@@ -24,7 +24,7 @@ class ReferenceTypeRefTest extends ResolveableTest {
   #[@test]
   public function unqualified_class_names_default_to_current_namespace() {
     $this->assertEquals(
-      XPClass::forName('lang.mirrors.unittest.TypeRefTest'),
+      XPClass::forName('lang.mirrors.unittest.parse.TypeRefTest'),
       (new ReferenceTypeRef('TypeRefTest'))->resolve($this->type)
     );
   }

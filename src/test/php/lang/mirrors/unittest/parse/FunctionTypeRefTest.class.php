@@ -1,4 +1,4 @@
-<?php namespace lang\mirrors\unittest;
+<?php namespace lang\mirrors\unittest\parse;
 
 use lang\mirrors\parse\FunctionTypeRef;
 use lang\mirrors\parse\TypeRef;

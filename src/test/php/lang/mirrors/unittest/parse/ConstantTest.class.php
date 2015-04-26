@@ -1,9 +1,9 @@
-<?php namespace lang\mirrors\unittest;
+<?php namespace lang\mirrors\unittest\parse;
 
 use lang\mirrors\parse\Constant;
 use lang\ElementNotFoundException;
 
-class ParsedConstantTest extends ResolveableTest {
+class ConstantTest extends ResolveableTest {
 
   #[@test, @values([['true', true], ['false', false], ['null', null]])]
   public function resolve_looks_up_special($name, $value) {
