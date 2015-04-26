@@ -98,7 +98,7 @@ class ClassSyntax extends \text\parse\Syntax {
       ]),
       'attribute' => new Sequence(
         [new Token(T_STRING), new Optional(new Apply('value'))],
-        function($values) { return ['target' => $values[0], 'value' => $values[1]]; }
+        function($values) { return ['target' => [null, $values[0]], 'value' => $values[1]]; }
       ),
       'annotation' => new Sequence(
         [new Token('@'), new Apply('annotation_target'), new Optional(new Apply('value'))],
@@ -127,6 +127,7 @@ class ClassSyntax extends \text\parse\Syntax {
         ]),
         new Sequence(
           [
+            new Returns(function($values, $source) { return $source->lastComment(); }),
             new Optional(new Apply('annotations')),
             new Apply('modifiers'),
             new Match([
@@ -140,7 +141,7 @@ class ClassSyntax extends \text\parse\Syntax {
               ),
             ])
           ],
-          function($values) { return array_merge($values[2], ['access' => $values[1], 'annotations' => $values[0]]); }
+          function($values) { return array_merge($values[3], ['comment' => $values[0], 'access' => $values[2], 'annotations' => $values[1]]); }
         ),
       ]),
       'modifiers' => new Tokens(T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC, T_FINAL, T_ABSTRACT),
@@ -155,12 +156,13 @@ class ClassSyntax extends \text\parse\Syntax {
           new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; }))
         ],
         function($values) { return [
-          'name'    => substr($values[5], 1),
-          'type'    => $values[2] ? implode('', $values[2]) : null,
-          'ref'     => isset($values[4]),
-          'var'     => isset($values[3]),
-          'this'    => $values[1],
-          'default' => $values[6]];
+          'name'        => substr($values[5], 1),
+          'annotations' => $values[0],
+          'type'        => $values[2] ? implode('', $values[2]) : null,
+          'ref'         => isset($values[4]),
+          'var'         => isset($values[3]),
+          'this'        => $values[1],
+          'default'     => $values[6]];
         }
       ),
       'aliases' => new Match([';' => null, '{' => new Block(true)]), 

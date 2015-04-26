@@ -141,7 +141,8 @@ class ClassSyntaxTest extends \unittest\TestCase {
               'name'        => 'fixture',
               'init'        => null,
               'access'      => ['private'],
-              'annotations' => null
+              'annotations' => null,
+              'comment'     => null
             ]
           ],
           'method' => [
@@ -149,22 +150,25 @@ class ClassSyntaxTest extends \unittest\TestCase {
               'kind'        => 'method',
               'name'        => 'connect',
               'params'      => [[
-                'name'    => 'arg',
-                'type'    => null,
-                'ref'     => false,
-                'var'     => false,
-                'default' => null,
-                'this'    => []
+                'name'        => 'arg',
+                'type'        => null,
+                'ref'         => false,
+                'var'         => false,
+                'default'     => null,
+                'this'        => [],
+                'annotations' => null
               ]],
               'access'      => ['private'],
-              'annotations' => ['$arg' => ['inject' => new Value('db')]]
+              'annotations' => ['$arg' => ['inject' => new Value('db')]],
+              'comment'     => null
             ],
             'can_create' => [
               'kind'        => 'method',
               'name'        => 'can_create',
               'params'      => [],
               'access'      => ['public'],
-              'annotations' => [null => ['test' => null]]
+              'annotations' => [null => ['test' => null]],
+              'comment'     => null
             ]
           ]
         ]
@@ -195,14 +199,16 @@ class ClassSyntaxTest extends \unittest\TestCase {
           'name'        => 'a',
           'init'        => null,
           'access'      => ['private'],
-          'annotations' => null
+          'annotations' => null,
+          'comment'     => null
         ],
         'b' => [
           'kind'        => 'field',
           'name'        => 'b',
           'init'        => null,
           'access'      => [],
-          'annotations' => null
+          'annotations' => null,
+          'comment'     => null
         ]
       ],
       $this->parse('<?php class Test { private $a, $b; }')->declaration()['field']

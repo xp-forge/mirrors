@@ -4,12 +4,14 @@ use lang\mirrors\TypeMirror;
 use lang\ElementNotFoundException;
 use lang\mirrors\unittest\fixture\FixtureHackAnnotations;
 
-#[@action(new OnlyOnHHVM())]
-class HackAnnotationsTest extends \unittest\TestCase {
+abstract class HackAnnotationsTest extends \unittest\TestCase {
+
+  /** @return lang.mirrors.Sources */
+  protected abstract function source();
 
   /** @return var[][] */
   private function targets() {
-    $mirror= new TypeMirror(FixtureHackAnnotations::class);
+    $mirror= new TypeMirror(FixtureHackAnnotations::class, $this->source());
     return [
       [$mirror],
       [$mirror->constructor()],

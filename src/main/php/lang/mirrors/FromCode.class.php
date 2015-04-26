@@ -224,9 +224,10 @@ class FromCode extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function field($holder, $field) {
+    $type= isset($field['type']) ? function() use($field) { return Type::forName($field['type']); } : null;
     return [
       'name'        => $field['name'],
-      'type'        => function() use($field) { return Type::forName($field['type']); },
+      'type'        => $type,
       'access'      => new Modifiers($field['access']),
       'holder'      => $holder,
       'annotations' => function() use($field) { return $field['annotations'][null]; },
@@ -352,14 +353,17 @@ class FromCode extends \lang\Object implements Source {
    */
   protected function method($holder, $method) {
     return [
-      'name'         => $method['name'],
+      'name'        => $method['name'],
       'access'      => new Modifiers($method['access']),
       'holder'      => $holder,
       'params'      => function() use($method) {
         $params= [];
         foreach ($method['params'] as $pos => $param) {
           $target= '$'.$param['name'];
-          $params[]= $this->param($pos, $param, isset($method['annotations'][$target]) ? $method['annotations'][$target] : []);
+          $params[]= $this->param($pos, $param, isset($param['annotations'])
+            ? $param['annotations'][null]
+            : (isset($method['annotations'][$target]) ? $method['annotations'][$target] : [])
+          );
         }
         return $params;
       },
