@@ -14,7 +14,8 @@ class HHVMAnnotationsTest extends \unittest\TestCase {
       [$mirror],
       [$mirror->constructor()],
       [$mirror->fields()->named('field')],
-      [$mirror->methods()->named('method')]
+      [$mirror->methods()->named('method')],
+      [$mirror->methods()->named('method')->parameters()->named('param')]
     ];
   }
 

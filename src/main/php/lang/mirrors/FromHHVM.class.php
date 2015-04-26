@@ -8,10 +8,25 @@ class FromHHVM extends FromReflection {
   public function typeAnnotations() {
     $annotations= [];
     foreach ($this->reflect->getAttributes() as $name => $value) {
-      $annotations[null][$name]= empty($value) ? null : new Value($value[0]);
+      $annotations[$name]= empty($value) ? null : new Value($value[0]);
     }
 
     return empty($annotations) ? parent::typeAnnotations() : $annotations;
+  }
+
+  /**
+   * Maps annotations
+   *
+   * @param  php.ReflectionParameter $reflect
+   * @return [:var]
+   */
+  protected function paramAnnotations($reflect) {
+    $annotations= [];
+    foreach ($reflect->getAttributes() as $name => $value) {
+      $annotations[$name]= empty($value) ? null : new Value($value[0]);
+    }
+
+    return empty($annotations) ? parent::paramAnnotations($reflect) : $annotations;
   }
 
   /**
@@ -23,7 +38,7 @@ class FromHHVM extends FromReflection {
   protected function methodAnnotations($reflect) {
     $annotations= [];
     foreach ($reflect->getAttributes() as $name => $value) {
-      $annotations[null][$name]= empty($value) ? null : new Value($value[0]);
+      $annotations[$name]= empty($value) ? null : new Value($value[0]);
     }
 
     return empty($annotations) ? parent::methodAnnotations($reflect) : $annotations;

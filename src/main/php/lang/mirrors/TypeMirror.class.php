@@ -95,10 +95,7 @@ class TypeMirror extends \lang\Object {
   public function modifiers() { return $this->reflect->typeModifiers(); }
 
   /** @return lang.mirrors.Annotations */
-  public function annotations() {
-    $lookup= $this->reflect->typeAnnotations();
-    return new Annotations($this, isset($lookup[null]) ? $lookup[null] : []);
-  }
+  public function annotations() { return new Annotations($this, (array)$this->reflect->typeAnnotations()); }
 
   /**
    * Resolves a type name in the context of this mirror

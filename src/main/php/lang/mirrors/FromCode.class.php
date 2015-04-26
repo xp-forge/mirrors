@@ -64,7 +64,7 @@ class FromCode extends \lang\Object implements Source {
   public function typeComment() { return $this->decl['comment']; }
 
   /** @return var */
-  public function typeAnnotations() { return $this->decl['annotations']; }
+  public function typeAnnotations() { return $this->decl['annotations'][null]; }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
@@ -226,7 +226,7 @@ class FromCode extends \lang\Object implements Source {
       'name'        => $field['name'],
       'access'      => new Modifiers($field['access']),
       'holder'      => $holder,
-      'annotations' => function() use($field) { return $field['annotations']; },
+      'annotations' => function() use($field) { return $field['annotations'][null]; },
       'comment'     => function() use($field) { return $field['comment']; }
     ];
   }
@@ -301,9 +301,10 @@ class FromCode extends \lang\Object implements Source {
    *
    * @param  int $pos
    * @param  [:var] $param
+   * @param  [:var] $annotations
    * @return [:var]
    */
-  private function param($pos, $param) {
+  private function param($pos, $param, $annotations) {
     if ($param['default']) {
       $default= function() use($param) { return $param['default']->resolve($this->mirror); };
     } else {
@@ -321,12 +322,13 @@ class FromCode extends \lang\Object implements Source {
     }
 
     return [
-      'pos'     => $pos,
-      'name'    => $param['name'],
-      'type'    => $type,
-      'ref'     => $param['ref'],
-      'var'     => $param['var'],
-      'default' => $default
+      'pos'         => $pos,
+      'name'        => $param['name'],
+      'type'        => $type,
+      'ref'         => $param['ref'],
+      'var'         => $param['var'],
+      'default'     => $default,
+      'annotations' => function() use($annotations) { return $annotations; }
     ];
   }
 
@@ -345,11 +347,12 @@ class FromCode extends \lang\Object implements Source {
       'params'      => function() use($method) {
         $params= [];
         foreach ($method['params'] as $pos => $param) {
-          $params[]= $this->param($pos, $param);
+          $target= '$'.$param['name'];
+          $params[]= $this->param($pos, $param, isset($method['annotations'][$target]) ? $method['annotations'][$target] : []);
         }
         return $params;
       },
-      'annotations' => function() use($method) { return $method['annotations']; },
+      'annotations' => function() use($method) { return $method['annotations'][null]; },
       'comment'     => function() use($method) { return $method['comment']; }
     ];
   }

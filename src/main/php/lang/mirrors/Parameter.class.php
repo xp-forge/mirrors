@@ -80,14 +80,7 @@ class Parameter extends \lang\Object {
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
-    $declared= $this->mirror->declaredIn();
-    $lookup= $declared->unit()->declaration()['method'];
-    $method= $this->mirror->reflect['name'];
-    $name= '$'.$this->reflect['name'];
-    return new Annotations(
-      $declared,
-      isset($lookup[$method]['annotations'][$name]) ? $lookup[$method]['annotations'][$name] : []
-    );
+    return new Annotations($this->mirror->declaredIn(), $this->reflect['annotations']());
   }
 
   /**

@@ -16,7 +16,9 @@ class FixtureHHVMAnnotations extends \lang\Object {
 
   <<test, runtime('~3.6'), expect(['class' => 'lang.IllegalArgumentException'])>>
   public function __construct() { }
-  
+
   <<test, runtime('~3.6'), expect(['class' => 'lang.IllegalArgumentException'])>>
-  public function method() { }
+  public function method(
+    <<test, runtime('~3.6'), expect(['class' => 'lang.IllegalArgumentException'])>> $param
+  ) { }
 }

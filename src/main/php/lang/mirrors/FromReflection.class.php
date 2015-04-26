@@ -51,7 +51,7 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /** @return var */
-  public function typeAnnotations() { return $this->codeUnit()->declaration()['annotations']; }
+  public function typeAnnotations() { return $this->codeUnit()->declaration()['annotations'][null]; }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
@@ -203,7 +203,7 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function fieldAnnotations($reflect) {
-    return $this->codeUnit()->declaration()['field'][$reflect->name]['annotations'];
+    return $this->codeUnit()->declaration()['field'][$reflect->name]['annotations'][null];
   }
 
   /**
@@ -300,6 +300,22 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /**
+   * Maps annotations
+   *
+   * @param  php.ReflectionParameter $reflect
+   * @return [:var]
+   */
+  protected function paramAnnotations($reflect) {
+    $decl= $this
+      ->resolve($reflect->getDeclaringClass()->name)
+      ->codeUnit()
+      ->declaration()['method'][$reflect->getDeclaringFunction()->name]
+    ;
+    $target= '$'.$reflect->name;
+    return isset($decl['annotations'][$target]) ? $decl['annotations'][$target] : [];
+  }
+
+  /**
    * Maps a parameter
    *
    * @param  int $pos
@@ -326,12 +342,13 @@ class FromReflection extends \lang\Object implements Source {
     }
 
     return [
-      'pos'     => $pos,
-      'name'    => $reflect->name,
-      'type'    => $type,
-      'ref'     => $reflect->isPassedByReference(),
-      'default' => $default,
-      'var'     => $var
+      'pos'         => $pos,
+      'name'        => $reflect->name,
+      'type'        => $type,
+      'ref'         => $reflect->isPassedByReference(),
+      'default'     => $default,
+      'var'         => $var,
+      'annotations' => function() use($reflect) { return $this->paramAnnotations($reflect); }
     ];
   }
 
@@ -342,7 +359,7 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function methodAnnotations($reflect) {
-    return $this->codeUnit()->declaration()['method'][$reflect->name]['annotations'];
+    return $this->codeUnit()->declaration()['method'][$reflect->name]['annotations'][null];
   }
 
   /**
