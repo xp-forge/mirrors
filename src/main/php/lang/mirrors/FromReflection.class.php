@@ -217,7 +217,7 @@ class FromReflection extends \lang\Object implements Source {
       'name'        => $reflect->name,
       'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
       'holder'      => $reflect->getDeclaringClass()->name,
-      'annotations' => function() use($reflect) { return $this->fieldAnnotations($reflect, $reflect->name); },
+      'annotations' => function() use($reflect) { return $this->fieldAnnotations($reflect); },
       'comment'     => function() use($reflect) { return $reflect->getDocComment(); },
       'read'        => function($instance) use($reflect) { return $this->readField($reflect, $instance); },
       'modify'      => function($instance, $value) use($reflect) { $this->modifyField($reflect, $instance, $value); }
