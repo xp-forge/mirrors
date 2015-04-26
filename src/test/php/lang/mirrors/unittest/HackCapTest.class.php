@@ -5,8 +5,11 @@ use lang\mirrors\Modifiers;
 use lang\mirrors\unittest\fixture\FixtureHackCapClass;
 
 #[@action(new OnlyOnHHVM())]
-class HackCapTest extends \unittest\TestCase {
+abstract class HackCapTest extends \unittest\TestCase {
   private $fixture;
+
+  /** @return lang.mirrors.Sources */
+  protected abstract function source();
 
   /**
    * Creates fixture
@@ -14,7 +17,7 @@ class HackCapTest extends \unittest\TestCase {
    * @return  void
    */
   public function setUp() {
-    $this->fixture= new TypeMirror(FixtureHackCapClass::class);
+    $this->fixture= new TypeMirrorFixture(HackCapClass::class, $this->source());
   }
 
   #[@test]
