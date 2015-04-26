@@ -203,7 +203,12 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function fieldAnnotations($reflect) {
-    return $this->codeUnit()->declaration()['field'][$reflect->name]['annotations'][null];
+    $decl= $this
+      ->resolve($reflect->getDeclaringClass()->name)
+      ->codeUnit()
+      ->declaration()['field'][$reflect->name]
+    ;
+    return $decl['annotations'][null];
   }
 
   /**
@@ -359,7 +364,12 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function methodAnnotations($reflect) {
-    return $this->codeUnit()->declaration()['method'][$reflect->name]['annotations'][null];
+    $decl= $this
+      ->resolve($reflect->getDeclaringClass()->name)
+      ->codeUnit()
+      ->declaration()['method'][$reflect->name]
+    ;
+    return $decl['annotations'][null];
   }
 
   /**
