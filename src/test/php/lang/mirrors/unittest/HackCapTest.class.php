@@ -4,7 +4,6 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\Modifiers;
 use lang\mirrors\unittest\fixture\FixtureHackCapClass;
 
-#[@action(new OnlyOnHHVM())]
 abstract class HackCapTest extends \unittest\TestCase {
   private $fixture;
 

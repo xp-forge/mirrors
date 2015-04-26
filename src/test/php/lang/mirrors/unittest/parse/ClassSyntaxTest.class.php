@@ -153,7 +153,8 @@ class ClassSyntaxTest extends \unittest\TestCase {
                 'type'    => null,
                 'ref'     => false,
                 'var'     => false,
-                'default' => null
+                'default' => null,
+                'this'    => []
               ]],
               'access'      => ['private'],
               'annotations' => ['$arg' => ['inject' => new Value('db')]]

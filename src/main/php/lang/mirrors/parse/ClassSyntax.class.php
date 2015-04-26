@@ -147,13 +147,21 @@ class ClassSyntax extends \text\parse\Syntax {
       'param' => new Sequence(
         [
           new Optional(new Apply('annotations')),
+          new Apply('modifiers'),
           new Tokens(T_ARRAY, T_CALLABLE, T_STRING, T_NS_SEPARATOR),
           new Optional(new Token(T_ELLIPSIS)),
           new Optional(new Token('&')),
           new Token(T_VARIABLE),
           new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; }))
         ],
-        function($values) { return ['name' => substr($values[4], 1), 'type' => $values[1] ? implode('', $values[1]) : null, 'ref' => isset($values[3]), 'var' => isset($values[2]), 'default' => $values[5]]; }
+        function($values) { return [
+          'name'    => substr($values[5], 1),
+          'type'    => $values[2] ? implode('', $values[2]) : null,
+          'ref'     => isset($values[4]),
+          'var'     => isset($values[3]),
+          'this'    => $values[1],
+          'default' => $values[6]];
+        }
       ),
       'aliases' => new Match([';' => null, '{' => new Block(true)]), 
       'method' => new Match([';' => null, '{' => new Block(true)]),

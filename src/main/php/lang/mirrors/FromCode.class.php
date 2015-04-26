@@ -4,6 +4,7 @@ use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
 use lang\Type;
 use lang\XPClass;
+use lang\Primitive;
 use lang\ElementNotFoundException;
 
 class FromCode extends \lang\Object implements Source {
@@ -224,6 +225,7 @@ class FromCode extends \lang\Object implements Source {
   private function field($holder, $field) {
     return [
       'name'        => $field['name'],
+      'type'        => function() use($field) { return Type::forName($field['type']); },
       'access'      => new Modifiers($field['access']),
       'holder'      => $holder,
       'annotations' => function() use($field) { return $field['annotations'][null]; },
@@ -239,6 +241,13 @@ class FromCode extends \lang\Object implements Source {
    */
   public function hasField($name) {
     if (isset($this->decl['field'][$name])) return true;
+
+    if (isset($this->decl['method']['__construct'])) {
+      foreach ($this->decl['method']['__construct']['params'] as $param) {
+        if ($name === $param['name'] && $param['this']) return true;
+      }
+    }
+
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $cmp => $field) {
         if ($cmp === $name) return true;
@@ -257,6 +266,19 @@ class FromCode extends \lang\Object implements Source {
    */
   public function fieldNamed($name) {
     if (isset($this->decl['field'][$name])) return $this->field($this->decl['name'], $this->decl['field'][$name]);
+
+    if (isset($this->decl['method']['__construct'])) {
+      foreach ($this->decl['method']['__construct']['params'] as $param) {
+        if ($name === $param['name'] && $param['this']) return $this->field($this->decl['name'], [
+          'name'        => $name,
+          'type'        => $param['type'],
+          'access'      => $param['this'],
+          'annotations' => [null => []],
+          'comment'     => null
+        ]);
+      }
+    }
+
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $cmp => $field) {
         if ($cmp === $name) return $field;
@@ -315,6 +337,14 @@ class FromCode extends \lang\Object implements Source {
       $type= function() { return Type::$ARRAY; };
     } else if ('callable' === $param['type']) {
       $type= function() { return Type::$CALLABLE; };
+    } else if ('int' === $param['type']) {
+      $type= function() { return Primitive::$INT; };
+    } else if ('string' === $param['type']) {
+      $type= function() { return Primitive::$STRING; };
+    } else if ('double' === $param['type']) {
+      $type= function() { return Primitive::$DOUBLE; };
+    } else if ('bool' === $param['type']) {
+      $type= function() { return Primitive::$BOOL; };
     } else if ($param['type']) {
       $type= function() use($param) { return new XPClass($this->resolve0($param['type'])); };
     } else {
