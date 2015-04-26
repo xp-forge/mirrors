@@ -5,6 +5,7 @@ use lang\Type;
 use lang\XPClass;
 use lang\ArrayType;
 use lang\MapType;
+use lang\FunctionType;
 
 class FromHHVM extends FromReflection {
 
@@ -30,6 +31,13 @@ class FromHHVM extends FromReflection {
       } else {
         return new ArrayType($this->mapType($components[0]));
       }
+    } else if (0 === strncmp($type, '(function', 9)) {
+      $p= strrpos($type, ':');
+      $params= explode(',', substr($type, 11, $p - 11 - 1));
+      return new FunctionType(
+        array_map(function($param) { return $this->mapType(trim($param)); }, $params),
+        $this->mapType(trim(substr($type, $p+ 1, -1)))
+      );
     }
     return Type::forName(strtr($type, ['HH\\' => '']));
   }

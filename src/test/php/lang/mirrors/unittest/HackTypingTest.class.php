@@ -5,6 +5,7 @@ use lang\Primitive;
 use lang\Type;
 use lang\ArrayType;
 use lang\MapType;
+use lang\FunctionType;
 use lang\XPClass;
 use lang\mirrors\TypeMirror;
 use lang\mirrors\unittest\fixture\FixtureHackTypedClass;
@@ -50,6 +51,11 @@ class HackTypingTest extends \unittest\TestCase {
   #[@test, @values(source= 'targets', args= ['unTypedArrayTyped'])]
   public function untyped_array_typed($target) {
     $this->assertEquals(Type::$ARRAY, $target);
+  }
+
+  #[@test, @values(source= 'targets', args= ['funcTyped'])]
+  public function func_typed($target) {
+    $this->assertEquals(new FunctionType([Primitive::$STRING, Primitive::$INT], Type::$VOID), $target);
   }
 
   #[@test, @values(source= 'targets', args= ['unTyped'])]

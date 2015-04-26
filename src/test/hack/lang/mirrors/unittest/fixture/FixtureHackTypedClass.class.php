@@ -4,6 +4,7 @@
  * Fixture for Hack types
  *
  * @see    http://docs.hhvm.com/manual/en/hack.annotations.php
+ * @see    http://docs.hhvm.com/manual/en/hack.annotations.functiontypes.php
  */
 class FixtureHackTypedClass extends \lang\Object {
   public int $typed;
@@ -11,6 +12,7 @@ class FixtureHackTypedClass extends \lang\Object {
   public array<string> $arrayTyped;
   public array<string, self> $mapTyped;
   public array $unTypedArrayTyped;
+  public (function (string, int): void) $funcTyped;
   public $unTyped;
 
   public function typed(): int { }
@@ -18,6 +20,7 @@ class FixtureHackTypedClass extends \lang\Object {
   public function arrayTyped(): array<string> { }
   public function mapTyped(): array<string, self> { }
   public function unTypedArrayTyped(): array { }
+  public function funcTyped(): (function (string, int): void) { }
   public function unTyped() { }
 
   public function parameters(
@@ -26,6 +29,7 @@ class FixtureHackTypedClass extends \lang\Object {
     array<string> $arrayTyped,
     array<string, self> $mapTyped,
     array $unTypedArrayTyped,
+    (function (string, int): void) $funcTyped,
     $unTyped
   ) { }
 }
