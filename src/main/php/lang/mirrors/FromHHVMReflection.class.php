@@ -7,7 +7,7 @@ use lang\ArrayType;
 use lang\MapType;
 use lang\FunctionType;
 
-class FromHHVM extends FromReflection {
+class FromHHVMReflection extends FromReflection {
 
   /**
    * Maps a Hack type to an XP type
