@@ -29,7 +29,7 @@ abstract class Sources extends \lang\Enum {
         if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
           return self::$REFLECTION->reflect($class, $source ?: $this);
         } else if (\lang\ClassLoader::getDefault()->providesClass($dotted)) {
-          return new FromCode($dotted, $source ?: $this);
+          return new From%1$sCode($dotted, $source ?: $this);
         } else {
           return new FromIncomplete($literal);
         }
@@ -50,13 +50,13 @@ abstract class Sources extends \lang\Enum {
         }
       }
     }', $reflect));
-    self::$CODE= newinstance(self::class, [2, 'CODE'], '{
+    self::$CODE= newinstance(self::class, [2, 'CODE'], sprintf('{
       static function __static() { }
 
       public function reflect($class, $source= null) {
-        return new FromCode(strtr($class, "\\\\", "."), $source);
+        return new From%1$sCode(strtr($class, "\\\\", "."), $source);
       }
-    }');
+    }', $reflect));
   }
 
   /**

@@ -9,7 +9,8 @@ use lang\ElementNotFoundException;
 
 class FromCode extends \lang\Object implements Source {
   private static $syntax;
-  private $unit, $decl;
+  private $unit;
+  protected $decl;
   public $name;
 
   static function __static() {
@@ -222,7 +223,7 @@ class FromCode extends \lang\Object implements Source {
    * @param  [:var] $field
    * @return [:var]
    */
-  private function field($holder, $field) {
+  protected function field($holder, $field) {
     return [
       'name'        => $field['name'],
       'type'        => function() use($field) { return Type::forName($field['type']); },
@@ -241,13 +242,6 @@ class FromCode extends \lang\Object implements Source {
    */
   public function hasField($name) {
     if (isset($this->decl['field'][$name])) return true;
-
-    if (isset($this->decl['method']['__construct'])) {
-      foreach ($this->decl['method']['__construct']['params'] as $param) {
-        if ($name === $param['name'] && $param['this']) return true;
-      }
-    }
-
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $cmp => $field) {
         if ($cmp === $name) return true;
@@ -266,19 +260,6 @@ class FromCode extends \lang\Object implements Source {
    */
   public function fieldNamed($name) {
     if (isset($this->decl['field'][$name])) return $this->field($this->decl['name'], $this->decl['field'][$name]);
-
-    if (isset($this->decl['method']['__construct'])) {
-      foreach ($this->decl['method']['__construct']['params'] as $param) {
-        if ($name === $param['name'] && $param['this']) return $this->field($this->decl['name'], [
-          'name'        => $name,
-          'type'        => $param['type'],
-          'access'      => $param['this'],
-          'annotations' => [null => []],
-          'comment'     => null
-        ]);
-      }
-    }
-
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $cmp => $field) {
         if ($cmp === $name) return $field;
@@ -369,7 +350,7 @@ class FromCode extends \lang\Object implements Source {
    * @param  [:var] $method
    * @return [:var]
    */
-  private function method($holder, $method) {
+  protected function method($holder, $method) {
     return [
       'name'         => $method['name'],
       'access'      => new Modifiers($method['access']),
