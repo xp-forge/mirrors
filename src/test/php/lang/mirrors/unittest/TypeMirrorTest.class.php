@@ -7,6 +7,11 @@ use lang\mirrors\Modifiers;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use unittest\TestCase;
+use lang\mirrors\unittest\fixture\FixtureTrait;
+use lang\mirrors\unittest\fixture\FixtureInterface;
+use lang\mirrors\unittest\fixture\FixtureEnum;
+use lang\mirrors\unittest\fixture\FixtureAbstract;
+use lang\mirrors\unittest\fixture\FixtureFinal;
 
 /**
  * Tests TypeMirror

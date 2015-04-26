@@ -6,6 +6,19 @@ use lang\Closeable;
 use lang\XPClass;
 use lang\Type;
 use lang\ElementNotFoundException;
+use lang\mirrors\unittest\fixture\AbstractMemberFixture;
+use lang\mirrors\unittest\fixture\MemberFixture;
+use lang\mirrors\unittest\fixture\FixtureAbstract;
+use lang\mirrors\unittest\fixture\FixtureBase;
+use lang\mirrors\unittest\fixture\FixtureCloseable;
+use lang\mirrors\unittest\fixture\FixtureEnum;
+use lang\mirrors\unittest\fixture\FixtureFinal;
+use lang\mirrors\unittest\fixture\FixtureImpl;
+use lang\mirrors\unittest\fixture\FixtureInterface;
+use lang\mirrors\unittest\fixture\FixtureParams;
+use lang\mirrors\unittest\fixture\FixtureTrait;
+use lang\mirrors\unittest\fixture\FixtureUsed;
+use lang\mirrors\unittest\fixture\FixtureUses;
 
 /**
  * Base class for source implementation testing

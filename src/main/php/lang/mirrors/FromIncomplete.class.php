@@ -5,6 +5,7 @@ use lang\mirrors\parse\ClassSource;
 use lang\Type;
 use lang\XPClass;
 use lang\ElementNotFoundException;
+use lang\IllegalArgumentException;
 
 class FromIncomplete extends \lang\Object implements Source {
   public $name;

@@ -9,6 +9,7 @@ use lang\IllegalStateException;
 use lang\Type;
 use lang\XPClass;
 use lang\ClassLoader;
+use lang\mirrors\unittest\fixture\FixtureParams;
 
 class ParameterTest extends \unittest\TestCase {
   private static $type= null;

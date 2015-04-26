@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\Generic;
+use lang\mirrors\unittest\fixture\FixtureInterface;
 
 class TypeMirrorInterfacesTest extends \unittest\TestCase implements FixtureInterface {
   private $fixture;
@@ -17,7 +18,7 @@ class TypeMirrorInterfacesTest extends \unittest\TestCase implements FixtureInte
 
   #[@test]
   public function contains_fixture_dotted() {
-    $this->assertTrue($this->fixture->interfaces()->contains('lang.mirrors.unittest.FixtureInterface'));
+    $this->assertTrue($this->fixture->interfaces()->contains('lang.mirrors.unittest.fixture.FixtureInterface'));
   }
 
   #[@test]

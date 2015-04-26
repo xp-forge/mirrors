@@ -4,6 +4,7 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\Method;
 use lang\mirrors\Member;
 use lang\ElementNotFoundException;
+use lang\mirrors\unittest\fixture\MemberFixture;
 
 class TypeMirrorMethodsTest extends \unittest\TestCase {
   private $fixture;

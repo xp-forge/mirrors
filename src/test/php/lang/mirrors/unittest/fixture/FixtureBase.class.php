@@ -1,4 +1,4 @@
-<?php namespace lang\mirrors\unittest;
+<?php namespace lang\mirrors\unittest\fixture;
 
 class FixtureBase implements FixtureInterface {
   use FixtureTrait;

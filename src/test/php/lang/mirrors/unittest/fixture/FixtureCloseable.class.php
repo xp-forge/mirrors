@@ -1,4 +1,4 @@
-<?php namespace lang\mirrors\unittest;
+<?php namespace lang\mirrors\unittest\fixture;
 
 interface FixtureCloseable extends FixtureInterface, \lang\Closeable {
 }

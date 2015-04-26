@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\unittest\fixture\FixtureTrait;
 
 class TypeMirrorTraitsTest extends \unittest\TestCase {
   use FixtureTrait;
