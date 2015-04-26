@@ -36,7 +36,7 @@ class Field extends Member {
    */
   public function type() {
     if (isset($this->reflect['type'])) {
-      return Type::forName($this->reflect['type']);
+      return $this->reflect['type']();
     }
 
     $tags= $this->tags();

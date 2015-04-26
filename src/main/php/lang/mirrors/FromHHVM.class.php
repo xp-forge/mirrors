@@ -2,6 +2,9 @@
 
 use lang\mirrors\parse\Value;
 use lang\Type;
+use lang\XPClass;
+use lang\ArrayType;
+use lang\MapType;
 
 class FromHHVM extends FromReflection {
 
@@ -13,18 +16,22 @@ class FromHHVM extends FromReflection {
    */
   private function mapType($type) {
     if ('self' === $type) {
-      return strtr($this->reflect->name, '\\', '.');
+      return new XPClass($this->reflect);
     } else if ('parent' === $type) {
-      return strtr($this->reflect->getParentClass()->name, '\\', '.');
-    } else if (0 === strncmp($type, 'array', 5)) {
+      return new XPClass($this->reflect->getParentClass());
+    } else if ('array' === $type) {
+      return Type::$ARRAY;
+    } else if ('callable' === $type) {
+      return Type::$CALLABLE;
+    } else if (0 === strncmp($type, 'array<', 6)) {
       $components= explode(',', substr($type, 6, -1));
       if (2 === sizeof($components)) {
-        return '[:'.$this->mapType(trim($components[1])).']';
+        return new MapType($this->mapType(trim($components[1])));
       } else {
-        return $this->mapType($components[0]).'[]';
+        return new ArrayType($this->mapType($components[0]));
       }
     }
-    return strtr($type, ['HH\\' => '']);
+    return Type::forName(strtr($type, ['HH\\' => '']));
   }
 
   /** @return var */
@@ -46,7 +53,7 @@ class FromHHVM extends FromReflection {
   protected function field($reflect) {
     $field= parent::field($reflect);
     if ($type= $reflect->getTypeText()) {
-      $field['type']= $this->mapType($type);
+      $field['type']= function() use($type) { return $this->mapType($type); };
     }
     return $field;
   }
@@ -62,12 +69,8 @@ class FromHHVM extends FromReflection {
     $hint= $reflect->getTypeText();
     if ('' === $hint) {
       $type= null;
-    } else if ('array' === $hint) {
-      $type= function() { return Type::$ARRAY; };
-    } else if ('callable' === $hint) {
-      $type= function() { return Type::$CALLABLE; };
     } else {
-      $type= function() use ($hint) { return Type::forName($this->mapType($hint)); };
+      $type= function() use ($hint) { return $this->mapType($hint); };
     }
 
     if ($var= $reflect->isVariadic()) {
@@ -113,7 +116,7 @@ class FromHHVM extends FromReflection {
   protected function method($reflect) {
     $method= parent::method($reflect);
     if ($type= $reflect->getReturnTypeText()) {
-      $method['returns']= $this->mapType($type);
+      $method['returns']= function() use($type) { return $this->mapType($type); };
     }
     return $method;
   }

@@ -47,6 +47,11 @@ class HackTypingTest extends \unittest\TestCase {
     $this->assertEquals(new MapType(new XPClass(FixtureHackTypedClass::class)), $target);
   }
 
+  #[@test, @values(source= 'targets', args= ['unTypedArrayTyped'])]
+  public function untyped_array_typed($target) {
+    $this->assertEquals(Type::$ARRAY, $target);
+  }
+
   #[@test, @values(source= 'targets', args= ['unTyped'])]
   public function untyped($target) {
     $this->assertEquals(Type::$VAR, $target);

@@ -38,7 +38,7 @@ class Method extends Routine {
    */
   public function returns() {
     if (isset($this->reflect['returns'])) {
-      return Type::forName($this->reflect['returns']);
+      return $this->reflect['returns']();
     }
 
     $return= $this->tags()['return'];
