@@ -10,16 +10,18 @@ use lang\XPClass;
 use lang\mirrors\TypeMirror;
 use lang\mirrors\unittest\fixture\FixtureHackTypedClass;
 
-#[@action(new OnlyOnHHVM())]
-class HackTypingTest extends \unittest\TestCase {
+abstract class HackTypingTest extends \unittest\TestCase {
+
+  /** @return lang.mirrors.Sources */
+  protected abstract function source();
 
   /** @return var[][] */
   private function targets($name) {
-    $mirror= new TypeMirror(FixtureHackTypedClass::class);
+    $mirror= new TypeMirror(FixtureHackTypedClass::class, $this->source());
     return [
-      [$mirror->fields()->named($name)->type()],
-      [$mirror->methods()->named($name)->returns()],
-      [$mirror->methods()->named('parameters')->parameters()->named($name)->type()]
+      [$mirror->fields()->named($name)->type(), 'field'],
+      [$mirror->methods()->named($name)->returns(), 'method'],
+      [$mirror->methods()->named('parameters')->parameters()->named($name)->type(), 'param']
     ];
   }
 

@@ -217,6 +217,32 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /**
+   * Map type
+   *
+   * @param  string $name
+   * @return function(): lang.Type
+   */
+  protected function type($name) {
+    if (null === $name) {
+      return null;
+    } else if ('array' === $name) {
+      return function() { return Type::$ARRAY; };
+    } else if ('callable' === $name) {
+      return function() { return Type::$CALLABLE; };
+    } else if ('int' === $name) {
+      return function() { return Primitive::$INT; };
+    } else if ('string' === $name) {
+      return function() { return Primitive::$STRING; };
+    } else if ('double' === $name) {
+      return function() { return Primitive::$DOUBLE; };
+    } else if ('bool' === $name) {
+      return function() { return Primitive::$BOOL; };
+    } else {
+      return function() use($name) { return new XPClass($this->resolve0($name)); };
+    }
+  }
+
+  /**
    * Maps a field
    *
    * @param  string $holder
@@ -224,10 +250,9 @@ class FromCode extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function field($holder, $field) {
-    $type= isset($field['type']) ? function() use($field) { return Type::forName($field['type']); } : null;
     return [
       'name'        => $field['name'],
-      'type'        => $type,
+      'type'        => isset($field['type']) ? $this->type($field['type']) : null,
       'access'      => new Modifiers($field['access']),
       'holder'      => $holder,
       'annotations' => function() use($field) { return $field['annotations'][null]; },
@@ -308,35 +333,17 @@ class FromCode extends \lang\Object implements Source {
    * @param  [:var] $annotations
    * @return [:var]
    */
-  private function param($pos, $param, $annotations) {
+  protected function param($pos, $param, $annotations) {
     if ($param['default']) {
       $default= function() use($param) { return $param['default']->resolve($this->mirror); };
     } else {
       $default= null;
     }
 
-    if ('array' === $param['type']) {
-      $type= function() { return Type::$ARRAY; };
-    } else if ('callable' === $param['type']) {
-      $type= function() { return Type::$CALLABLE; };
-    } else if ('int' === $param['type']) {
-      $type= function() { return Primitive::$INT; };
-    } else if ('string' === $param['type']) {
-      $type= function() { return Primitive::$STRING; };
-    } else if ('double' === $param['type']) {
-      $type= function() { return Primitive::$DOUBLE; };
-    } else if ('bool' === $param['type']) {
-      $type= function() { return Primitive::$BOOL; };
-    } else if ($param['type']) {
-      $type= function() use($param) { return new XPClass($this->resolve0($param['type'])); };
-    } else {
-      $type= null;
-    }
-
     return [
       'pos'         => $pos,
       'name'        => $param['name'],
-      'type'        => $type,
+      'type'        => $this->type($param['type']),
       'ref'         => $param['ref'],
       'var'         => $param['var'],
       'default'     => $default,
@@ -356,6 +363,7 @@ class FromCode extends \lang\Object implements Source {
       'name'        => $method['name'],
       'access'      => new Modifiers($method['access']),
       'holder'      => $holder,
+      'returns'     => $this->type($method['returns']),
       'params'      => function() use($method) {
         $params= [];
         foreach ($method['params'] as $pos => $param) {
@@ -491,7 +499,7 @@ class FromCode extends \lang\Object implements Source {
    * @param  string $name
    * @return string
    */
-  private function resolve0($name) {
+  protected function resolve0($name) {
     if ('self' === $name || $name === $this->decl['name']) {
       return $this->name;
     } else if ('parent' === $name) {
