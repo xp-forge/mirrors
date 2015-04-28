@@ -56,18 +56,11 @@ class ClassSyntax extends \text\parse\Syntax {
         })
       ]),
       'type' => new Match([
-        T_STRING       => new Sequence([$typeName], function($values) { return array_merge([$values[0]], $values[1]); } ),
-        T_NS_SEPARATOR => new Sequence([$typeName], function($values) { return array_merge([$values[0]], $values[1]); } ),
+        T_STRING       => new Sequence([$typeName], function($values) { return $values[0].implode('', $values[1]); } ),
+        T_NS_SEPARATOR => new Sequence([$typeName], function($values) { return $values[0].implode('', $values[1]); } ),
         '('            => new Sequence(
           [new Token(T_FUNCTION), new Token('('), new Repeated(new Apply('type'), new Token(',')), new Token(')'), new Token(':'), new Apply('type'), new Token(')')],
-          function($values) { 
-            return array_merge(
-              ['function('],
-              [implode(', ', array_map(function($t) { return implode('', $t); }, $values[3]))],
-              ['): '],
-              [implode('', $values[6])]
-            );
-          }
+          function($values) { return 'function('.implode(', ', $values[3]).'): '.$values[6]; }
         ),
         '?'            => new Sequence([new Apply('type')], function($values) { return $values[1]; }),
         T_ARRAY        => new Sequence(
@@ -77,15 +70,15 @@ class ClassSyntax extends \text\parse\Syntax {
           ))],
           function($values) {
             if (null === $values[1]) {
-              return ['array'];
+              return 'array';
             } else if (1 === sizeof($values[1])) {
-              return [$values[1][0], '[]'];
+              return $values[1][0].'[]';
             } else if (2 === sizeof($values[1])) {
-              return ['[:', $values[1][1], ']'];
+              return '[:'.$values[1][1].']';
             }
           }
         ),
-        T_CALLABLE     => new Returns(['callable']),
+        T_CALLABLE     => new Returns('callable'),
       ]),
       'decl' => new Sequence(
         [
@@ -168,7 +161,7 @@ class ClassSyntax extends \text\parse\Syntax {
                   [
                     new Token(T_STRING),
                     new Token('('), new Repeated(new Apply('param'), new Token(',')), new Token(')'),
-                    new Optional(new Sequence([new Token(':'), new Apply('type')], function($values) { return implode('', $values[1]); })),
+                    new Optional(new Sequence([new Token(':'), new Apply('type')], function($values) { return $values[1]; })),
                     new Apply('method')
                   ],
                   function($values) { return ['kind' => 'method', 'name' => $values[1], 'params' => $values[3], 'returns' => $values[5]]; }
@@ -180,7 +173,7 @@ class ClassSyntax extends \text\parse\Syntax {
               ]),
               new Sequence(
                 [new Apply('type'), new Token(T_VARIABLE), new Optional(new Apply('init')), new Match([',' => null, ';' => null])],
-                function($values) { return ['kind' => 'field', 'name' => substr($values[1], 1), 'init' => $values[2], 'type' => implode('', $values[0])]; }
+                function($values) { return ['kind' => 'field', 'name' => substr($values[1], 1), 'init' => $values[2], 'type' => $values[0]]; }
               )
             ])
           ],
@@ -202,7 +195,7 @@ class ClassSyntax extends \text\parse\Syntax {
         function($values) { return [
           'name'        => substr($values[5], 1),
           'annotations' => $values[0],
-          'type'        => $values[2] ? implode('', $values[2]) : null,
+          'type'        => $values[2],
           'ref'         => isset($values[4]),
           'var'         => isset($values[3]),
           'this'        => $values[1],
