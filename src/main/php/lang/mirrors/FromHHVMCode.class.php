@@ -47,10 +47,14 @@ class FromHHVMCode extends FromCode {
     return parent::fieldNamed($name);
   }
 
+  /**
+   * Map type
+   *
+   * @param  string $name
+   * @return function(): lang.Type
+   */
   protected function type($name) {
-    if (null === $name) {
-      return null;
-    } else if ('this' === $name) {
+    if ('this' === $name) {
       return function() { return new XPClass($this->resolve0('self')); };
     } else if ('void' === $name) {
       return function() { return Type::$VOID; };

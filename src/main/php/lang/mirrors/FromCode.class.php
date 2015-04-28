@@ -223,9 +223,7 @@ class FromCode extends \lang\Object implements Source {
    * @return function(): lang.Type
    */
   protected function type($name) {
-    if (null === $name) {
-      return null;
-    } else if ('array' === $name) {
+    if ('array' === $name) {
       return function() { return Type::$ARRAY; };
     } else if ('callable' === $name) {
       return function() { return Type::$CALLABLE; };
@@ -343,7 +341,7 @@ class FromCode extends \lang\Object implements Source {
     return [
       'pos'         => $pos,
       'name'        => $param['name'],
-      'type'        => $this->type($param['type']),
+      'type'        => isset($param['type']) ? $this->type($param['type']) : null,
       'ref'         => $param['ref'],
       'var'         => $param['var'],
       'default'     => $default,
@@ -363,7 +361,7 @@ class FromCode extends \lang\Object implements Source {
       'name'        => $method['name'],
       'access'      => new Modifiers($method['access']),
       'holder'      => $holder,
-      'returns'     => $this->type($method['returns']),
+      'returns'     => isset($method['returns']) ? $this->type($method['returns']) : null,
       'params'      => function() use($method) {
         $params= [];
         foreach ($method['params'] as $pos => $param) {
