@@ -4,6 +4,7 @@ use lang\IllegalArgumentException;
 use lang\ClassLoader;
 use lang\IClassLoader;
 use lang\ClassNotFoundException;
+use lang\ClassFormatException;
 
 class ClassSource extends \text\parse\Tokens {
   protected $tokens;
@@ -20,8 +21,27 @@ class ClassSource extends \text\parse\Tokens {
     if (!$cl instanceof IClassLoader) {
       throw new ClassNotFoundException($class);
     }
+    $this->tokenize($cl->loadClassBytes($class), $class);
+  }
 
-    $this->tokens= token_get_all($cl->loadClassBytes($class));
+  /**
+   * Tokenize code
+   *
+   * @param  string $code Class source code
+   * @param  string $class Class name
+   * @throws lang.ClassFormatException
+   */
+  protected function tokenize($code, $class) {
+    $this->tokens= token_get_all($code);
+    $start= array_shift($this->tokens);
+    if (T_OPEN_TAG === $start[0]) {
+
+      // We now either have "<?php ", "first token", "<?", " ", "first token",
+      // or "<?", "hh", "first token". Swallow one token after short open tag.
+      if ('<?' === $start[1]) array_shift($this->tokens);
+    } else {
+      throw new ClassFormatException($class.' does not start with PHP open tag');
+    }
   }
 
   /** @return string */

@@ -41,8 +41,8 @@ class ClassSyntax extends \text\parse\Syntax {
     }');
 
     return new Rules([
-      new Sequence([new Token(T_OPEN_TAG), new Optional(new Apply('package')), new Repeated(new Apply('import')), new Apply('decl')], function($values) {
-        return new CodeUnit($values[1], $values[2], $values[3]);
+      new Sequence([new Optional(new Apply('package')), new Repeated(new Apply('import')), new Apply('decl')], function($values) {
+        return new CodeUnit($values[0], $values[1], $values[2]);
       }),
       'package' => new Sequence([new Token(T_NAMESPACE), $typeName, new Token(';')], function($values) {
         return implode('', $values[1]);

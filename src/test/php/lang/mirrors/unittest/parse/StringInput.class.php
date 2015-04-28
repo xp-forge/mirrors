@@ -8,6 +8,6 @@ class StringInput extends \lang\mirrors\parse\ClassSource {
    * @param  string $input
    */
   public function __construct($input) {
-    $this->tokens= token_get_all($input);
+    $this->tokenize($input, '(string input)');
   }
 }
