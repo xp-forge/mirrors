@@ -4,44 +4,15 @@ use lang\mirrors\parse\Value;
 use lang\Type;
 use lang\XPClass;
 use lang\ArrayType;
-use lang\MapType;
+use lang\types->map;
 use lang\FunctionType;
 
 class FromHHVMReflection extends FromReflection {
+  private $types;
 
-  /**
-   * Maps a Hack type to an XP type
-   *
-   * @param  string $type
-   * @return string
-   */
-  private function mapType($type) {
-    if ('self' === $type || 'HH\\this' === $type) {
-      return new XPClass($this->reflect);
-    } else if ('parent' === $type) {
-      return new XPClass($this->reflect->getParentClass());
-    } else if ('array' === $type) {
-      return Type::$ARRAY;
-    } else if ('callable' === $type) {
-      return Type::$CALLABLE;
-    } else if ('HH\\mixed' === $type) {
-      return Type::$VAR;
-    } else if (0 === strncmp($type, 'array<', 6)) {
-      $components= explode(',', substr($type, 6, -1));
-      if (2 === sizeof($components)) {
-        return new MapType($this->mapType(trim($components[1])));
-      } else {
-        return new ArrayType($this->mapType($components[0]));
-      }
-    } else if (0 === strncmp($type, '(function', 9)) {
-      $p= strrpos($type, ':');
-      $params= explode(',', substr($type, 11, $p - 11 - 1));
-      return new FunctionType(
-        array_map(function($param) { return $this->mapType(trim($param)); }, $params),
-        $this->mapType(trim(substr($type, $p+ 1, -1)))
-      );
-    }
-    return Type::forName(ltrim(strtr($type, ['HH\\' => '']), '?'));
+  public function __construct(\ReflectionClass $reflect, Sources $source= null) {
+    parent::__construct($reflect, $source);
+    $this->types= new HackTypes($reflect);
   }
 
   /** @return var */
@@ -63,7 +34,7 @@ class FromHHVMReflection extends FromReflection {
   protected function field($reflect) {
     $field= parent::field($reflect);
     if ($type= $reflect->getTypeText()) {
-      $field['type']= function() use($type) { return $this->mapType($type); };
+      $field['type']= function() use($type) { return $this->types->map($type); };
     }
     return $field;
   }
@@ -80,7 +51,7 @@ class FromHHVMReflection extends FromReflection {
     if ('' === $hint) {
       $type= null;
     } else {
-      $type= function() use ($hint) { return $this->mapType($hint); };
+      $type= function() use ($hint) { return $this->types->map($hint); };
     }
 
     if ($var= $reflect->isVariadic()) {
@@ -126,7 +97,7 @@ class FromHHVMReflection extends FromReflection {
   protected function method($reflect) {
     $method= parent::method($reflect);
     if ($type= $reflect->getReturnTypeText()) {
-      $method['returns']= function() use($type) { return $this->mapType($type); };
+      $method['returns']= function() use($type) { return $this->types->map($type); };
     }
     return $method;
   }
