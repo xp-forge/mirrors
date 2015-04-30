@@ -1,11 +1,6 @@
 <?php namespace lang\mirrors;
 
 use lang\mirrors\parse\Value;
-use lang\Type;
-use lang\XPClass;
-use lang\ArrayType;
-use lang\types->map;
-use lang\FunctionType;
 
 class FromHHVMReflection extends FromReflection {
   private $types;

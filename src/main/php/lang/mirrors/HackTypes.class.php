@@ -61,9 +61,8 @@ class HackTypes extends \lang\Object {
    */
   private function functionType($literal) {
     $signature= [];
-    if (')' === $literal{10}) {
-      $o= 11;
-    } else for ($brackets= 0, $o= $i= 9, $s= strlen($literal); $i < $s; $i++) {
+    $o= strpos($literal, '(', 1) + 1;
+    if (')' !== $literal{$o}) for ($brackets= 0, $i= --$o, $s= strlen($literal); $i < $s; $i++) {
       if (':' === $literal{$i} && 0 === $brackets) {
         $signature[]= $this->map(substr($literal, $o + 1, $i - $o- 2));
         $o= $i+ 1;
@@ -77,7 +76,7 @@ class HackTypes extends \lang\Object {
         $brackets--;
       }
     }
-    return new FunctionType($signature, $this->map(ltrim(substr($literal, $o + 1, -1), ' ')));
+    return new FunctionType($signature, $this->map(trim(substr($literal, $o + 1, -1), ': ')));
   }
 
   /**

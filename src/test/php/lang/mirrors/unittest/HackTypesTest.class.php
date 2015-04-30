@@ -110,12 +110,13 @@ class HackTypesTest extends \unittest\TestCase {
     $this->assertEquals(new XPClass(self::class), $this->types->map('HH\this'));
   }
 
-  #[@test]
-  public function function_without_parameters() {
-    $this->assertEquals(
-      new FunctionType([], Type::$VOID),
-      $this->types->map('(function(): HH\void)')
-    );
+  #[@test, @values([
+  #  '(function(): HH\void)',
+  #  '(function (): HH\void)',
+  #  '(function () : HH\void)'
+  #])]
+  public function function_without_parameters($literal) {
+    $this->assertEquals(new FunctionType([], Type::$VOID), $this->types->map($literal));
   }
 
   #[@test]
