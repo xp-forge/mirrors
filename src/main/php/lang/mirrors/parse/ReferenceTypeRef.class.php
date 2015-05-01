@@ -29,11 +29,7 @@ class ReferenceTypeRef extends Resolveable {
    * @return var
    */
   public function resolve($source) {
-    if (!$source instanceof \lang\mirrors\Source) {
-      (new \lang\IllegalArgumentException('Requires source'))->printStackTrace();
-      exit;
-    }
-    return XPClass::forName($source->resolve($this->name)->typeName());
+    return new XPClass($source->resolve($this->name)->name);
   }
 
   /**
