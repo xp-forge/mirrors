@@ -1,10 +1,10 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\mirrors\parse\ClassSyntax;
+use lang\mirrors\parse\PhpSyntax;
 use lang\mirrors\parse\CodeUnit;
 use lang\mirrors\parse\Value;
 
-class ClassSyntaxTest extends \unittest\TestCase {
+class PhpSyntaxTest extends \unittest\TestCase {
 
   /**
    * Parses a string
@@ -13,7 +13,7 @@ class ClassSyntaxTest extends \unittest\TestCase {
    * @return lang.reflection.parse.CodeUnit
    */
   private function parse($input) {
-    return (new ClassSyntax())->parse(new StringInput($input));
+    return (new PhpSyntax())->parse(new StringInput($input));
   }
 
   #[@test]

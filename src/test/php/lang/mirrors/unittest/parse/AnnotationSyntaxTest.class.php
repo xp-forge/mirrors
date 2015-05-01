@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\mirrors\parse\ClassSyntax;
+use lang\mirrors\parse\PhpSyntax;
 use lang\mirrors\parse\Value;
 use lang\mirrors\parse\Constant;
 use lang\mirrors\parse\ArrayExpr;
@@ -24,7 +24,7 @@ class AnnotationSyntaxTest extends \unittest\TestCase {
    * @return var
    */
   private function parse($input, $target= null) {
-    $unit= (new ClassSyntax())->parse(new StringInput(
+    $unit= (new PhpSyntax())->parse(new StringInput(
       "<?php class Test {\n  $input\n  function fixture() { } }"
     ));
     return $unit->declaration()['method']['fixture']['annotations'][$target];

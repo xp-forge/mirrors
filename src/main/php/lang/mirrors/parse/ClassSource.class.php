@@ -8,7 +8,7 @@ use lang\ClassFormatException;
 
 class ClassSource extends \text\parse\Tokens {
   protected $tokens;
-  private $comment;
+  private $comment, $syntax;
 
   /**
    * Creates a new class source
@@ -38,11 +38,19 @@ class ClassSource extends \text\parse\Tokens {
 
       // We now either have "<?php ", "first token", "<?", " ", "first token",
       // or "<?", "hh", "first token". Swallow one token after short open tag.
-      if ('<?' === $start[1]) array_shift($this->tokens);
+      if ('<?' === $start[1]) {
+        $next= array_shift($this->tokens);
+        $this->syntax= trim(is_array($next) ? $next[1] : $next) ?: 'php';
+      } else {
+        $this->syntax= trim(substr($start[1], 2));
+      }
     } else {
       throw new ClassFormatException($class.' does not start with PHP open tag');
     }
   }
+
+  /** @return string */
+  public function usedSyntax() { return $this->syntax; }
 
   /** @return string */
   public function lastComment() { return $this->comment; }
