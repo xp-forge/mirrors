@@ -45,7 +45,7 @@ class ClassSource extends \text\parse\Tokens {
         $this->syntax= trim(substr($start[1], 2));
       }
     } else {
-      throw new ClassFormatException($class.' does not start with PHP open tag');
+      throw new ClassFormatException($class.' does not start with PHP open tag: '.$this->nameOf($start));
     }
   }
 
