@@ -32,21 +32,17 @@ class ClassSource extends \text\parse\Tokens {
    * @throws lang.ClassFormatException
    */
   protected function tokenize($code, $class) {
-    $this->tokens= token_get_all($code);
-    $start= array_shift($this->tokens);
-    if (T_OPEN_TAG === $start[0]) {
-
-      // We now either have "<?php ", "first token", "<?", " ", "first token",
-      // or "<?", "hh", "first token". Swallow one token after short open tag.
-      if ('<?' === $start[1]) {
-        $next= array_shift($this->tokens);
-        $this->syntax= trim(is_array($next) ? $next[1] : $next) ?: 'php';
-      } else {
-        $this->syntax= trim(substr($start[1], 2));
-      }
+    if (0 === strncmp($code, '<?hh ', 5)) {
+      $this->syntax= 'hh';
+      $this->tokens= token_get_all('<?php '.substr($code, 5));
+    } else if (0 === strncmp($code, '<?php ', 6)) {
+      $this->syntax= 'php';
+      $this->tokens= token_get_all($code);
     } else {
-      throw new ClassFormatException($class.' does not start with PHP open tag: '.$this->nameOf($start));
+      throw new ClassFormatException($class.' does not start with PHP open tag: '.substr($code, 0, 6).'...');
     }
+
+    array_shift($this->tokens);
   }
 
   /** @return string */
