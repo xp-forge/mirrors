@@ -4,11 +4,13 @@ use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
 use lang\Type;
 use lang\XPClass;
+use lang\Primitive;
 use lang\ElementNotFoundException;
 
 class FromCode extends \lang\Object implements Source {
   private static $syntax;
-  private $unit, $decl;
+  private $unit;
+  protected $decl;
   public $name;
 
   static function __static() {
@@ -64,7 +66,7 @@ class FromCode extends \lang\Object implements Source {
   public function typeComment() { return $this->decl['comment']; }
 
   /** @return var */
-  public function typeAnnotations() { return $this->decl['annotations']; }
+  public function typeAnnotations() { return $this->decl['annotations'][null]; }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
@@ -195,11 +197,12 @@ class FromCode extends \lang\Object implements Source {
     }
 
     return [
-      'name'    => '__default',
-      'access'  => Modifiers::IS_PUBLIC,
-      'holder'  => $this->decl['name'],
-      'comment' => function() { return null; },
-      'params'  => function() { return []; }
+      'name'        => '__default',
+      'access'      => Modifiers::IS_PUBLIC,
+      'holder'      => $this->decl['name'],
+      'comment'     => function() { return null; },
+      'annotations' => function() { return []; },
+      'params'      => function() { return []; }
     ];
   }
 
@@ -214,18 +217,44 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /**
+   * Map type
+   *
+   * @param  string $name
+   * @return function(): lang.Type
+   */
+  protected function type($name) {
+    if ('array' === $name) {
+      return function() { return Type::$ARRAY; };
+    } else if ('callable' === $name) {
+      return function() { return Type::$CALLABLE; };
+    } else if ('int' === $name) {
+      return function() { return Primitive::$INT; };
+    } else if ('string' === $name) {
+      return function() { return Primitive::$STRING; };
+    } else if ('double' === $name) {
+      return function() { return Primitive::$DOUBLE; };
+    } else if ('bool' === $name) {
+      return function() { return Primitive::$BOOL; };
+    } else {
+      return function() use($name) { return new XPClass($this->resolve0($name)); };
+    }
+  }
+
+  /**
    * Maps a field
    *
    * @param  string $holder
    * @param  [:var] $field
    * @return [:var]
    */
-  private function field($holder, $field) {
+  protected function field($holder, $field) {
     return [
-      'name'    => $field['name'],
-      'access'  => new Modifiers($field['access']),
-      'holder'  => $holder,
-      'comment' => function() use($field) { return $field['comment']; }
+      'name'        => $field['name'],
+      'type'        => isset($field['type']) ? $this->type($field['type']) : null,
+      'access'      => new Modifiers($field['access']),
+      'holder'      => $holder,
+      'annotations' => function() use($field) { return $field['annotations'][null]; },
+      'comment'     => function() use($field) { return $field['comment']; }
     ];
   }
 
@@ -299,32 +328,24 @@ class FromCode extends \lang\Object implements Source {
    *
    * @param  int $pos
    * @param  [:var] $param
+   * @param  [:var] $annotations
    * @return [:var]
    */
-  private function param($pos, $param) {
+  protected function param($pos, $param, $annotations) {
     if ($param['default']) {
       $default= function() use($param) { return $param['default']->resolve($this->mirror); };
     } else {
       $default= null;
     }
 
-    if ('array' === $param['type']) {
-      $type= function() { return Type::$ARRAY; };
-    } else if ('callable' === $param['type']) {
-      $type= function() { return Type::$CALLABLE; };
-    } else if ($param['type']) {
-      $type= function() use($param) { return new XPClass($this->resolve0($param['type'])); };
-    } else {
-      $type= null;
-    }
-
     return [
-      'pos'     => $pos,
-      'name'    => $param['name'],
-      'type'    => $type,
-      'ref'     => $param['ref'],
-      'var'     => $param['var'],
-      'default' => $default
+      'pos'         => $pos,
+      'name'        => $param['name'],
+      'type'        => isset($param['type']) ? $this->type($param['type']) : null,
+      'ref'         => $param['ref'],
+      'var'         => $param['var'],
+      'default'     => $default,
+      'annotations' => function() use($annotations) { return $annotations; }
     ];
   }
 
@@ -335,19 +356,25 @@ class FromCode extends \lang\Object implements Source {
    * @param  [:var] $method
    * @return [:var]
    */
-  private function method($holder, $method) {
+  protected function method($holder, $method) {
     return [
-      'name'    => $method['name'],
-      'access'  => new Modifiers($method['access']),
-      'holder'  => $holder,
-      'params'  => function() use($method) {
+      'name'        => $method['name'],
+      'access'      => new Modifiers($method['access']),
+      'holder'      => $holder,
+      'returns'     => isset($method['returns']) ? $this->type($method['returns']) : null,
+      'params'      => function() use($method) {
         $params= [];
         foreach ($method['params'] as $pos => $param) {
-          $params[]= $this->param($pos, $param);
+          $target= '$'.$param['name'];
+          $params[]= $this->param($pos, $param, isset($param['annotations'])
+            ? $param['annotations'][null]
+            : (isset($method['annotations'][$target]) ? $method['annotations'][$target] : [])
+          );
         }
         return $params;
       },
-      'comment' => function() use($method) { return $method['comment']; }
+      'annotations' => function() use($method) { return $method['annotations'][null]; },
+      'comment'     => function() use($method) { return $method['comment']; }
     ];
   }
 
@@ -470,7 +497,7 @@ class FromCode extends \lang\Object implements Source {
    * @param  string $name
    * @return string
    */
-  private function resolve0($name) {
+  protected function resolve0($name) {
     if ('self' === $name || $name === $this->decl['name']) {
       return $this->name;
     } else if ('parent' === $name) {

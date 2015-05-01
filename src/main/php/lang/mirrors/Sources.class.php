@@ -12,14 +12,16 @@
  */
 abstract class Sources extends \lang\Enum {
   public static $DEFAULT, $REFLECTION, $CODE;
+  private static $HHVM;
 
   static function __static() {
-    self::$DEFAULT= newinstance(self::class, [0, 'DEFAULT'], '{
+    $reflect= defined('HHVM_VERSION') ? 'FromHHVM' : 'From';
+    self::$DEFAULT= newinstance(self::class, [0, 'DEFAULT'], sprintf('{
       static function __static() { }
 
       public function reflect($class, $source= null) {
         if ($class instanceof \ReflectionClass) {
-          return new FromReflection($class, $source ?: $this);
+          return new %1$sReflection($class, $source ?: $this);
         }
 
         $literal= strtr($class, ".", "\\\\");
@@ -27,34 +29,34 @@ abstract class Sources extends \lang\Enum {
         if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
           return self::$REFLECTION->reflect($class, $source ?: $this);
         } else if (\lang\ClassLoader::getDefault()->providesClass($dotted)) {
-          return new FromCode($dotted, $source ?: $this);
+          return new %1$sCode($dotted, $source ?: $this);
         } else {
           return new FromIncomplete($literal);
         }
       }
-    }');
-    self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], '{
+    }', $reflect));
+    self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], sprintf('{
       static function __static() { }
 
       public function reflect($class, $source= null) {
         if ($class instanceof \ReflectionClass) {
-          return new FromReflection($class, $source);
+          return new %1$sReflection($class, $source);
         }
 
         try {
-          return new FromReflection(new \ReflectionClass(strtr($class, ".", "\\\\")), $source);
+          return new %1$sReflection(new \ReflectionClass(strtr($class, ".", "\\\\")), $source);
         } catch (\Exception $e) {
           throw new \lang\ClassNotFoundException($class.": ".$e->getMessage());
         }
       }
-    }');
-    self::$CODE= newinstance(self::class, [2, 'CODE'], '{
+    }', $reflect));
+    self::$CODE= newinstance(self::class, [2, 'CODE'], sprintf('{
       static function __static() { }
 
       public function reflect($class, $source= null) {
-        return new FromCode(strtr($class, "\\\\", "."), $source);
+        return new %1$sCode(strtr($class, "\\\\", "."), $source);
       }
-    }');
+    }', $reflect));
   }
 
   /**

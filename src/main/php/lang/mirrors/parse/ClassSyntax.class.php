@@ -41,8 +41,8 @@ class ClassSyntax extends \text\parse\Syntax {
     }');
 
     return new Rules([
-      new Sequence([new Token(T_OPEN_TAG), new Optional(new Apply('package')), new Repeated(new Apply('import')), new Apply('decl')], function($values) {
-        return new CodeUnit($values[1], $values[2], $values[3]);
+      new Sequence([new Optional(new Apply('package')), new Repeated(new Apply('import')), new Apply('decl')], function($values) {
+        return new CodeUnit($values[0], $values[1], $values[2]);
       }),
       'package' => new Sequence([new Token(T_NAMESPACE), $typeName, new Token(';')], function($values) {
         return implode('', $values[1]);
@@ -55,19 +55,44 @@ class ClassSyntax extends \text\parse\Syntax {
           return trim($values[3], '\'"');
         })
       ]),
+      'type' => new Match([
+        T_STRING       => new Sequence([$typeName], function($values) { return $values[0].implode('', $values[1]); } ),
+        T_NS_SEPARATOR => new Sequence([$typeName], function($values) { return $values[0].implode('', $values[1]); } ),
+        '('            => new Sequence(
+          [new Token(T_FUNCTION), new Token('('), new Repeated(new Apply('type'), new Token(',')), new Token(')'), new Token(':'), new Apply('type'), new Token(')')],
+          function($values) { return 'function('.implode(', ', $values[3]).'): '.$values[6]; }
+        ),
+        '?'            => new Sequence([new Apply('type')], function($values) { return $values[1]; }),
+        T_ARRAY        => new Sequence(
+          [new Optional(new Sequence(
+            [new Token(398), new Repeated(new Token(T_STRING), new Token(',')), new Token(399)],
+            function($values) { return $values[1];}
+          ))],
+          function($values) {
+            if (null === $values[1]) {
+              return 'array';
+            } else if (1 === sizeof($values[1])) {
+              return $values[1][0].'[]';
+            } else if (2 === sizeof($values[1])) {
+              return '[:'.$values[1][1].']';
+            }
+          }
+        ),
+        T_CALLABLE     => new Returns('callable'),
+      ]),
       'decl' => new Sequence(
         [
           new Returns(function($values, $source) { return $source->lastComment(); }),
           new Optional(new Apply('annotations')),
           new Apply('modifiers'),
           new Match([
-            T_CLASS     => new Sequence([new Token(T_STRING), new Optional(new Apply('parent')), new Optional(new Apply('implements')), new Apply('type')], function($values) {
+            T_CLASS     => new Sequence([new Token(T_STRING), new Optional(new Apply('parent')), new Optional(new Apply('implements')), new Apply('body')], function($values) {
               return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => $values[2], 'implements' => $values[3]], $values[4]);
             }),
-            T_INTERFACE => new Sequence([new Token(T_STRING), new Optional(new Apply('parents')), new Apply('type')], function($values) {
+            T_INTERFACE => new Sequence([new Token(T_STRING), new Optional(new Apply('parents')), new Apply('body')], function($values) {
               return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => null, 'implements' => $values[2]], $values[3]);
             }),
-            T_TRAIT     => new Sequence([new Token(T_STRING), new Apply('type')], function($values) {
+            T_TRAIT     => new Sequence([new Token(T_STRING), new Apply('body')], function($values) {
               return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => null], $values[2]);
             }),
           ])
@@ -86,9 +111,19 @@ class ClassSyntax extends \text\parse\Syntax {
         [new Token(T_IMPLEMENTS), new Repeated($typeName, new Token(','))],
         function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
       ),
-      'annotations' => new Sequence(
-        [new Token('['), new Repeated(new Apply('annotation'), new Token(','), $collectAnnotations), new Token(']')],
-        function($values) { return $values[1]; }
+      'annotations' => new Match([
+        '[' => new Sequence(
+          [new Repeated(new Apply('annotation'), new Token(','), $collectAnnotations), new Token(']')],
+          function($values) { return $values[1]; }
+        ),
+        T_SL => new Sequence(
+          [new Repeated(new Apply('attribute'), new Token(','), $collectAnnotations), new Token(T_SR)],
+          function($values) { return $values[1]; }
+        ),
+      ]),
+      'attribute' => new Sequence(
+        [new Token(T_STRING), new Optional(new Apply('value'))],
+        function($values) { return ['target' => [null, $values[0]], 'value' => $values[1]]; }
       ),
       'annotation' => new Sequence(
         [new Token('@'), new Apply('annotation_target'), new Optional(new Apply('value'))],
@@ -102,7 +137,7 @@ class ClassSyntax extends \text\parse\Syntax {
         [new Token('('), new Apply('expr'), new Token(')')],
         function($values) { return $values[1]; }
       ),
-      'type' => new Sequence(
+      'body' => new Sequence(
         [new Token('{'), new Repeated(new Apply('member'), null, $collectMembers), new Token('}')],
         function($values) { return $values[1]; }
       ),
@@ -117,32 +152,55 @@ class ClassSyntax extends \text\parse\Syntax {
         ]),
         new Sequence(
           [
+            new Returns(function($values, $source) { return $source->lastComment(); }),
             new Optional(new Apply('annotations')),
             new Apply('modifiers'),
-            new Match([
-              T_FUNCTION => new Sequence(
-                [new Token(T_STRING), new Token('('), new Repeated(new Apply('param'), new Token(',')), new Token(')'), new Apply('method')],
-                function($values) { return ['kind' => 'method', 'name' => $values[1], 'params' => $values[3]]; }
-              ),
-              T_VARIABLE => new Sequence(
-                [new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; })), new Match([',' => null, ';' => null])],
-                function($values) { return ['kind' => 'field', 'name' => substr($values[0], 1), 'init' => $values[2]]; }
-              ),
+            new OneOf([
+              new Match([
+                T_FUNCTION => new Sequence(
+                  [
+                    new Token(T_STRING),
+                    new Token('('), new Repeated(new Apply('param'), new Token(',')), new Token(')'),
+                    new Optional(new Sequence([new Token(':'), new Apply('type')], function($values) { return $values[1]; })),
+                    new Apply('method')
+                  ],
+                  function($values) { return ['kind' => 'method', 'name' => $values[1], 'params' => $values[3], 'returns' => $values[5]]; }
+                ),
+                T_VARIABLE => new Sequence(
+                  [new Optional(new Apply('init')), new Match([',' => null, ';' => null])],
+                  function($values) { return ['kind' => 'field', 'name' => substr($values[0], 1), 'init' => $values[2]]; }
+                ),
+              ]),
+              new Sequence(
+                [new Apply('type'), new Token(T_VARIABLE), new Optional(new Apply('init')), new Match([',' => null, ';' => null])],
+                function($values) { return ['kind' => 'field', 'name' => substr($values[1], 1), 'init' => $values[2], 'type' => $values[0]]; }
+              )
             ])
           ],
-          function($values) { return array_merge($values[2], ['access' => $values[1], 'annotations' => $values[0]]); }
+          function($values) { return array_merge($values[3], ['comment' => $values[0], 'access' => $values[2], 'annotations' => $values[1]]); }
         ),
       ]),
+      'init' => new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; }),
       'modifiers' => new Tokens(T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC, T_FINAL, T_ABSTRACT),
       'param' => new Sequence(
         [
-          new Tokens(T_ARRAY, T_CALLABLE, T_STRING, T_NS_SEPARATOR),
+          new Optional(new Apply('annotations')),
+          new Apply('modifiers'),
+          new Optional(new Apply('type')),
           new Optional(new Token(T_ELLIPSIS)),
           new Optional(new Token('&')),
           new Token(T_VARIABLE),
-          new Optional(new Sequence([new Token('='), new Apply('expr')], function($values) { return $values[1]; }))
+          new Optional(new Apply('init'))
         ],
-        function($values) { return ['name' => substr($values[3], 1), 'type' => $values[0] ? implode('', $values[0]) : null, 'ref' => isset($values[2]), 'var' => isset($values[1]), 'default' => $values[4]]; }
+        function($values) { return [
+          'name'        => substr($values[5], 1),
+          'annotations' => $values[0],
+          'type'        => $values[2],
+          'ref'         => isset($values[4]),
+          'var'         => isset($values[3]),
+          'this'        => $values[1],
+          'default'     => $values[6]];
+        }
       ),
       'aliases' => new Match([';' => null, '{' => new Block(true)]), 
       'method' => new Match([';' => null, '{' => new Block(true)]),

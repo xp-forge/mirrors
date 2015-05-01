@@ -15,7 +15,7 @@ class Closure extends \lang\Object {
     $signature= '';
     foreach ($this->params as $param) {
       $signature.= sprintf(
-        ', %s%s%s%s',
+        ', %s%s$%s%s',
         $param['type'],
         $param['ref'] ? ' &' : ' ',
         $param['name'],

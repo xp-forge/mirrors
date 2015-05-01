@@ -91,7 +91,7 @@ class AnnotationSyntaxTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  ['function() { }', [], ''],
-  #  ['function($a) { }', [['name' => 'a', 'type' => null, 'ref' => false, 'var' => false, 'default' => null]], '']
+  #  ['function($a) { }', [['name' => 'a', 'annotations' => null, 'type' => null, 'ref' => false, 'var' => false, 'this' => [], 'default' => null]], '']
   #])]
   public function annotation_with_closures($literal, $signature, $code) {
     $this->assertEquals(

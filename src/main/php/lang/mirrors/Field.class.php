@@ -35,6 +35,10 @@ class Field extends Member {
    * @return lang.Type
    */
   public function type() {
+    if (isset($this->reflect['type'])) {
+      return $this->reflect['type']();
+    }
+
     $tags= $this->tags();
     if (isset($tags['type'])) {
       return Type::forName($tags['type'][0]);

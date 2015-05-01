@@ -37,6 +37,10 @@ class Method extends Routine {
    * @return lang.Type
    */
   public function returns() {
+    if (isset($this->reflect['returns'])) {
+      return $this->reflect['returns']();
+    }
+
     $return= $this->tags()['return'];
     return empty($return) ? Type::$VAR : $return[0]->resolve($this->declaredIn());
   }

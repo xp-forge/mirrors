@@ -26,6 +26,12 @@ use lang\mirrors\unittest\fixture\FixtureUses;
 #[@fixture]
 abstract class SourceTest extends \unittest\TestCase {
 
+  #[@fixture]
+  private $field;
+
+  #[@fixture]
+  private function method() { }
+
   /**
    * Returns the keys of an iterator on a map sorted alphabetically
    *
@@ -86,7 +92,7 @@ abstract class SourceTest extends \unittest\TestCase {
 
   #[@test]
   public function typeAnnotations_of_this_class() {
-    $this->assertEquals([null => ['fixture' => null]], $this->reflect(self::class)->typeAnnotations());
+    $this->assertEquals(['fixture' => null], $this->reflect(self::class)->typeAnnotations());
   }
 
   #[@test]
@@ -295,6 +301,12 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function fieldAnnotations_of_field_in_this_class() {
+    $field= $this->reflect(self::class)->fieldNamed('field');
+    $this->assertEquals(['fixture' => null], $field['annotations']());
+  }
+
+  #[@test]
   public function has_instance_method() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicInstanceMethod'));
   }
@@ -364,6 +376,12 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test, @expect(ElementNotFoundException::class)]
   public function non_existant_method() {
     $this->reflect(MemberFixture::class)->methodNamed('does.not.exist');
+  }
+
+  #[@test]
+  public function methodAnnotations_of_field_in_this_class() {
+    $method= $this->reflect(self::class)->methodNamed('method');
+    $this->assertEquals(['fixture' => null], $method['annotations']());
   }
 
   #[@test]

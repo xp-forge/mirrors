@@ -10,7 +10,8 @@ use lang\IllegalArgumentException;
 use lang\Throwable;
 
 class FromReflection extends \lang\Object implements Source {
-  private $reflect, $source;
+  protected $reflect;
+  private $source;
   private $unit= null;
   public $name;
 
@@ -50,9 +51,7 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /** @return var */
-  public function typeAnnotations() {
-    return $this->codeUnit()->declaration()['annotations'];
-  }
+  public function typeAnnotations() { return $this->codeUnit()->declaration()['annotations'][null]; }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
@@ -157,11 +156,12 @@ class FromReflection extends \lang\Object implements Source {
     $ctor= $this->reflect->getConstructor();
     if (null === $ctor) {
       return [
-        'name'    => '__default',
-        'access'  => Modifiers::IS_PUBLIC,
-        'holder'  => $this->reflect->name,
-        'comment' => function() { return null; },
-        'params'  => function() { return []; }
+        'name'        => '__default',
+        'access'      => Modifiers::IS_PUBLIC,
+        'holder'      => $this->reflect->name,
+        'comment'     => function() { return null; },
+        'params'      => function() { return []; },
+        'annotations' => function() { return []; },
       ];
     } else {
       return $this->method($ctor);
@@ -197,19 +197,35 @@ class FromReflection extends \lang\Object implements Source {
   public function hasField($name) { return $this->reflect->hasProperty($name); }
 
   /**
+   * Maps annotations
+   *
+   * @param  php.ReflectionProperty $reflect
+   * @return [:var]
+   */
+  protected function fieldAnnotations($reflect) {
+    $decl= $this
+      ->resolve($reflect->getDeclaringClass()->name)
+      ->codeUnit()
+      ->declaration()['field'][$reflect->name]
+    ;
+    return $decl['annotations'][null];
+  }
+
+  /**
    * Maps a field
    *
    * @param  php.ReflectionProperty $reflect
    * @return [:var]
    */
-  private function field($reflect) {
+  protected function field($reflect) {
     return [
-      'name'    => $reflect->name,
-      'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
-      'holder'  => $reflect->getDeclaringClass()->name,
-      'comment' => function() use($reflect) { return $reflect->getDocComment(); },
-      'read'    => function($instance) use($reflect) { return $this->readField($reflect, $instance); },
-      'modify'  => function($instance, $value) use($reflect) { $this->modifyField($reflect, $instance, $value); }
+      'name'        => $reflect->name,
+      'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
+      'holder'      => $reflect->getDeclaringClass()->name,
+      'annotations' => function() use($reflect) { return $this->fieldAnnotations($reflect); },
+      'comment'     => function() use($reflect) { return $reflect->getDocComment(); },
+      'read'        => function($instance) use($reflect) { return $this->readField($reflect, $instance); },
+      'modify'      => function($instance, $value) use($reflect) { $this->modifyField($reflect, $instance, $value); }
     ];
   }
 
@@ -289,13 +305,29 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /**
+   * Maps annotations
+   *
+   * @param  php.ReflectionParameter $reflect
+   * @return [:var]
+   */
+  protected function paramAnnotations($reflect) {
+    $decl= $this
+      ->resolve($reflect->getDeclaringClass()->name)
+      ->codeUnit()
+      ->declaration()['method'][$reflect->getDeclaringFunction()->name]
+    ;
+    $target= '$'.$reflect->name;
+    return isset($decl['annotations'][$target]) ? $decl['annotations'][$target] : [];
+  }
+
+  /**
    * Maps a parameter
    *
    * @param  int $pos
    * @param  php.ReflectionParameter $reflect
    * @return [:var]
    */
-  private function param($pos, $reflect) {
+  protected function param($pos, $reflect) {
     if ($reflect->isArray()) {
       $type= function() { return Type::$ARRAY; };
     } else if ($reflect->isCallable()) {
@@ -315,13 +347,29 @@ class FromReflection extends \lang\Object implements Source {
     }
 
     return [
-      'pos'     => $pos,
-      'name'    => $reflect->name,
-      'type'    => $type,
-      'ref'     => $reflect->isPassedByReference(),
-      'default' => $default,
-      'var'     => $var
+      'pos'         => $pos,
+      'name'        => $reflect->name,
+      'type'        => $type,
+      'ref'         => $reflect->isPassedByReference(),
+      'default'     => $default,
+      'var'         => $var,
+      'annotations' => function() use($reflect) { return $this->paramAnnotations($reflect); }
     ];
+  }
+
+  /**
+   * Maps annotations
+   *
+   * @param  php.ReflectionMethod $reflect
+   * @return [:var]
+   */
+  protected function methodAnnotations($reflect) {
+    $decl= $this
+      ->resolve($reflect->getDeclaringClass()->name)
+      ->codeUnit()
+      ->declaration()['method'][$reflect->name]
+    ;
+    return $decl['annotations'][null];
   }
 
   /**
@@ -330,20 +378,21 @@ class FromReflection extends \lang\Object implements Source {
    * @param  php.ReflectionMethod $reflect
    * @return [:var]
    */
-  private function method($reflect) {
+  protected function method($reflect) {
     return [
-      'name'    => $reflect->name,
-      'access'  => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
-      'holder'  => $reflect->getDeclaringClass()->name,
-      'params'  => function() use($reflect) {
+      'name'        => $reflect->name,
+      'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
+      'holder'      => $reflect->getDeclaringClass()->name,
+      'params'      => function() use($reflect) {
         $params= [];
         foreach ($reflect->getParameters() as $pos => $param) {
           $params[]= $this->param($pos, $param);
         }
         return $params;
       },
-      'comment' => function() use($reflect) { return $reflect->getDocComment(); },
-      'invoke'  => function($instance, $args) use($reflect) { return $this->invokeMethod($reflect, $instance, $args); }
+      'annotations' => function() use($reflect) { return $this->methodAnnotations($reflect); },
+      'comment'     => function() use($reflect) { return $reflect->getDocComment(); },
+      'invoke'      => function($instance, $args) use($reflect) { return $this->invokeMethod($reflect, $instance, $args); }
     ];
   }
 
