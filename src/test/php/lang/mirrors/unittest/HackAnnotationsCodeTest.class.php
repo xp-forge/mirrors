@@ -2,7 +2,6 @@
 
 use lang\mirrors\Sources;
 
-#[@action(new OnlyOnHHVM())]
 class HackAnnotationsCodeTest extends HackAnnotationsTest {
 
   /** @return lang.mirrors.Sources */
