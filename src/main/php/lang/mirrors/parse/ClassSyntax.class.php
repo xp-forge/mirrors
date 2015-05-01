@@ -65,11 +65,11 @@ class ClassSyntax extends \text\parse\Syntax {
         '?'            => new Sequence([new Apply('type')], function($values) { return $values[1]; }),
         T_ARRAY        => new Sequence(
           [new Optional(new Sequence(
-            [new Token(398), new Repeated(new Token(T_STRING), new Token(',')), new Token(399)],
+            [new Tokens(398, '<'), new Repeated(new Token(T_STRING), new Token(',')), new Tokens(399, '>')],
             function($values) { return $values[1];}
           ))],
           function($values) {
-            if (null === $values[1]) {
+            if (empty($values[1])) {
               return 'array';
             } else if (1 === sizeof($values[1])) {
               return $values[1][0].'[]';
