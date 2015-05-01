@@ -8,7 +8,15 @@ Mirrors
 [![Required HHVM 3.5+](https://raw.githubusercontent.com/xp-framework/web/master/static/hhvm-3_5plus.png)](http://hhvm.com/)
 [![Latest Stable Version](https://poser.pugx.org/xp-forge/mirrors/version.png)](https://packagist.org/packages/xp-forge/mirrors)
 
-The *Mirrors* library provides a replacement for the XP Framework's reflection API, using a concise and fluent API.
+The *Mirrors* library provides a replacement for the XP Framework's reflection API.
+
+Features
+--------
+**Concise and fluent**: This library aims at reducing the amount of `if` statements in the calling code when working with reflection. One example is constructor handling - if a type doesn't declare a constructor, a default constructor is returned. Another is the `of()` iterator which can filter on instance and static members, instead of having to loop and check whether the modifiers.
+
+**Sources**: This library supports reflecting classes either by using PHP's reflection classes or directly from their source code. The latter can be useful to prevent classes from being loaded, and in situations where we want to reflect classes during the class loading process (e.g. for compile-time metaprogramming, see the [Kinds library](https://github.com/xp-forge/kinds)).
+
+**Hack language**: This library supports HHVM's [Hack language](http://docs.hhvm.com/manual/en/hacklangref.php), mapping its type literals to the XP type system and its attributes to XP annotations. You can use Hack alongside PHP in HHVM; and this library will support a seamless migration, e.g. moving from return types declared in the apidocs to Hack's syntactic form, all the while maintaining the same reflection information.
 
 API
 ---
