@@ -8,11 +8,11 @@ class TypeRefTest extends ResolveableTest {
 
   #[@test, @values([[Primitive::$INT], [Primitive::$BOOL], [Primitive::$DOUBLE], [Primitive::$STRING]])]
   public function primitives($primitive) {
-    $this->assertEquals($primitive, (new TypeRef($primitive))->resolve($this->type));
+    $this->assertEquals($primitive, (new TypeRef($primitive))->resolve($this->source));
   }
 
   #[@test, @values([[Type::$VAR], [Type::$VOID]])]
   public function special($type) {
-    $this->assertEquals($type, (new TypeRef($type))->resolve($this->type));
+    $this->assertEquals($type, (new TypeRef($type))->resolve($this->source));
   }
 }

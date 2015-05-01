@@ -11,7 +11,7 @@ class MapTypeRefTest extends ResolveableTest {
   public function component_type_resolved() {
     $this->assertEquals(
       new MapType(Type::$VAR),
-      (new MapTypeRef(new TypeRef(Type::$VAR)))->resolve($this->type)
+      (new MapTypeRef(new TypeRef(Type::$VAR)))->resolve($this->source)
     );
   }
 }

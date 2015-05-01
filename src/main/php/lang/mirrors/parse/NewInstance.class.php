@@ -24,13 +24,12 @@ class NewInstance extends Resolveable {
   /**
    * Resolve this value 
    *
-   * @param  lang.reflection.TypeMirror $type
+   * @param  lang.mirrors.Source $source
    * @return var
    */
-  public function resolve($type) {
-    $constructor= $type->resolve($this->type)->constructor();
-    return $constructor->newInstance(...array_map(
-      function($arg) use($type) { return $arg->resolve($type); },
+  public function resolve($source) {
+    return $source->resolve($this->type)->newInstance(array_map(
+      function($arg) use($source) { return $arg->resolve($source); },
       $this->arguments
     ));
   }

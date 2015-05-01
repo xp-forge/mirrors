@@ -7,11 +7,11 @@ class ArrayExprTest extends ResolveableTest {
 
   #[@test]
   public function resolve_resolves_values_in_array_backing() {
-    $this->assertEquals([1], (new ArrayExpr([new Value(1)]))->resolve($this->type));
+    $this->assertEquals([1], (new ArrayExpr([new Value(1)]))->resolve($this->source));
   }
 
   #[@test]
   public function resolve_resolves_values_in_map_backing() {
-    $this->assertEquals(['key' => 1], (new ArrayExpr(['key' => new Value(1)]))->resolve($this->type));
+    $this->assertEquals(['key' => 1], (new ArrayExpr(['key' => new Value(1)]))->resolve($this->source));
   }
 }

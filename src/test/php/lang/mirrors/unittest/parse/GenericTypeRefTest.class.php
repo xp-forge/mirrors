@@ -12,7 +12,7 @@ class GenericTypeRefTest extends ResolveableTest {
   public function filter_of_int() {
     $this->assertEquals(
       Type::forName('util.Filter<int>'),
-      (new GenericTypeRef(new ReferenceTypeRef('util.Filter'), [new TypeRef(Primitive::$INT)]))->resolve($this->type)
+      (new GenericTypeRef(new ReferenceTypeRef('util.Filter'), [new TypeRef(Primitive::$INT)]))->resolve($this->source)
     );
   }
 }

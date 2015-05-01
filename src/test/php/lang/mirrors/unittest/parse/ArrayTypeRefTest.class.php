@@ -11,7 +11,7 @@ class ArrayTypeRefTest extends ResolveableTest {
   public function component_type_resolved() {
     $this->assertEquals(
       new ArrayType(Type::$VAR),
-      (new ArrayTypeRef(new TypeRef(Type::$VAR)))->resolve($this->type)
+      (new ArrayTypeRef(new TypeRef(Type::$VAR)))->resolve($this->source)
     );
   }
 }

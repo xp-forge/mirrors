@@ -22,13 +22,13 @@ class Pairs extends Resolveable {
   /**
    * Resolve this value 
    *
-   * @param  lang.reflection.TypeMirror $type
+   * @param  lang.mirrors.Source $source
    * @return var
    */
-  public function resolve($type) {
+  public function resolve($source) {
     $resolved= [];
     foreach ($this->backing as $key => $value) {
-      $resolved[$key]= $value->resolve($type);
+      $resolved[$key]= $value->resolve($source);
     }
     return $resolved;
   }

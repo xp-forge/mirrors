@@ -23,7 +23,7 @@ class GenericTypeRef extends Resolveable {
   /**
    * Resolve this value 
    *
-   * @param  lang.reflection.TypeMirror $type
+   * @param  lang.mirrors.Source $source
    * @return var
    */
   public function resolve($type) {

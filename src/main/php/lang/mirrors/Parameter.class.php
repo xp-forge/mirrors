@@ -56,7 +56,7 @@ class Parameter extends \lang\Object {
       $params= $this->mirror->tags()['param'];
       $n= $this->reflect['pos'];
       if (isset($params[$n])) {
-        return $params[$n]->resolve($this->mirror->declaredIn());
+        return $params[$n]->resolve($this->mirror->declaredIn()->reflect);
       } else {
         return Type::$VAR;
       }

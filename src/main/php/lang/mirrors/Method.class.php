@@ -42,7 +42,7 @@ class Method extends Routine {
     }
 
     $return= $this->tags()['return'];
-    return empty($return) ? Type::$VAR : $return[0]->resolve($this->declaredIn());
+    return empty($return) ? Type::$VAR : $return[0]->resolve($this->declaredIn()->reflect);
   }
 
   /**

@@ -3,6 +3,8 @@
 use lang\mirrors\parse\PhpSyntax;
 use lang\mirrors\parse\CodeUnit;
 use lang\mirrors\parse\Value;
+use lang\mirrors\parse\TypeRef;
+use lang\Primitive;
 
 class PhpSyntaxTest extends \unittest\TestCase {
 
@@ -228,7 +230,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
           'access'      => [],
           'annotations' => null,
           'comment'     => null,
-          'returns'     => 'int'
+          'returns'     => new TypeRef(Primitive::$INT)
         ]
       ],
       $this->parse('<?php class Test { function a(): int; }')->declaration()['method']

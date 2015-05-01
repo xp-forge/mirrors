@@ -219,25 +219,11 @@ class FromCode extends \lang\Object implements Source {
   /**
    * Map type
    *
-   * @param  string $name
+   * @param  lang.mirrors.parse.Resolveable $ref
    * @return function(): lang.Type
    */
-  protected function type($name) {
-    if ('array' === $name) {
-      return function() { return Type::$ARRAY; };
-    } else if ('callable' === $name) {
-      return function() { return Type::$CALLABLE; };
-    } else if ('int' === $name) {
-      return function() { return Primitive::$INT; };
-    } else if ('string' === $name) {
-      return function() { return Primitive::$STRING; };
-    } else if ('double' === $name) {
-      return function() { return Primitive::$DOUBLE; };
-    } else if ('bool' === $name) {
-      return function() { return Primitive::$BOOL; };
-    } else {
-      return function() use($name) { return new XPClass($this->resolve0($name)); };
-    }
+  private function type($ref) {
+    return function() use($ref) { return $ref->resolve($this); };
   }
 
   /**

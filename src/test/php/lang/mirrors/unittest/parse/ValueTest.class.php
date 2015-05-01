@@ -6,7 +6,7 @@ class ValueTest extends ResolveableTest {
 
   #[@test]
   public function resolve_returns_backing_null() {
-    $this->assertNull((new Value(null))->resolve($this->type));
+    $this->assertNull((new Value(null))->resolve($this->source));
   }
 
   #[@test, @values([
@@ -16,6 +16,6 @@ class ValueTest extends ResolveableTest {
   #  [[]], [[1, 2, 3]], [['key' => 'value']]
   #])]
   public function resolve_returns_backing_value($value) {
-    $this->assertEquals($value, (new Value($value))->resolve($this->type));
+    $this->assertEquals($value, (new Value($value))->resolve($this->source));
   }
 }

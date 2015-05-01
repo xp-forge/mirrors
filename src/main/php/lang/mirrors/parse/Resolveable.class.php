@@ -5,10 +5,10 @@ abstract class Resolveable extends \lang\Object {
   /**
    * Resolve this value 
    *
-   * @param  lang.reflection.TypeMirror $type
+   * @param  lang.mirrors.Source $source
    * @return var
    */
-  public abstract function resolve($type);
+  public abstract function resolve($source);
 
   /**
    * Creates a string representation

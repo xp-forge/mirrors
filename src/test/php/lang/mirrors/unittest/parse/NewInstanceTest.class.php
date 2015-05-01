@@ -9,7 +9,7 @@ class NewInstanceTest extends ResolveableTest {
   public function resolved() {
     $this->assertInstanceOf(
       'lang.Object',
-      (new NewInstance('lang.Object', []))->resolve($this->type)
+      (new NewInstance('lang.Object', []))->resolve($this->source)
     );
   }
 
@@ -21,7 +21,7 @@ class NewInstanceTest extends ResolveableTest {
     ]);
     $this->assertEquals(
       ['Test', 1],
-      (new NewInstance($fixture->getClassName(), [new Value('Test'), new Value(1)]))->resolve($this->type)->passed
+      (new NewInstance($fixture->getClassName(), [new Value('Test'), new Value(1)]))->resolve($this->source)->passed
     );
   }
 }

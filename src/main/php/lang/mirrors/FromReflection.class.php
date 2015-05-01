@@ -492,7 +492,7 @@ class FromReflection extends \lang\Object implements Source {
     if ('self' === $name || $name === $this->reflect->getShortName()) {
       return $this->source->reflect($this->reflect);
     } else if ('parent' === $name) {
-      return $this->reflect->getParentClass();
+      return $this->source->reflect($this->reflect->getParentClass());
     } else if ('\\' === $name{0}) {
       return $this->source->reflect(new \ReflectionClass(strtr(substr($name, 1), '.', '\\')));
     } else if (strstr($name, '\\') || strstr($name, '.')) {

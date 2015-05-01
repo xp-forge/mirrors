@@ -11,6 +11,8 @@ use text\parse\rules\Match;
 use text\parse\rules\Returns;
 use text\parse\rules\Collect;
 use text\parse\rules\OneOf;
+use lang\Type;
+use lang\Primitive;
 
 class PhpSyntax extends \text\parse\Syntax {
   protected $typeName, $collectMembers, $collectElements, $collectAnnotations;
@@ -71,10 +73,23 @@ class PhpSyntax extends \text\parse\Syntax {
         })
       ]),
       'type' => new Match([
-        T_STRING       => new Sequence([$this->typeName], function($values) { return $values[0].implode('', $values[1]); } ),
-        T_NS_SEPARATOR => new Sequence([$this->typeName], function($values) { return $values[0].implode('', $values[1]); } ),
-        T_ARRAY        => new Returns('array'),
-        T_CALLABLE     => new Returns('callable'),
+        T_STRING       => new Sequence([$this->typeName], function($values) {
+          $t= $values[0].implode('', $values[1]);
+          if ('string' === $t) {
+            return new TypeRef(Primitive::$STRING);
+          } else if ('int' === $t) {
+            return new TypeRef(Primitive::$INT);
+          } else if ('double' === $t || 'float' === $t) {
+            return new TypeRef(Primitive::$DOUBLE);
+          } else if ('bool' === $t) {
+            return new TypeRef(Primitive::$BOOL);
+          } else {
+            return new ReferenceTypeRef($t);
+          }
+        }),
+        T_NS_SEPARATOR => new Sequence([$this->typeName], function($values) { return new ReferenceTypeRef($values[0].implode('', $values[1])); } ),
+        T_ARRAY        => new Returns(new TypeRef(Type::$ARRAY)),
+        T_CALLABLE     => new Returns(new TypeRef(Type::$CALLABLE)),
       ]),
       'decl' => new Sequence(
         [
