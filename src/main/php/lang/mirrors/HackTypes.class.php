@@ -10,6 +10,7 @@ use lang\FunctionType;
  * Maps a Hack type literal as returned e.g. by HHVM reflection's `getTypeText()`
  * methods on various of its reflection objects to an XP type.
  *
+ * @see    http://docs.hhvm.com/manual/en/hack.annotations.php
  * @test   xp://lang.mirrors.unittest.HackTypesTest
  */
 class HackTypes extends \lang\Object {

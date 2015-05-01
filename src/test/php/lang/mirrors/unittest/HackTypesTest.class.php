@@ -134,4 +134,20 @@ class HackTypesTest extends \unittest\TestCase {
       $this->types->map('(function(HH\string, HH\int): HH\void)')
     );
   }
+
+  #[@test]
+  public function function_returning_function() {
+    $this->assertEquals(
+      new FunctionType([], new FunctionType([Primitive::$INT], Primitive::$INT)),
+      $this->types->map('(function(): (function(HH\int): HH\int))')
+    );
+  }
+
+  #[@test]
+  public function function_accpting_function() {
+    $this->assertEquals(
+      new FunctionType([new FunctionType([Primitive::$INT], Primitive::$INT)], Type::$VOID),
+      $this->types->map('(function((function(HH\int): HH\int)): HH\void)')
+    );
+  }
 }
