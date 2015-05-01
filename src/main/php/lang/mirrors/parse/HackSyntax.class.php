@@ -20,10 +20,9 @@ class HackSyntax extends PhpSyntax {
    * @return [:text.parse.rules.Rules]
    */
   protected function extend($rules) {
-    $typeName= new Tokens(T_STRING, T_NS_SEPARATOR);
     $rules['type']= new Match([
-      T_STRING       => new Sequence([$typeName], function($values) { return $values[0].implode('', $values[1]); } ),
-      T_NS_SEPARATOR => new Sequence([$typeName], function($values) { return $values[0].implode('', $values[1]); } ),
+      T_STRING       => new Sequence([$this->typeName], function($values) { return $values[0].implode('', $values[1]); } ),
+      T_NS_SEPARATOR => new Sequence([$this->typeName], function($values) { return $values[0].implode('', $values[1]); } ),
       '('            => new Sequence(
         [new Token(T_FUNCTION), new Token('('), new Repeated(new Apply('type'), new Token(',')), new Token(')'), new Token(':'), new Apply('type'), new Token(')')],
         function($values) { return 'function('.implode(', ', $values[3]).'): '.$values[6]; }
@@ -46,6 +45,21 @@ class HackSyntax extends PhpSyntax {
       ),
       T_CALLABLE     => new Returns('callable'),
     ]);
+
+    $rules['annotations']= new Match([
+      '[' => new Sequence(
+        [new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations), new Token(']')],
+        function($values) { return $values[1]; }
+      ),
+      T_SL => new Sequence(
+        [new Repeated(new Apply('attribute'), new Token(','), $this->collectAnnotations), new Token(T_SR)],
+        function($values) { return $values[1]; }
+      ),
+    ]);
+    $rules['attribute']= new Sequence(
+      [new Token(T_STRING), new Optional(new Apply('value'))],
+      function($values) { return ['target' => [null, $values[0]], 'value' => $values[1]]; }
+    );
     return $rules;
   }
 }

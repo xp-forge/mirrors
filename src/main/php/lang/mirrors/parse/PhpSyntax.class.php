@@ -13,20 +13,19 @@ use text\parse\rules\Collect;
 use text\parse\rules\OneOf;
 
 class PhpSyntax extends \text\parse\Syntax {
+  protected $typeName, $collectMembers, $collectElements, $collectAnnotations;
 
-  protected function extend($rules) {
-    return $rules;
-  }
-
-  /** @return text.parse.Rules */
-  protected function rules() {
-    $typeName= new Tokens(T_STRING, T_NS_SEPARATOR);
-    $collectMembers= newinstance('text.parse.rules.Collection', [], '{
+  /**
+   * Initialize members.
+   */
+  public function __construct() {
+    $this->typeName= new Tokens(T_STRING, T_NS_SEPARATOR);
+    $this->collectMembers= newinstance('text.parse.rules.Collection', [], '{
       public function collect(&$values, $value) {
         $values[$value["kind"]][$value["name"]]= $value;
       }
     }');
-    $collectElements= newinstance('text.parse.rules.Collection', [], '{
+    $this->collectElements= newinstance('text.parse.rules.Collection', [], '{
       public function collect(&$values, $value) {
         if (is_array($value)) {
           $values[key($value)]= current($value);
@@ -35,22 +34,36 @@ class PhpSyntax extends \text\parse\Syntax {
         }
       }
     }');
-    $collectAnnotations= newinstance('text.parse.rules.Collection', [], '{
+    $this->collectAnnotations= newinstance('text.parse.rules.Collection', [], '{
       public function collect(&$values, $value) {
         $target= $value["target"];
         $values[$target[0]][$target[1]]= $value["value"];
       }
     }');
+    parent::__construct();
+  }
 
+  /**
+   * Extends base rules
+   *
+   * @param  [:text.parse.rules.Rules] $rules
+   * @return [:text.parse.rules.Rules]
+   */
+  protected function extend($rules) {
+    return $rules;
+  }
+
+  /** @return text.parse.Rules */
+  protected function rules() {
     return new Rules($this->extend([
       new Sequence([new Optional(new Apply('package')), new Repeated(new Apply('import')), new Apply('decl')], function($values) {
         return new CodeUnit($values[0], $values[1], $values[2]);
       }),
-      'package' => new Sequence([new Token(T_NAMESPACE), $typeName, new Token(';')], function($values) {
+      'package' => new Sequence([new Token(T_NAMESPACE), $this->typeName, new Token(';')], function($values) {
         return implode('', $values[1]);
       }),
       'import' => new Match([
-        T_USE => new Sequence([$typeName, new Token(';')], function($values) {
+        T_USE => new Sequence([$this->typeName, new Token(';')], function($values) {
           return implode('', $values[1]);
         }),
         T_NEW => new Sequence([new Token(T_STRING), new Token('('), new Token(T_CONSTANT_ENCAPSED_STRING), new Token(')'), new Token(';')], function($values) {
@@ -58,8 +71,8 @@ class PhpSyntax extends \text\parse\Syntax {
         })
       ]),
       'type' => new Match([
-        T_STRING       => new Sequence([$typeName], function($values) { return $values[0].implode('', $values[1]); } ),
-        T_NS_SEPARATOR => new Sequence([$typeName], function($values) { return $values[0].implode('', $values[1]); } ),
+        T_STRING       => new Sequence([$this->typeName], function($values) { return $values[0].implode('', $values[1]); } ),
+        T_NS_SEPARATOR => new Sequence([$this->typeName], function($values) { return $values[0].implode('', $values[1]); } ),
         T_ARRAY        => new Returns('array'),
         T_CALLABLE     => new Returns('callable'),
       ]),
@@ -83,30 +96,20 @@ class PhpSyntax extends \text\parse\Syntax {
         function($values) { return array_merge($values[3], ['comment' => $values[0], 'modifiers' => $values[2], 'annotations' => $values[1]]); }
       ),
       'parent' => new Sequence(
-        [new Token(T_EXTENDS), $typeName],
+        [new Token(T_EXTENDS), $this->typeName],
         function($values) { return implode('', $values[1]); }
       ),
       'parents' => new Sequence(
-        [new Token(T_EXTENDS), new Repeated($typeName, new Token(','))],
+        [new Token(T_EXTENDS), new Repeated($this->typeName, new Token(','))],
         function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
       ),
       'implements' => new Sequence(
-        [new Token(T_IMPLEMENTS), new Repeated($typeName, new Token(','))],
+        [new Token(T_IMPLEMENTS), new Repeated($this->typeName, new Token(','))],
         function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
       ),
-      'annotations' => new Match([
-        '[' => new Sequence(
-          [new Repeated(new Apply('annotation'), new Token(','), $collectAnnotations), new Token(']')],
-          function($values) { return $values[1]; }
-        ),
-        T_SL => new Sequence(
-          [new Repeated(new Apply('attribute'), new Token(','), $collectAnnotations), new Token(T_SR)],
-          function($values) { return $values[1]; }
-        ),
-      ]),
-      'attribute' => new Sequence(
-        [new Token(T_STRING), new Optional(new Apply('value'))],
-        function($values) { return ['target' => [null, $values[0]], 'value' => $values[1]]; }
+      'annotations' => new Sequence(
+        [new Token('['), new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations), new Token(']')],
+        function($values) { return $values[1]; }
       ),
       'annotation' => new Sequence(
         [new Token('@'), new Apply('annotation_target'), new Optional(new Apply('value'))],
@@ -121,12 +124,12 @@ class PhpSyntax extends \text\parse\Syntax {
         function($values) { return $values[1]; }
       ),
       'body' => new Sequence(
-        [new Token('{'), new Repeated(new Apply('member'), null, $collectMembers), new Token('}')],
+        [new Token('{'), new Repeated(new Apply('member'), null, $this->collectMembers), new Token('}')],
         function($values) { return $values[1]; }
       ),
       'member' => new OneOf([
         new Match([
-          T_USE   => new Sequence([$typeName, new Apply('aliases')], function($values) {
+          T_USE   => new Sequence([$this->typeName, new Apply('aliases')], function($values) {
             return ['kind' => 'use', 'name' => implode('', $values[1])];
           }),
           T_CONST => new Sequence([new Token(T_STRING), new Token('='), new Apply('expr'), new Token(';')], function($values) {
@@ -200,20 +203,20 @@ class PhpSyntax extends \text\parse\Syntax {
             T_LNUMBER => function($values) { return new Value((int)$values[0]); },
           ]),
           T_CONSTANT_ENCAPSED_STRING => function($values) { return new Value(eval('return '.$values[0].';')); },
-          '[' => new Sequence([new Repeated(new Apply('element'), new Token(','), $collectElements), new Token(']')], function($values) {
+          '[' => new Sequence([new Repeated(new Apply('element'), new Token(','), $this->collectElements), new Token(']')], function($values) {
             return new ArrayExpr($values[1]);
           }),
-          T_ARRAY => new Sequence([new Token('('), new Repeated(new Apply('element'), new Token(','), $collectElements), new Token(')')], function($values) {
+          T_ARRAY => new Sequence([new Token('('), new Repeated(new Apply('element'), new Token(','), $this->collectElements), new Token(')')], function($values) {
             return new ArrayExpr($values[2]);
           }),
           T_FUNCTION => new Sequence([new Token('('), new Repeated(new Apply('param'), new Token(',')), new Token(')'), new Block(false)], function($values) {
             return new Closure($values[2], $values[4]);
           }),
-          T_NEW => new Sequence([$typeName, new Token('('), new Repeated(new Apply('expr'), new Token(',')), new Token(')')], function($values) {
+          T_NEW => new Sequence([$this->typeName, new Token('('), new Repeated(new Apply('expr'), new Token(',')), new Token(')')], function($values) {
             return new NewInstance(implode('', $values[1]), (array)$values[3]);
           }),
         ]),
-        new Sequence([$typeName, new Token(T_DOUBLE_COLON), new Apply('member_ref')], function($values) {
+        new Sequence([$this->typeName, new Token(T_DOUBLE_COLON), new Apply('member_ref')], function($values) {
           return new Member(implode('', $values[0]), $values[2]);
         }),
         new Sequence([new Apply('pair'), new Optional(new Token(',')), new Repeated(new Apply('pair'), new Token(','), Collect::$AS_MAP)], function($values) {
