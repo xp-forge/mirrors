@@ -6,7 +6,7 @@
   "description" : "Mirrors",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "~6.1",
+    "xp-framework/core": "dev-infrastructure/lazily-init-reflect",
     "xp-forge/parse": "~0.2",
     "php" : ">=5.6.0"
   },

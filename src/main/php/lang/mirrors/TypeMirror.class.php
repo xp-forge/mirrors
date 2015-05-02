@@ -29,7 +29,7 @@ class TypeMirror extends \lang\Object {
     if ($arg instanceof \ReflectionClass) {
       $this->reflect= new FromReflection($arg);
     } else if ($arg instanceof XPClass) {
-      $this->reflect= new FromReflection($arg->_reflect);
+      $this->reflect= new FromReflection($arg->reflect());
     } else if ($arg instanceof Source) {
       $this->reflect= $arg;
     } else if (null === $source) {
