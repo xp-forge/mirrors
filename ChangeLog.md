@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.4.0 / 2015-05-05
+
 * Updated dependency on xp-framework/core to `~6.2` - @thekid
 * Merged PR #11: Hack language support. This adds support for Hack's
   native annotations and type system as well as its constructor argument
