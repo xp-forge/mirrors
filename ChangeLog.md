@@ -3,6 +3,15 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Updated dependency on xp-framework/core to `~6.2` - @thekid
+* Merged PR #11: Hack language support. This adds support for Hack's
+  native annotations and type system as well as its constructor argument
+  promotion on HHVM as well as when using the code reflection source.
+  http://docs.hhvm.com/manual/en/hack.attributes.php
+  http://docs.hhvm.com/manual/en/hack.annotations.types.php
+  http://docs.hhvm.com/manual/en/hack.constructorargumentpromotion.php
+  (@thekid)
+
 ## 0.3.0 / 2015-04-20
 
 * Merged PR #10: Reflection sources. Types can now be reflected both via
