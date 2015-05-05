@@ -24,7 +24,7 @@ The entry point class is the type mirror:
 
 ```php
 public class lang.mirrors.TypeMirror extends lang.Object {
-  public __construct(var $arg[, lang.mirrors.Source $source]) throws ...
+  public __construct(var $arg[, lang.mirrors.Sources $source]) throws ...
 
   public string name()
   public string comment()
