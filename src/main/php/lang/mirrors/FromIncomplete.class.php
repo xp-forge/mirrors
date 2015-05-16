@@ -14,6 +14,9 @@ class FromIncomplete extends \lang\Object implements Source {
     $this->name= $name;
   }
 
+  /** @return bool */
+  public function present() { return false; }
+
   /** @return lang.mirrors.parse.CodeUnit */
   public function codeUnit() { return null; }
 

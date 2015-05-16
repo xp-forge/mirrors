@@ -2,6 +2,9 @@
 
 interface Source {
 
+  /** @return bool */
+  public function present();
+
   /** @return lang.mirrors.parse.CodeUnit */
   public function codeUnit();
 

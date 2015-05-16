@@ -21,6 +21,9 @@ class FromReflection extends \lang\Object implements Source {
     $this->source= $source ?: Sources::$REFLECTION;
   }
 
+  /** @return bool */
+  public function present() { return true; }
+
   /** @return lang.mirrors.parse.CodeUnit */
   public function codeUnit() {
     if (null === $this->unit) {
@@ -494,15 +497,15 @@ class FromReflection extends \lang\Object implements Source {
     } else if ('parent' === $name) {
       return $this->source->reflect($this->reflect->getParentClass());
     } else if ('\\' === $name{0}) {
-      return $this->source->reflect(new \ReflectionClass(strtr(substr($name, 1), '.', '\\')));
+      return $this->source->reflect(strtr(substr($name, 1), '.', '\\'));
     } else if (strstr($name, '\\') || strstr($name, '.')) {
-      return $this->source->reflect(new \ReflectionClass(strtr($name, '.', '\\')));
+      return $this->source->reflect(strtr($name, '.', '\\'));
     } else {
       foreach ($this->codeUnit()->imports() as $imported) {
-        if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return $this->source->reflect(new \ReflectionClass($imported));
+        if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return $this->source->reflect($imported);
       }
       $ns= $this->reflect->getNamespaceName();
-      return $this->source->reflect(new \ReflectionClass(($ns ? $ns.'\\' : '').$name));
+      return $this->source->reflect(($ns ? $ns.'\\' : '').$name);
     }
   }
 
@@ -513,6 +516,6 @@ class FromReflection extends \lang\Object implements Source {
    * @return bool
    */
   public function equals($cmp) {
-    return $cmp instanceof self && $this->name === $cmp->name;
+    return $cmp instanceof Source && $this->name === $cmp->name;
   }
 }

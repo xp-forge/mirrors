@@ -4,6 +4,9 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\Sources;
 use lang\mirrors\Package;
 use lang\mirrors\Modifiers;
+use lang\mirrors\FromIncomplete;
+use lang\mirrors\FromReflection;
+use lang\mirrors\FromCode;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use unittest\TestCase;
@@ -12,25 +15,60 @@ use lang\mirrors\unittest\fixture\FixtureInterface;
 use lang\mirrors\unittest\fixture\FixtureEnum;
 use lang\mirrors\unittest\fixture\FixtureAbstract;
 use lang\mirrors\unittest\fixture\FixtureFinal;
+use lang\XPClass;
 
 /**
  * Tests TypeMirror
  */
 class TypeMirrorTest extends TestCase {
 
-  #[@test]
-  public function can_create() {
-    new TypeMirror(self::class);
+  /** @return var[][] */
+  private function args() {
+    return [
+      [self::class, 'type literal'],
+      ['lang.mirrors.unittest.TypeMirrorTest', 'fully qualified'],
+      [new XPClass(self::class), 'type system'],
+      [new \ReflectionClass(self::class), 'php reflection']
+    ];
+  }
+
+  #[@test, @values('args')]
+  public function can_create($arg) {
+    new TypeMirror($arg);
+  }
+
+  #[@test, @values('args')]
+  public function can_create_with_default_source($arg) {
+    new TypeMirror($arg, Sources::$DEFAULT);
+  }
+
+  #[@test, @values('args')]
+  public function can_create_with_reflection_source($arg) {
+    new TypeMirror($arg, Sources::$REFLECTION);
+  }
+
+  #[@test, @values('args')]
+  public function can_create_with_code_source($arg) {
+    new TypeMirror($arg, Sources::$CODE);
+  }
+
+  #[@test, @values([
+  #  [new FromReflection(new \ReflectionClass(self::class))],
+  #  [new FromCode('lang.mirrors.unittest.TypeMirrorTest')],
+  #  [new FromIncomplete('does\not\exist')]
+  #])]
+  public function can_create_from_source($source) {
+    new TypeMirror($source);
   }
 
   #[@test]
-  public function can_create_from_reflection() {
-    new TypeMirror(self::class, Sources::$REFLECTION);
+  public function this_class_is_present() {
+    $this->assertTrue((new TypeMirror(self::class))->present());
   }
 
   #[@test]
-  public function can_create_from_parsed() {
-    new TypeMirror(self::class, Sources::$CODE);
+  public function non_existant_class_not_present() {
+    $this->assertFalse((new TypeMirror('does.not.exist'))->present());
   }
 
   #[@test]

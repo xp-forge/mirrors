@@ -2,9 +2,7 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
-use lang\ClassNotFoundException;
 use lang\IllegalArgumentException;
-use lang\XPClass;
 
 /**
  * Reference type mirrors
@@ -23,14 +21,9 @@ class TypeMirror extends \lang\Object {
    *
    * @param  var $arg Either a php.ReflectionClass, an XPClass instance or a string with the FQCN
    * @param  lang.mirrors.Sources $source
-   * @throws lang.ClassNotFoundException
    */
   public function __construct($arg, Sources $source= null) {
-    if ($arg instanceof \ReflectionClass) {
-      $this->reflect= new FromReflection($arg);
-    } else if ($arg instanceof XPClass) {
-      $this->reflect= new FromReflection($arg->reflect());
-    } else if ($arg instanceof Source) {
+    if ($arg instanceof Source) {
       $this->reflect= $arg;
     } else if (null === $source) {
       $this->reflect= Sources::$DEFAULT->reflect($arg);
@@ -41,6 +34,9 @@ class TypeMirror extends \lang\Object {
     $this->methods= new Methods($this);
     $this->fields= new Fields($this);
   }
+
+  /** @return bool */
+  public function present() { return $this->reflect->present(); }
 
   /** @return string */
   public function name() { return $this->reflect->typeName(); }

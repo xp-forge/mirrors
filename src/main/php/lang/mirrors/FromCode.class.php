@@ -25,6 +25,9 @@ class FromCode extends \lang\Object implements Source {
     $this->source= $source ?: Sources::$CODE;
   }
 
+  /** @return bool */
+  public function present() { return true; }
+
   /**
    * Fetches all types to merge with
    *
@@ -518,6 +521,6 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function equals($cmp) {
-    return $cmp instanceof self && $this->name === $cmp->name;
+    return $cmp instanceof Source && $this->name === $cmp->name;
   }
 }

@@ -3,6 +3,12 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Changed default, reflection and code sources to behave consistently
+  regarding when types are not found. Now, all three sources return
+  an type mirror referencing an incomplete type. To check for a type's
+  existance, use the new `TypeMirror::present()` method.
+  (@thekid)
+
 ## 0.4.0 / 2015-05-05
 
 * Updated dependency on xp-framework/core to `~6.2` - @thekid
