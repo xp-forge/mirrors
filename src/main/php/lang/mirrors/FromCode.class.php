@@ -193,7 +193,7 @@ class FromCode extends \lang\Object implements Source {
   /** @return [:var] */
   public function constructor() {
     if (isset($this->decl['method']['__construct'])) {
-      return $this->method($this->decl['name'], $this->decl['method']['__construct']);
+      return $this->method($this->name, $this->decl['method']['__construct']);
     }
     foreach ($this->merge(true, true) as $reflect) {
       if ($reflect->hasMethod('__construct')) return $reflect->constructor();
@@ -202,7 +202,7 @@ class FromCode extends \lang\Object implements Source {
     return [
       'name'        => '__default',
       'access'      => Modifiers::IS_PUBLIC,
-      'holder'      => $this->decl['name'],
+      'holder'      => $this->name,
       'comment'     => function() { return null; },
       'annotations' => function() { return []; },
       'params'      => function() { return []; }
@@ -272,7 +272,7 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function fieldNamed($name) {
-    if (isset($this->decl['field'][$name])) return $this->field($this->decl['name'], $this->decl['field'][$name]);
+    if (isset($this->decl['field'][$name])) return $this->field($this->name, $this->decl['field'][$name]);
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $cmp => $field) {
         if ($cmp === $name) return $field;
@@ -286,7 +286,7 @@ class FromCode extends \lang\Object implements Source {
   public function allFields() {
     if (isset($this->decl['field'])) {
       foreach ($this->decl['field'] as $name => $field) {
-        yield $name => $this->field($this->decl['name'], $field);
+        yield $name => $this->field($this->name, $field);
       }
     }
     foreach ($this->merge(true, true) as $reflect) {
@@ -301,7 +301,7 @@ class FromCode extends \lang\Object implements Source {
   public function declaredFields() {
     if (isset($this->decl['field'])) {
       foreach ($this->decl['field'] as $name => $field) {
-        yield $name => $this->field($this->decl['name'], $field);
+        yield $name => $this->field($this->name, $field);
       }
     }
     foreach ($this->merge(false, true) as $reflect) {
@@ -392,7 +392,7 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function methodNamed($name) {
-    if (isset($this->decl['method'][$name])) return $this->method($this->decl['name'], $this->decl['method'][$name]);
+    if (isset($this->decl['method'][$name])) return $this->method($this->name, $this->decl['method'][$name]);
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allMethods() as $cmp => $method) {
         if ($cmp === $name) return $method;
@@ -406,7 +406,7 @@ class FromCode extends \lang\Object implements Source {
   public function allMethods() {
     if (isset($this->decl['method'])) {
       foreach ($this->decl['method'] as $name => $method) {
-        yield $name => $this->method($this->decl['name'], $method);
+        yield $name => $this->method($this->name, $method);
       }
     }
     foreach ($this->merge(true, true) as $reflect) {
@@ -421,7 +421,7 @@ class FromCode extends \lang\Object implements Source {
   public function declaredMethods() {
     if (isset($this->decl['method'])) {
       foreach ($this->decl['method'] as $name => $method) {
-        yield $name => $this->method($this->decl['name'], $method);
+        yield $name => $this->method($this->name, $method);
       }
     }
     foreach ($this->merge(false, true) as $reflect) {
@@ -493,7 +493,10 @@ class FromCode extends \lang\Object implements Source {
       return $this->resolve0($this->decl['parent']);
     } else if ('\\' === $name{0}) {
       return substr($name, 1);
-    } else if (strstr($name, '\\') || strstr($name, '.')) {
+    } else if (strstr($name, '\\')) {
+      $package= $this->unit->package();
+      return ($package ? $package.'\\' : '').$name;
+    } else if (strstr($name, '.')) {
       return strtr($name, '.', '\\');
     } else {
       foreach ($this->unit->imports() as $imported) {

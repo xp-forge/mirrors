@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\unittest\fixture\FixtureUsed;
 use unittest\TestCase;
 
 class TypeMirrorResolveTest extends TestCase {
@@ -38,9 +39,16 @@ class TypeMirrorResolveTest extends TestCase {
     );
   }
 
+  #[@test]
+  public function by_relative() {
+    $this->assertEquals(
+      new TypeMirror(FixtureUsed::class),
+      $this->fixture->resolve('fixture\FixtureUsed')
+    );
+  }
+
   #[@test, @values([
   #  'lang.mirrors.unittest.TypeMirrorTest',
-  #  'lang\mirrors\unittest\TypeMirrorTest',
   #  '\lang\mirrors\unittest\TypeMirrorTest'
   #])]
   public function by_fully_qualified($name) {

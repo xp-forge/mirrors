@@ -72,7 +72,7 @@ abstract class Member extends \lang\Object {
    * @return lang.mirrors.TypeMirror
    */
   public function declaredIn() { 
-    return $this->mirror->resolve($this->reflect['holder']);
+    return $this->mirror->resolve('\\'.$this->reflect['holder']);
   }
 
   /** @return lang.mirrors.Annotations */

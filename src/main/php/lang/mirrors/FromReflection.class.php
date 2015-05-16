@@ -207,7 +207,7 @@ class FromReflection extends \lang\Object implements Source {
    */
   protected function fieldAnnotations($reflect) {
     $decl= $this
-      ->resolve($reflect->getDeclaringClass()->name)
+      ->resolve('\\'.$reflect->getDeclaringClass()->name)
       ->codeUnit()
       ->declaration()['field'][$reflect->name]
     ;
@@ -315,7 +315,7 @@ class FromReflection extends \lang\Object implements Source {
    */
   protected function paramAnnotations($reflect) {
     $decl= $this
-      ->resolve($reflect->getDeclaringClass()->name)
+      ->resolve('\\'.$reflect->getDeclaringClass()->name)
       ->codeUnit()
       ->declaration()['method'][$reflect->getDeclaringFunction()->name]
     ;
@@ -368,7 +368,7 @@ class FromReflection extends \lang\Object implements Source {
    */
   protected function methodAnnotations($reflect) {
     $decl= $this
-      ->resolve($reflect->getDeclaringClass()->name)
+      ->resolve('\\'.$reflect->getDeclaringClass()->name)
       ->codeUnit()
       ->declaration()['method'][$reflect->name]
     ;
@@ -498,7 +498,10 @@ class FromReflection extends \lang\Object implements Source {
       return $this->source->reflect($this->reflect->getParentClass());
     } else if ('\\' === $name{0}) {
       return $this->source->reflect(strtr(substr($name, 1), '.', '\\'));
-    } else if (strstr($name, '\\') || strstr($name, '.')) {
+    } else if (strstr($name, '\\')) {
+      $ns= $this->reflect->getNamespaceName();
+      return $this->source->reflect(($ns ? $ns.'\\' : '').$name);
+    } else if (strstr($name, '.')) {
       return $this->source->reflect(strtr($name, '.', '\\'));
     } else {
       foreach ($this->codeUnit()->imports() as $imported) {

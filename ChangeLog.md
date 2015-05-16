@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Added support for relative namespace references.
+  (@thekid)
+
 ## 0.5.0 / 2015-05-16
 
 * Changed default, reflection and code sources to behave consistently

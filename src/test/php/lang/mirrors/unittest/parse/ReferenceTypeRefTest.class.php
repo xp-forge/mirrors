@@ -9,7 +9,7 @@ class ReferenceTypeRefTest extends ResolveableTest {
   public function fully_qualified_class_name() {
     $this->assertEquals(
       $this->getClass(),
-      (new ReferenceTypeRef(__CLASS__))->resolve($this->source)
+      (new ReferenceTypeRef('\\'.__CLASS__))->resolve($this->source)
     );
   }
 
