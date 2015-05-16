@@ -499,9 +499,8 @@ class FromCode extends \lang\Object implements Source {
     } else if (strstr($name, '.')) {
       return strtr($name, '.', '\\');
     } else {
-      foreach ($this->unit->imports() as $imported) {
-        if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return $imported;
-      }
+      $imports= $this->unit->imports();
+      if (isset($imports[$name])) return $imports[$name];
       $package= $this->unit->package();
       return ($package ? $package.'\\' : '').$name;
     }

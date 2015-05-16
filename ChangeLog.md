@@ -3,8 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
-* Added support for relative namespace references.
-  (@thekid)
+* Added support for namespace aliases - @thekid
+* Added support for relative namespace references - @thekid
 
 ## 0.5.0 / 2015-05-16
 

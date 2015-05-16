@@ -58,20 +58,23 @@ class PhpSyntax extends \text\parse\Syntax {
   /** @return text.parse.Rules */
   protected function rules() {
     return new Rules($this->extend([
-      new Sequence([new Optional(new Apply('package')), new Repeated(new Apply('import')), new Apply('decl')], function($values) {
+      new Sequence([new Optional(new Apply('package')), new Repeated(new Apply('import'), null, Collect::$AS_MAP), new Apply('decl')], function($values) {
         return new CodeUnit($values[0], $values[1], $values[2]);
       }),
       'package' => new Sequence([new Token(T_NAMESPACE), $this->typeName, new Token(';')], function($values) {
         return implode('', $values[1]);
       }),
       'import' => new Match([
-        T_USE => new Sequence([$this->typeName, new Token(';')], function($values) {
-          return implode('', $values[1]);
+        T_USE => new Sequence([$this->typeName, new Optional(new Apply('alias')), new Token(';')], function($values) {
+          return [$values[2] ?: end($values[1]) => implode('', $values[1])];
         }),
         T_NEW => new Sequence([new Token(T_STRING), new Token('('), new Token(T_CONSTANT_ENCAPSED_STRING), new Token(')'), new Token(';')], function($values) {
-          return trim($values[3], '\'"');
+          $name= strtr(trim($values[3], '\'"'), '.', '\\');
+          $p= strrpos($name, '\\');
+          return [false === $p ? $name : substr($name, $p + 1) => $name];
         })
       ]),
+      'alias' => new Sequence([new Token(T_AS), new Token(T_STRING)], function($values) { return $values[1]; }),
       'type' => new Match([
         T_STRING       => new Sequence([$this->typeName], function($values) {
           $t= $values[0].implode('', $values[1]);

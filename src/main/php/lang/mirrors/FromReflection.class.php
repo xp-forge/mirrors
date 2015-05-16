@@ -504,9 +504,8 @@ class FromReflection extends \lang\Object implements Source {
     } else if (strstr($name, '.')) {
       return $this->source->reflect(strtr($name, '.', '\\'));
     } else {
-      foreach ($this->codeUnit()->imports() as $imported) {
-        if (0 === substr_compare($imported, $name, strrpos($imported, '\\') + 1)) return $this->source->reflect($imported);
-      }
+      $imports= $this->codeUnit()->imports();
+      if (isset($imports[$name])) return $this->source->reflect($imports[$name]);
       $ns= $this->reflect->getNamespaceName();
       return $this->source->reflect(($ns ? $ns.'\\' : '').$name);
     }

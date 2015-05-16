@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\mirrors\unittest\fixture\FixtureUsed;
+use lang\mirrors\unittest\fixture\FixtureAbstract as Aliased;
 use unittest\TestCase;
 
 class TypeMirrorResolveTest extends TestCase {
@@ -13,7 +14,7 @@ class TypeMirrorResolveTest extends TestCase {
    * @return void
    */
   public function setUp() {
-    $this->fixture= new TypeMirror(self::class, \lang\mirrors\Sources::$CODE);
+    $this->fixture= new TypeMirror(self::class);
   }
 
   #[@test]
@@ -63,6 +64,14 @@ class TypeMirrorResolveTest extends TestCase {
     $this->assertEquals(
       new TypeMirror(TestCase::class),
       $this->fixture->resolve('TestCase')
+    );
+  }
+
+  #[@test]
+  public function aliased_class() {
+    $this->assertEquals(
+      new TypeMirror(Aliased::class),
+      $this->fixture->resolve('Aliased')
     );
   }
 

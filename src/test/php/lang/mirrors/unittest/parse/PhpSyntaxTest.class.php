@@ -124,11 +124,51 @@ class PhpSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function no_imports() {
+    $this->assertEquals(
+      [],
+      $this->parse('<?php class Test { }')->imports()
+    );
+  }
+
+  #[@test]
+  public function one_import() {
+    $this->assertEquals(
+      ['Objects' => 'util\Objects'],
+      $this->parse('<?php use util\Objects; class Test { }')->imports()
+    );
+  }
+
+  #[@test]
+  public function imports() {
+    $this->assertEquals(
+      ['Objects' => 'util\Objects', 'Date' => 'util\Date'],
+      $this->parse('<?php use util\Objects; use util\Date; class Test { }')->imports()
+    );
+  }
+
+  #[@test]
+  public function aliase_import() {
+    $this->assertEquals(
+      ['Aliased' => 'util\Objects'],
+      $this->parse('<?php use util\Objects as Aliased; class Test { }')->imports()
+    );
+  }
+
+  #[@test]
+  public function new_import() {
+    $this->assertEquals(
+      ['ArrayListExtensions' => 'util\ArrayListExtensions'],
+      $this->parse('<?php new import("util.ArrayListExtensions"); class Test { }')->imports()
+    );
+  }
+
+  #[@test]
   public function test_class() {
     $this->assertEquals(
       new CodeUnit(
         'de\thekid\test',
-        ['util\Objects'],
+        ['Objects' => 'util\Objects'],
         [
           'kind'        => 'class',
           'name'        => 'IntegrationTest',
