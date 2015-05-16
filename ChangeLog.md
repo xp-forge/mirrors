@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.5.0 / 2015-05-16
+
 * Changed default, reflection and code sources to behave consistently
   regarding when types are not found. Now, all three sources return
   an type mirror referencing an incomplete type. To check for a type's
