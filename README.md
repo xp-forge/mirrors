@@ -20,12 +20,13 @@ Features
 
 API
 ---
-The entry point class is the type mirror:
+The entry point class is the type mirror. It can be constructed by passing either type literals (e.g. `util\Date`), fully qualified class names (e.g. `util.Date`), XPClass instances or PHP's ReflectionClass; and optionally supplying a source to load the information from. The constructor does not throw exceptions for non-existant types: Instead, use `present()` to check of the type exists.
 
 ```php
 public class lang.mirrors.TypeMirror extends lang.Object {
-  public __construct(var $arg[, lang.mirrors.Sources $source]) throws ...
+  public __construct(var $arg[, lang.mirrors.Sources $source])
 
+  public bool present()
   public string name()
   public string comment()
   public self parent()
