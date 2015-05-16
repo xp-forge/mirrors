@@ -10,6 +10,7 @@ use lang\IllegalArgumentException;
  * @test   xp://lang.mirrors.unittest.TypeMirrorConstantsTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorFieldsTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorMethodsTest
+ * @test   xp://lang.mirrors.unittest.TypeMirrorResolveTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorTest
  */
 class TypeMirror extends \lang\Object {
