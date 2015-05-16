@@ -7,11 +7,14 @@ use lang\IllegalArgumentException;
 /**
  * Reference type mirrors
  *
+ * @test   xp://lang.mirrors.unittest.TypeMirrorAnnotationsTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorConstantsTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorFieldsTest
+ * @test   xp://lang.mirrors.unittest.TypeMirrorInterfacesTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorMethodsTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorResolveTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorTest
+ * @test   xp://lang.mirrors.unittest.TypeMirrorTraitsTest
  */
 class TypeMirror extends \lang\Object {
   private $methods, $fields;
