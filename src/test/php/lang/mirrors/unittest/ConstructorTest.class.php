@@ -4,6 +4,9 @@ use lang\mirrors\Constructor;
 use lang\mirrors\TypeMirror;
 use lang\IllegalArgumentException;
 use lang\mirrors\TargetInvocationException;
+use lang\mirrors\unittest\fixture\FixtureInterface;
+use lang\mirrors\unittest\fixture\FixtureTrait;
+use lang\mirrors\unittest\fixture\FixtureAbstract;
 
 class ConstructorTest extends \unittest\TestCase {
 
