@@ -18,4 +18,24 @@ class PackageTest extends \unittest\TestCase {
   public function declaration() {
     $this->assertEquals('unittest', (new Package('lang.mirrors.unittest'))->declaration());
   }
+
+  #[@test]
+  public function global_namespace_has_empty_name() {
+    $this->assertEquals('', Package::$GLOBAL->name());
+  }
+
+  #[@test]
+  public function global_namespace_has_empty_declaration() {
+    $this->assertEquals('', Package::$GLOBAL->name());
+  }
+
+  #[@test]
+  public function global_namespace_is_global() {
+    $this->assertTrue(Package::$GLOBAL->isGlobal(), '(global)');
+  }
+
+  #[@test]
+  public function this_namespace_is_not_global() {
+    $this->assertFalse((new Package(__NAMESPACE__))->isGlobal(), __NAMESPACE__);
+  }
 }

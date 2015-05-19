@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Added new `Package::isGlobal()` method and `Package::$GLOBAL`
+  (@thekid)
+
 ## 0.5.1 / 2015-05-16
 
 * Added support for namespace aliases - @thekid

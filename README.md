@@ -31,6 +31,7 @@ public class lang.mirrors.TypeMirror extends lang.Object {
   public string comment()
   public self parent()
   public lang.mirrors.Kind kind()
+  public lang.mirrors.Package package()
   public lang.mirrors.Modifiers modifiers()
   public lang.mirrors.parse.CodeUnit unit()
   public lang.mirrors.Traits traits()

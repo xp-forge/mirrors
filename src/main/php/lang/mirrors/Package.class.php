@@ -7,6 +7,11 @@
  */
 class Package extends \lang\Object {
   private $name;
+  public static $GLOBAL;
+
+  static function __static() {
+    self::$GLOBAL= new self('');
+  }
 
   /**
    * Creates a package instance
@@ -22,6 +27,9 @@ class Package extends \lang\Object {
 
   /** @return string */
   public function declaration() { return substr($this->name, strrpos($this->name, '.') + 1); }
+
+  /** @return bool */
+  public function isGlobal() { return '' === $this->name; }
 
   /**
    * Returns whether a given value is equal to this code unit
@@ -39,6 +47,6 @@ class Package extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->name().'>';
+    return $this->getClassName().'<'.($this->isGlobal() ? '(global)' : $this->name).'>';
   }
 }
