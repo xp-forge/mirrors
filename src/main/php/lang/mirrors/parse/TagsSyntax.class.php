@@ -29,7 +29,7 @@ class TagsSyntax extends \text\parse\Syntax {
       ),
       'tag' => new Match([
         TagsSource::T_PARSED => new Sequence(
-          [new Apply('type'), new Text()],
+          [new Apply('types'), new Text()],
           function($values) { return [$values[0] => $values[1]]; }
         ),
         TagsSource::T_WORD => new Sequence(
@@ -39,10 +39,22 @@ class TagsSyntax extends \text\parse\Syntax {
       ]),
       'braces' => new Match([
         TagsSource::T_FUNCTION => new Sequence(
-          [new Token('('), new Repeated(new Apply('type'), new Token(',')), new Token(')'), new Token(':'), new Apply('type')],
-          function($values) { return new FunctionTypeRef($values[2], $values[5]); }
+          [new Token('('), new Repeated(new Apply('types'), new Token(',')), new Token(')'), new Token(':'), new Apply('type')],
+          function($values) { return new FunctionTypeRef([null] === $values[2] ? [] : $values[2], $values[5]); }
         )
       ]),
+      'types' => new Sequence(
+        [new Repeated(new Apply('type'), new Token('|'))],
+        function($values) {
+          if (empty($values[0])) {
+            return null;
+          } else if (1 === sizeof($values[0])) {
+            return $values[0][0];
+          } else {
+            return new TypeUnionRef($values[0]);
+          }
+        }
+      ),
       'type' => new Sequence(
         [
           new OneOf([
@@ -55,7 +67,7 @@ class TagsSyntax extends \text\parse\Syntax {
               TagsSource::T_VOID     => new Returns(new TypeRef(Type::$VOID)),
               TagsSource::T_WORD     => new Sequence(
                 [new Optional(new Sequence(
-                  [new Token('<'), new Repeated(new Apply('type'), new Token(',')), new Token('>')],
+                  [new Token('<'), new Repeated(new Apply('types'), new Token(',')), new Token('>')],
                   function($values) { return $values[1]; }
                 ))],
                 function($values) {
@@ -68,7 +80,7 @@ class TagsSyntax extends \text\parse\Syntax {
                 function($values) { return $values[1]; }
               ),
               '[' => new Sequence(
-                [new Token(':'), new Apply('type'), new Token(']')],
+                [new Token(':'), new Apply('types'), new Token(']')],
                 function($values) { return new MapTypeRef($values[2]); }
               )
             ]),
