@@ -7,12 +7,12 @@ class NativeReflectionTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->type= new TypeMirror(\ReflectionClass::class);
+    $this->type= new TypeMirror(\Exception::class);
   }
 
   #[@test]
   public function name_has_no_dots() {
-    $this->assertEquals('ReflectionClass', $this->type->name());
+    $this->assertEquals('Exception', $this->type->name());
   }
 
   #[@test]
@@ -22,7 +22,7 @@ class NativeReflectionTest extends \unittest\TestCase {
 
   #[@test]
   public function declaration_works_correctly() {
-    $this->assertEquals('ReflectionClass', $this->type->declaration());
+    $this->assertEquals('Exception', $this->type->declaration());
   }
 
   #[@test]
@@ -32,12 +32,12 @@ class NativeReflectionTest extends \unittest\TestCase {
 
   #[@test]
   public function accessing_field_annotations() {
-    $this->assertFalse($this->type->fields()->named('name')->annotations()->present());
+    $this->assertFalse($this->type->fields()->named('message')->annotations()->present());
   }
 
   #[@test]
   public function accessing_methods_annotations() {
-    $this->assertFalse($this->type->methods()->named('getName')->annotations()->present());
+    $this->assertFalse($this->type->methods()->named('getMessage')->annotations()->present());
   }
 
   #[@test]
