@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Resolved ambiguity in function types in conjunction with arrays.
+  See xp-framework/core#74
+  (@thekid)
 * Added new `Package::isGlobal()` method and `Package::$GLOBAL`
   (@thekid)
 
