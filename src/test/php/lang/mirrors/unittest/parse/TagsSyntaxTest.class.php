@@ -44,6 +44,16 @@ class TagsSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  ['@param callable', new TypeRef(Type::$CALLABLE)],
+  #  ['@param array', new TypeRef(Type::$ARRAY)],
+  #  ['@param void', new TypeRef(Type::$VOID)],
+  #  ['@param var', new TypeRef(Type::$VAR)]
+  #])]
+  public function special_types_param($declaration, $type) {
+    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
   #  ['@param var[]', new ArrayTypeRef(new TypeRef(Type::$VAR))],
   #  ['@param string[][]', new ArrayTypeRef(new ArrayTypeRef(new TypeRef(Primitive::$STRING)))]
   #])]
