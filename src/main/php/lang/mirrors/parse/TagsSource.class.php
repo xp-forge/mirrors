@@ -13,6 +13,8 @@ class TagsSource extends \text\parse\Tokens {
   const T_DOUBLE   = 274;
   const T_VAR      = 275;
   const T_VOID     = 276;
+  const T_CALLABLE = 277;
+  const T_ARRAY    = 278;
 
   private static $keywords= [
     'param'     => self::T_PARSED,
@@ -25,7 +27,9 @@ class TagsSource extends \text\parse\Tokens {
     'int'       => self::T_INT,
     'double'    => self::T_DOUBLE,
     'var'       => self::T_VAR,
-    'void'      => self::T_VOID
+    'void'      => self::T_VOID,
+    'callable'  => self::T_CALLABLE,
+    'array'     => self::T_ARRAY
   ];
 
   /**

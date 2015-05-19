@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Added support for `array` and `callable` type unions
+  (@thekid)
+
 ## 0.6.0 / 2015-05-20
 
 * Resolved ambiguity in function types in conjunction with arrays.
