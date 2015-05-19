@@ -206,12 +206,12 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function fieldAnnotations($reflect) {
-    $decl= $this
+    $fields= $this
       ->resolve('\\'.$reflect->getDeclaringClass()->name)
       ->codeUnit()
-      ->declaration()['field'][$reflect->name]
+      ->declaration()['field']
     ;
-    return $decl['annotations'][null];
+    return isset($fields[$reflect->name]) ? $fields[$reflect->name]['annotations'][null] : null;
   }
 
   /**
@@ -314,13 +314,14 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function paramAnnotations($reflect) {
-    $decl= $this
+    $methods= $this
       ->resolve('\\'.$reflect->getDeclaringClass()->name)
       ->codeUnit()
-      ->declaration()['method'][$reflect->getDeclaringFunction()->name]
+      ->declaration()['method']
     ;
+    $method= $reflect->getDeclaringFunction()->name;
     $target= '$'.$reflect->name;
-    return isset($decl['annotations'][$target]) ? $decl['annotations'][$target] : [];
+    return isset($methods[$method]['annotations'][$target]) ? $methods[$method]['annotations'][$target] : null;
   }
 
   /**
@@ -367,12 +368,12 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function methodAnnotations($reflect) {
-    $decl= $this
+    $methods= $this
       ->resolve('\\'.$reflect->getDeclaringClass()->name)
       ->codeUnit()
-      ->declaration()['method'][$reflect->name]
+      ->declaration()['method']
     ;
-    return $decl['annotations'][null];
+    return isset($methods[$reflect->name]) ? $methods[$reflect->name]['annotations'][null] : null;
   }
 
   /**

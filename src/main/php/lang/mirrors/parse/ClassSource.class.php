@@ -14,15 +14,19 @@ class ClassSource extends \text\parse\Tokens {
    * Creates a new class source
    *
    * @param  string $class Dotted fully qualified name
-   * @throws lang.ClassNotFoundException If class can not be located
+   * @throws lang.ClassFormatException
    */
   public function __construct($class) {
     $cl= ClassLoader::getDefault()->findClass($class);
-    if (!$cl instanceof IClassLoader) {
-      throw new ClassNotFoundException($class);
+    if ($cl instanceof IClassLoader) {
+      $this->tokenize($cl->loadClassBytes($class), $class);
+    } else {
+      $this->tokens= null;
     }
-    $this->tokenize($cl->loadClassBytes($class), $class);
   }
+
+  /** @return bool */
+  public function present() { return is_array($this->tokens); }
 
   /**
    * Tokenize code

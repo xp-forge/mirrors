@@ -26,9 +26,13 @@ class ClassSyntax extends \lang\Object {
   public function codeUnitOf($class) {
     if (!isset(self::$cache[$class])) {
       $source= new ClassSource($class);
-      self::$cache[$class]= self::$syntax[$source->usedSyntax()]->newInstance()->parse($source);
-      while (sizeof(self::$cache) > self::CACHE_LIMIT) {
-        unset(self::$cache[key(self::$cache)]);
+      if ($source->present()) {
+        self::$cache[$class]= self::$syntax[$source->usedSyntax()]->newInstance()->parse($source);
+        while (sizeof(self::$cache) > self::CACHE_LIMIT) {
+          unset(self::$cache[key(self::$cache)]);
+        }
+      } else {
+        return CodeUnit::ofIcomplete($class);
       }
     }
     return self::$cache[$class];
