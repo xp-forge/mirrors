@@ -62,10 +62,18 @@ class TagsSyntaxTest extends \unittest\TestCase {
   #[@test, @values([
   #  ['@param function(): var', new FunctionTypeRef([], new TypeRef(Type::$VAR))],
   #  ['@param function(string): var', new FunctionTypeRef([new TypeRef(Primitive::$STRING)], new TypeRef(Type::$VAR))],
-  #  ['@param function(string, int): void', new FunctionTypeRef([new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)], new TypeRef(Type::$VOID))]
+  #  ['@param function(string, int): void', new FunctionTypeRef([new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)], new TypeRef(Type::$VOID))],
   #])]
   public function function_type($declaration, $type) {
     $this->assertEquals(['param' => [$type]], $this->parse($declaration));
+  }
+
+  #[@test]
+  public function function_in_braces() {
+    $this->assertEquals(
+      ['param' => [new ArrayTypeRef(new FunctionTypeRef([], new TypeRef(Primitive::$INT)))]],
+      $this->parse('@param (function(): int)[]')
+    );
   }
 
   #[@test, @values([
