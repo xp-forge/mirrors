@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.6.0 / 2015-05-20
+
 * Resolved ambiguity in function types in conjunction with arrays.
   See xp-framework/core#74
   (@thekid)
