@@ -111,6 +111,8 @@ class TagsSyntaxTest extends \unittest\TestCase {
   #[@test, @values([
   #  '@param string|int',
   #  '@param string|int The union',
+  #  '@param (string|int)',
+  #  '@param (string|int) The union',
   #  '@param string | int',
   #  '@param string | int The union'
   #])]
