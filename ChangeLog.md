@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* **Heads up: Minimum requirement is now XP 6.3.0!**
+* Merged PR #14: Add type union support
+  (@thekid)
 * Added support for `array` and `callable` type unions
   (@thekid)
 
