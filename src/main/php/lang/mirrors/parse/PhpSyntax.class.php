@@ -127,7 +127,7 @@ class PhpSyntax extends \text\parse\Syntax {
       ),
       'annotations' => new Sequence(
         [new Token('['), new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations), new Token(']')],
-        function($values) { return $values[1]; }
+        function($values) { isset($values[1][null]) || $values[1][null]= []; return $values[1]; }
       ),
       'annotation' => new Sequence(
         [new Token('@'), new Apply('annotation_target'), new Optional(new Apply('value'))],
