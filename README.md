@@ -95,7 +95,7 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
 }
 
 public class lang.mirrors.Parameters extends lang.Object implements php.IteratorAggregate {
-  public __construct(lang.mirrors.Method $mirror, var $reflect)
+  public __construct(lang.mirrors.Routine $mirror, var $reflect)
 
   public bool present()
   public int length()
@@ -108,10 +108,11 @@ public class lang.mirrors.Parameters extends lang.Object implements php.Iterator
 }
 
 public class lang.mirrors.Parameter extends lang.Object {
-  public __construct(lang.mirrors.Method $mirror, var $reflect)
+  public __construct(lang.mirrors.Routine $mirror, var $reflect)
 
   public string name()
   public int position()
+  public lang.mirrors.Routine declaringRoutine()
   public bool isOptional()
   public bool isVariadic()
   public bool isVerified()
