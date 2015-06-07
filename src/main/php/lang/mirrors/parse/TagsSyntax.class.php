@@ -29,7 +29,7 @@ class TagsSyntax extends \text\parse\Syntax {
       ),
       'tag' => new Match([
         TagsSource::T_PARSED => new Sequence(
-          [new Apply('type'), new Text()],
+          [new Apply('types'), new Text()],
           function($values) { return [$values[0] => $values[1]]; }
         ),
         TagsSource::T_WORD => new Sequence(
@@ -37,44 +37,51 @@ class TagsSyntax extends \text\parse\Syntax {
           function($values) { return [$values[0] => $values[1]]; }
         )
       ]),
-      'braces' => new Match([
-        TagsSource::T_FUNCTION => new Sequence(
-          [new Token('('), new Repeated(new Apply('type'), new Token(',')), new Token(')'), new Token(':'), new Apply('type')],
-          function($values) { return new FunctionTypeRef($values[2], $values[5]); }
-        )
-      ]),
+      'types' => new Sequence(
+        [new Repeated(new Apply('type'), new Token('|'))],
+        function($values) {
+          if (empty($values[0])) {
+            return null;
+          } else if (1 === sizeof($values[0])) {
+            return $values[0][0];
+          } else {
+            return new TypeUnionRef($values[0]);
+          }
+        }
+      ),
       'type' => new Sequence(
         [
-          new OneOf([
-            new Match([
-              TagsSource::T_STRING   => new Returns(new TypeRef(Primitive::$STRING)),
-              TagsSource::T_DOUBLE   => new Returns(new TypeRef(Primitive::$DOUBLE)),
-              TagsSource::T_INT      => new Returns(new TypeRef(Primitive::$INT)),
-              TagsSource::T_BOOL     => new Returns(new TypeRef(Primitive::$BOOL)),
-              TagsSource::T_VAR      => new Returns(new TypeRef(Type::$VAR)),
-              TagsSource::T_VOID     => new Returns(new TypeRef(Type::$VOID)),
-              TagsSource::T_CALLABLE => new Returns(new TypeRef(Type::$CALLABLE)),
-              TagsSource::T_ARRAY    => new Returns(new TypeRef(Type::$ARRAY)),
-              TagsSource::T_WORD     => new Sequence(
-                [new Optional(new Sequence(
-                  [new Token('<'), new Repeated(new Apply('type'), new Token(',')), new Token('>')],
-                  function($values) { return $values[1]; }
-                ))],
-                function($values) {
-                  $base= new ReferenceTypeRef($values[0]);
-                  return $values[1] ? new GenericTypeRef($base, $values[1]) : $base;
-                }
-              ),
-              '(' => new Sequence(
-                [new Apply('braces'), new Token(')')],
+          new Match([
+            TagsSource::T_STRING   => new Returns(new TypeRef(Primitive::$STRING)),
+            TagsSource::T_DOUBLE   => new Returns(new TypeRef(Primitive::$DOUBLE)),
+            TagsSource::T_INT      => new Returns(new TypeRef(Primitive::$INT)),
+            TagsSource::T_BOOL     => new Returns(new TypeRef(Primitive::$BOOL)),
+            TagsSource::T_VAR      => new Returns(new TypeRef(Type::$VAR)),
+            TagsSource::T_VOID     => new Returns(new TypeRef(Type::$VOID)),
+            TagsSource::T_CALLABLE => new Returns(new TypeRef(Type::$CALLABLE)),
+            TagsSource::T_ARRAY    => new Returns(new TypeRef(Type::$ARRAY)),
+            TagsSource::T_FUNCTION => new Sequence(
+              [new Token('('), new Repeated(new Apply('types'), new Token(',')), new Token(')'), new Token(':'), new Apply('type')],
+              function($values) { return new FunctionTypeRef([null] === $values[2] ? [] : $values[2], $values[5]); }
+            ),
+            TagsSource::T_WORD     => new Sequence(
+              [new Optional(new Sequence(
+                [new Token('<'), new Repeated(new Apply('types'), new Token(',')), new Token('>')],
                 function($values) { return $values[1]; }
-              ),
-              '[' => new Sequence(
-                [new Token(':'), new Apply('type'), new Token(']')],
-                function($values) { return new MapTypeRef($values[2]); }
-              )
-            ]),
-            new Apply('braces')
+              ))],
+              function($values) {
+                $base= new ReferenceTypeRef($values[0]);
+                return $values[1] ? new GenericTypeRef($base, $values[1]) : $base;
+              }
+            ),
+            '(' => new Sequence(
+              [new Apply('types'), new Token(')')],
+              function($values) { return $values[1]; }
+            ),
+            '[' => new Sequence(
+              [new Token(':'), new Apply('types'), new Token(']')],
+              function($values) { return new MapTypeRef($values[2]); }
+            )
           ]),
           new Repeated(new Sequence([new Token('['), new Token(']')], function() { return true; })),
         ],

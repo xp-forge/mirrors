@@ -8,6 +8,7 @@ use lang\mirrors\parse\MapTypeRef;
 use lang\mirrors\parse\FunctionTypeRef;
 use lang\mirrors\parse\GenericTypeRef;
 use lang\mirrors\parse\ReferenceTypeRef;
+use lang\mirrors\parse\TypeUnionRef;
 use lang\Type;
 use lang\Primitive;
 
@@ -105,6 +106,21 @@ class TagsSyntaxTest extends \unittest\TestCase {
   #])]
   public function nested_type_parameters($declaration, $type) {
     $this->assertEquals(['param' => [$type]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
+  #  '@param string|int',
+  #  '@param string|int The union',
+  #  '@param (string|int)',
+  #  '@param (string|int) The union',
+  #  '@param string | int',
+  #  '@param string | int The union'
+  #])]
+  public function union_type($declaration) {
+    $this->assertEquals(
+      ['param' => [new TypeUnionRef([new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)])]],
+      $this->parse($declaration)
+    );
   }
 
   #[@test, @values([

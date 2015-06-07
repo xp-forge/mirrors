@@ -38,7 +38,7 @@ class TagsSource extends \text\parse\Tokens {
    * @param  string $input
    */
   public function __construct($input) {
-    $this->tokens= new StringTokenizer($input, "@:()<>[], \t\n", true);
+    $this->tokens= new StringTokenizer($input, "@:()<>[]|, \t\n", true);
   }
 
   /** @return var */
