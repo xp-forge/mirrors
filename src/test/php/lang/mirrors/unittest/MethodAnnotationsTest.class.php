@@ -13,10 +13,14 @@ class MethodAnnotationsTest extends AbstractMethodTest {
   #[@fixture, @other('value')]
   private function multipleAnnotationFixture() { }
 
+  #[@$param: fixture]
+  private function paramAnnotationFixture($param) { }
+
   #[@test, @values([
   #  ['noAnnotationFixture'],
   #  ['singleAnnotationFixture'],
-  #  ['multipleAnnotationFixture']
+  #  ['multipleAnnotationFixture'],
+  #  ['paramAnnotationFixture']
   #])]
   public function annotations($fixture) {
     $this->assertInstanceOf('lang.mirrors.Annotations', $this->fixture($fixture)->annotations());

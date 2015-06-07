@@ -201,7 +201,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
                 'annotations' => null
               ]],
               'access'      => ['private'],
-              'annotations' => ['$arg' => ['inject' => new Value('db')]],
+              'annotations' => [null => [], '$arg' => ['inject' => new Value('db')]],
               'comment'     => null,
               'returns'     => null
             ],
