@@ -8,6 +8,7 @@ use lang\mirrors\unittest\fixture\FixtureInterface;
 use lang\mirrors\unittest\fixture\FixtureTrait;
 use lang\mirrors\unittest\fixture\FixtureAbstract;
 use lang\ClassLoader;
+use unittest\actions\RuntimeVersion;
 
 class ConstructorTest extends \unittest\TestCase {
 
@@ -66,6 +67,14 @@ class ConstructorTest extends \unittest\TestCase {
   public function creating_instances_wraps_argument_mismatch_exceptions() {
     $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
       '__construct' => function(TypeMirror $arg) { }
+    ]);
+    (new Constructor(new TypeMirror($fixture)))->newInstance(null);
+  }
+
+  #[@test, @expect(TargetInvocationException::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  public function creating_instances_wraps_errors() {
+    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
+      '__construct' => function($arg) { $arg->invoke(); }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
   }

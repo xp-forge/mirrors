@@ -4,6 +4,7 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\TargetInvocationException;
 use lang\Object;
 use lang\IllegalArgumentException;
+use unittest\actions\RuntimeVersion;
 
 class MethodInvocationTest extends AbstractMethodTest {
 
@@ -14,6 +15,8 @@ class MethodInvocationTest extends AbstractMethodTest {
   private function returnsArgsFixture() { return func_get_args(); }
 
   private function throwsExceptionFixture() { throw new IllegalArgumentException('Test'); }
+
+  private function raisesErrorFixture() { $value= null; $value->invoke(); }
 
   private function typeHintedFixture(Object $arg) { }
 
@@ -53,6 +56,11 @@ class MethodInvocationTest extends AbstractMethodTest {
   #[@test, @expect(TargetInvocationException::class)]
   public function wraps_exceptions_raised_from_invoked_method() {
     $this->fixture('throwsExceptionFixture')->invoke($this);
+  }
+
+  #[@test, @expect(TargetInvocationException::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  public function wraps_errors_raised_from_invoked_method() {
+    $this->fixture('raisesErrorFixture')->invoke($this);
   }
 
   #[@test, @expect(TargetInvocationException::class)]
