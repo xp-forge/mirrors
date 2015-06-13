@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.8.0 / 2015-06-13
+
 * **Heads up: Minimum requirement is now XP 6.3.1!**
 * Added support for PHP7's [scalar type hints](https://wiki.php.net/rfc/scalar_type_hints_v5)
   (@thekid)
