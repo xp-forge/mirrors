@@ -65,7 +65,7 @@ class ConstructorTest extends \unittest\TestCase {
   #[@test, @expect(TargetInvocationException::class)]
   public function creating_instances_wraps_argument_mismatch_exceptions() {
     $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
-      '__construct' => function(self $arg) { }
+      '__construct' => function(TypeMirror $arg) { }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
   }
