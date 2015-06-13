@@ -5,10 +5,16 @@ use lang\Type;
 use lang\XPClass;
 use lang\ClassLoader;
 use lang\mirrors\TypeMirror;
-use unittest\actions\RuntimeVersion;
 
-#[@action(new RuntimeVersion('>=7.0.0-dev'))]
-class Php7TypesTest extends \unittest\TestCase {
+abstract class Php7TypesTest extends \unittest\TestCase {
+
+  /**
+   * Returns a fixture for a given class declaration
+   *
+   * @param  lang.XPClass $class
+   * @return lang.mirrors.TypeMirror
+   */
+  protected abstract function newFixture($class);
 
   #[@test]
   public function primitive_return_type() {
@@ -16,7 +22,7 @@ class Php7TypesTest extends \unittest\TestCase {
       public function fixture(): int { return 0; }
     }');
 
-    $this->assertEquals(Primitive::$INT, (new TypeMirror($fixture))->methods()->named('fixture')->returns());
+    $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test]
@@ -25,7 +31,7 @@ class Php7TypesTest extends \unittest\TestCase {
       public function fixture(): array { return []; }
     }');
 
-    $this->assertEquals(Type::$ARRAY, (new TypeMirror($fixture))->methods()->named('fixture')->returns());
+    $this->assertEquals(Type::$ARRAY, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test]
@@ -34,7 +40,7 @@ class Php7TypesTest extends \unittest\TestCase {
       public function fixture(): callable { return []; }
     }');
 
-    $this->assertEquals(Type::$CALLABLE, (new TypeMirror($fixture))->methods()->named('fixture')->returns());
+    $this->assertEquals(Type::$CALLABLE, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test]
@@ -43,7 +49,7 @@ class Php7TypesTest extends \unittest\TestCase {
       public function fixture(): self { return new self(); }
     }');
 
-    $this->assertEquals($fixture, (new TypeMirror($fixture))->methods()->named('fixture')->returns());
+    $this->assertEquals($fixture, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test]
@@ -52,7 +58,7 @@ class Php7TypesTest extends \unittest\TestCase {
       public function fixture(): parent { return new parent(); }
     }');
 
-    $this->assertEquals(XPClass::forName('lang.Object'), (new TypeMirror($fixture))->methods()->named('fixture')->returns());
+    $this->assertEquals(XPClass::forName('lang.Object'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test]
@@ -61,7 +67,7 @@ class Php7TypesTest extends \unittest\TestCase {
       public function fixture(): \lang\Object { return new \lang\Object(); }
     }');
 
-    $this->assertEquals(XPClass::forName('lang.Object'), (new TypeMirror($fixture))->methods()->named('fixture')->returns());
+    $this->assertEquals(XPClass::forName('lang.Object'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test]
@@ -70,7 +76,7 @@ class Php7TypesTest extends \unittest\TestCase {
       public function fixture(int $param) { }
     }');
 
-    $this->assertEquals(Primitive::$INT, (new TypeMirror($fixture))->methods()->named('fixture')->parameters()->first()->type());
+    $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 
   #[@test]
@@ -79,6 +85,6 @@ class Php7TypesTest extends \unittest\TestCase {
       public function fixture(self $param) { }
     }');
 
-    $this->assertEquals($fixture, (new TypeMirror($fixture))->methods()->named('fixture')->parameters()->first()->type());
+    $this->assertEquals($fixture, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 }
