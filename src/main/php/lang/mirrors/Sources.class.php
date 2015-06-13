@@ -15,7 +15,14 @@ abstract class Sources extends \lang\Enum {
   private static $HHVM;
 
   static function __static() {
-    $reflect= defined('HHVM_VERSION') ? 'FromHHVM' : 'From';
+    if (defined('HHVM_VERSION')) {
+      $reflect= 'FromHHVM';
+    } else if (PHP_VERSION < '7.0.0') {
+      $reflect= 'From';
+    } else {
+      $reflect= 'FromPhp7';
+    }
+
     self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], sprintf('{
       static function __static() { }
 

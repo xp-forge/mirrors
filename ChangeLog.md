@@ -4,6 +4,10 @@ Mirrors change log
 ## ?.?.? / ????-??-??
 
 * **Heads up: Minimum requirement is now XP 6.3.1!**
+* Added support for PHP7's [scalar type hints](https://wiki.php.net/rfc/scalar_type_hints_v5)
+  (@thekid)
+* Added support for PHP7's [return type syntax](https://wiki.php.net/rfc/return_types)
+  (@thekid)
 * Added forward compatibility handling of PHP7's BaseException class
   to method invocations and instance creations
   (@thekid)
