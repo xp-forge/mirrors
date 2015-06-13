@@ -7,6 +7,7 @@ use lang\mirrors\TargetInvocationException;
 use lang\mirrors\unittest\fixture\FixtureInterface;
 use lang\mirrors\unittest\fixture\FixtureTrait;
 use lang\mirrors\unittest\fixture\FixtureAbstract;
+use lang\ClassLoader;
 
 class ConstructorTest extends \unittest\TestCase {
 
@@ -55,10 +56,18 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test, @expect(TargetInvocationException::class)]
   public function creating_instances_wraps_exceptions() {
-    $fixture= newinstance('lang.Object', ['Test'], [
-      '__construct' => function($arg) { if (null === $arg) throw new IllegalArgumentException('Test'); }
+    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
+      '__construct' => function($arg) { throw new IllegalArgumentException('Test'); }
     ]);
-    (new Constructor(new TypeMirror(typeof($fixture))))->newInstance(null);
+    (new Constructor(new TypeMirror($fixture)))->newInstance(null);
+  }
+
+  #[@test, @expect(TargetInvocationException::class)]
+  public function creating_instances_wraps_argument_mismatch_exceptions() {
+    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
+      '__construct' => function(self $arg) { }
+    ]);
+    (new Constructor(new TypeMirror($fixture)))->newInstance(null);
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
