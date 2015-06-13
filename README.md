@@ -18,7 +18,7 @@ Features
 
 **Hack language**: This library supports HHVM's [Hack language](http://docs.hhvm.com/manual/en/hacklangref.php), mapping its type literals to the XP type system and its attributes to XP annotations. You can use Hack alongside PHP in HHVM; and this library will support a seamless migration, e.g. moving from return types declared in the apidocs to Hack's syntactic form, all the while maintaining the same reflection information.
 
-**PHP7**: This library supports PHP7's [scalar type hints](https://wiki.php.net/rfc/scalar_type_hints_v5) and [return type syntax](https://wiki.php.net/rfc/return_types).
+**PHP7**: This library supports PHP7's [scalar type hints](https://wiki.php.net/rfc/scalar_type_hints_v5) and [return type syntax](https://wiki.php.net/rfc/return_types) using both runtime reflection and static code sources.
 
 API
 ---
