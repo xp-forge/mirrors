@@ -3,6 +3,7 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* **Heads up: Minimum requirement is now XP 6.3.1!**
 * Added forward compatibility handling of PHP7's BaseException class
   to method invocations and instance creations
   (@thekid)
