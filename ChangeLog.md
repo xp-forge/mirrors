@@ -3,10 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.9.0 / 2015-07-12
+
 * Added Parameter::declaringRoutine(). See xp-forge/mirrors#15 - @thekid
-
-## 0.8.1 / 2015-07-12
-
 * Added forward compatibility with XP 6.4.0 - @thekid
 
 ## 0.8.0 / 2015-06-13
