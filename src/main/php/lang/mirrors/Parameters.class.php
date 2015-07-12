@@ -11,7 +11,7 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
   /**
    * Creates a new parameters instance
    *
-   * @param  lang.mirrors.Method $mirror
+   * @param  lang.mirrors.Routine $mirror
    * @param  [:var] $reflect
    */
   public function __construct($mirror, $reflect) {

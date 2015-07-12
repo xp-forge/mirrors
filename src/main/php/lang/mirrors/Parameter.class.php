@@ -15,7 +15,7 @@ class Parameter extends \lang\Object {
   /**
    * Creates a new parameter
    *
-   * @param  lang.mirrors.Method $mirror
+   * @param  lang.mirrors.Routine $mirror
    * @param  var $arg Either a ReflectionParameter or an offset
    * @throws lang.IllegalArgumentException If there is no such parameter
    */
@@ -40,6 +40,9 @@ class Parameter extends \lang\Object {
 
   /** @return int */
   public function position() { return $this->reflect['pos']; }
+
+  /** @return lang.mirrors.Routine */
+  public function declaringRoutine() { return $this->mirror; }
 
   /** @return bool */
   public function isVariadic() { return $this->reflect['var']; }
