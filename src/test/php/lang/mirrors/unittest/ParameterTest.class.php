@@ -26,7 +26,7 @@ class ParameterTest extends \unittest\TestCase {
         self::$type= new TypeMirror(FixtureParams::class);
       } else {
         $class= ClassLoader::defineClass('FixtureParamsWithTypedVariadic', FixtureParams::class, [], '{
-          private function oneVariadicTypedParam(Type... $arg) { }
+          private function oneVariadicTypedParam(\lang\Type... $arg) { }
         }');
         self::$type= new TypeMirror($class);
       }

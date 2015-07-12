@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 0.8.1 / 2015-07-12
+
+* Added forward compatibility with XP 6.4.0 - @thekid
+
 ## 0.8.0 / 2015-06-13
 
 * **Heads up: Minimum requirement is now XP 6.3.1!**
