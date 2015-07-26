@@ -2,6 +2,11 @@
 
 use text\StringTokenizer;
 
+/**
+ * Source parser for tags in API documentation.
+ *
+ * @see  http://www.phpdoc.org/docs/latest/guides/types.html#keywords
+ */
 class TagsSource extends \text\parse\Tokens {
   const T_WORD     = 260;
   const T_PARSED   = 261;
@@ -31,7 +36,13 @@ class TagsSource extends \text\parse\Tokens {
     'var'       => self::T_VAR,
     'void'      => self::T_VOID,
     'callable'  => self::T_CALLABLE,
-    'array'     => self::T_ARRAY
+    'array'     => self::T_ARRAY,
+
+    'resource'  => self::T_VAR,
+    'mixed'     => self::T_VAR,
+    'false'     => self::T_BOOL,
+    'true'      => self::T_BOOL,
+    'null'      => self::T_VOID
   ];
 
   /**

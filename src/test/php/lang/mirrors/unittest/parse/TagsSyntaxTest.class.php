@@ -55,6 +55,17 @@ class TagsSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  ['@param resource', new TypeRef(Type::$VAR)],
+  #  ['@param mixed', new TypeRef(Type::$VAR)],
+  #  ['@param null', new TypeRef(Type::$VOID)],
+  #  ['@param false', new TypeRef(Primitive::$BOOL)],
+  #  ['@param true', new TypeRef(Primitive::$BOOL)]
+  #])]
+  public function foreign_types_param($declaration, $type) {
+    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
   #  ['@param var[]', new ArrayTypeRef(new TypeRef(Type::$VAR))],
   #  ['@param string[][]', new ArrayTypeRef(new ArrayTypeRef(new TypeRef(Primitive::$STRING)))]
   #])]
