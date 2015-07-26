@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.0.0 / 2015-07-26
+
 * **Dropped support for PHP7 alpha1, now requires alpha2!** This second
   alpha includes the "Throwable" RFC which changes the builtin exception
   hierarchy: https://wiki.php.net/rfc/throwable-interface
