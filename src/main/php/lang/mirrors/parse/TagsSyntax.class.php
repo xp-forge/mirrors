@@ -19,7 +19,7 @@ class TagsSyntax extends \text\parse\Syntax {
   protected function rules() {
     return new Rules([
       new Repeated(
-        new Sequence([new Token('@'), new Apply('tag')], function($values) { return $values[1]; }),
+        new Apply('tag', function($values) { return $values[0]; }),
         new Token("\n"),
         newinstance('text.parse.rules.Collection', [], '{
           public function collect(&$values, $value) {
@@ -30,11 +30,11 @@ class TagsSyntax extends \text\parse\Syntax {
       'tag' => new Match([
         TagsSource::T_PARSED => new Sequence(
           [new Apply('types'), new Text()],
-          function($values) { return [$values[0] => $values[1]]; }
+          function($values) { return [substr($values[0], 1) => $values[1]]; }
         ),
         TagsSource::T_WORD => new Sequence(
           [new Text()],
-          function($values) { return [$values[0] => $values[1]]; }
+          function($values) { return [substr($values[0], 1) => $values[1]]; }
         )
       ]),
       'types' => new Sequence(

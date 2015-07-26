@@ -23,11 +23,11 @@ class TagsSource extends \text\parse\Tokens {
   const T_THIS     = 279;
 
   private static $keywords= [
-    'param'     => self::T_PARSED,
-    'throws'    => self::T_PARSED,
-    'return'    => self::T_PARSED,
-    'var'       => self::T_PARSED,
-    'type'      => self::T_PARSED,
+    '@param'    => self::T_PARSED,
+    '@throws'   => self::T_PARSED,
+    '@return'   => self::T_PARSED,
+    '@var'      => self::T_PARSED,
+    '@type'     => self::T_PARSED,
 
     'function'  => self::T_FUNCTION,
     'string'    => self::T_STRING,
@@ -66,8 +66,12 @@ class TagsSource extends \text\parse\Tokens {
     while ($this->tokens->hasMoreTokens()) {
       $token= $this->tokens->nextToken();
       if (strspn($token, ' ')) {
-        // Skip
-      } else if (1 === strlen($token)) {
+        continue;
+      } else if ('@' === $token) {
+        $token.= $this->tokens->nextToken();
+      }
+
+      if (1 === strlen($token)) {
         return $token;
       } else if (isset(self::$keywords[$token])) {
         return [self::$keywords[$token], $token];

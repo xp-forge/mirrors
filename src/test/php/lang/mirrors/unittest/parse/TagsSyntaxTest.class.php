@@ -173,6 +173,22 @@ class TagsSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  '@type int',
+  #  '@type int $field'
+  #])]
+  public function type_tag_is_parsed($declaration) {
+    $this->assertEquals(['type' => [new TypeRef(Primitive::$INT)]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
+  #  '@var int',
+  #  '@var int $field'
+  #])]
+  public function var_tag_is_parsed($declaration) {
+    $this->assertEquals(['var' => [new TypeRef(Primitive::$INT)]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
   #  ['@param resource', new TypeRef(Type::$VAR)],
   #  ['@param object', new TypeRef(Type::$VAR)],
   #  ['@param mixed', new TypeRef(Type::$VAR)],
