@@ -41,9 +41,9 @@ class Field extends Member {
 
     $tags= $this->tags();
     if (isset($tags['type'])) {
-      return Type::forName($tags['type'][0]);
+      return $tags['type'][0]->resolve($this->declaredIn()->reflect);
     } else if (isset($tags['var'])) {
-      return Type::forName($tags['var'][0]);
+      return $tags['var'][0]->resolve($this->declaredIn()->reflect);
     } else {
       return Type::$VAR;
     }

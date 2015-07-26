@@ -1,5 +1,6 @@
 <?php namespace lang\mirrors\unittest;
 
+use lang\Type;
 use lang\mirrors\Field;
 use lang\mirrors\Modifiers;
 use lang\mirrors\TypeMirror;
@@ -10,6 +11,9 @@ class FieldTest extends AbstractFieldTest {
 
   /** @type lang.mirrors.Field */
   private $fixture;
+
+  /** @type Field */
+  private $resolved;
 
   #[@test]
   public function can_create_from_field_name() {
@@ -34,6 +38,16 @@ class FieldTest extends AbstractFieldTest {
   #[@test]
   public function modifiers() {
     $this->assertEquals(new Modifiers('private'), $this->fixture('fixture')->modifiers());
+  }
+
+  #[@test]
+  public function type() {
+    $this->assertEquals(Type::forName('lang.mirrors.Field'), $this->fixture('fixture')->type());
+  }
+
+  #[@test]
+  public function type_is_resolved() {
+    $this->assertEquals(Type::forName('lang.mirrors.Field'), $this->fixture('resolved')->type());
   }
 
   #[@test]

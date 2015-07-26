@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed bug with field types not being resolved according to the current
+  context, e.g. `self` or unqualified names. Previously already worked
+  with methods and their parameters.
+  (@thekid)
 * Added string representations for the members accessors `constants()`,
   `fields()` and `methods()`.
   (@thekid)

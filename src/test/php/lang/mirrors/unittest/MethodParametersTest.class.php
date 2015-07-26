@@ -1,5 +1,6 @@
 <?php namespace lang\mirrors\unittest;
 
+use lang\mirrors\Parameter;
 use lang\mirrors\TypeMirror;
 use lang\Type;
 use lang\Object;
@@ -23,6 +24,9 @@ class MethodParametersTest extends AbstractMethodTest {
 
   /** @param string $fixture */
   private function shortFormParameterFixture($fixture) { }
+
+  /** @param Parameter $fixture */
+  private function resolvedParameterFixture($fixture) { }
 
   /**
    * Fixture
@@ -107,5 +111,13 @@ class MethodParametersTest extends AbstractMethodTest {
   #])]
  public function length($fixture, $expect) {
     $this->assertEquals($expect, $this->fixture($fixture)->parameters()->length());
+  }
+
+  #[@test]
+  public function resolved() {
+    $this->assertEquals(
+      Type::forName('lang.mirrors.Parameter'),
+      $this->fixture('resolvedParameterFixture')->parameters()->named('fixture')->type()
+    );
   }
 }

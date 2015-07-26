@@ -20,6 +20,8 @@ class TagsSource extends \text\parse\Tokens {
     'param'     => self::T_PARSED,
     'throws'    => self::T_PARSED,
     'return'    => self::T_PARSED,
+    'var'       => self::T_PARSED,
+    'type'      => self::T_PARSED,
 
     'function'  => self::T_FUNCTION,
     'string'    => self::T_STRING,
