@@ -38,6 +38,10 @@ class TagsSource extends \text\parse\Tokens {
     'callable'  => self::T_CALLABLE,
     'array'     => self::T_ARRAY,
 
+    'float'     => self::T_DOUBLE,
+    'integer'   => self::T_INT,
+    'boolean'   => self::T_BOOL,
+
     'resource'  => self::T_VAR,
     'mixed'     => self::T_VAR,
     'false'     => self::T_BOOL,

@@ -66,6 +66,18 @@ class TagsSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  ['@param bool', new TypeRef(Primitive::$BOOL)],
+  #  ['@param boolean', new TypeRef(Primitive::$BOOL)],
+  #  ['@param int', new TypeRef(Primitive::$INT)],
+  #  ['@param integer', new TypeRef(Primitive::$INT)],
+  #  ['@param double', new TypeRef(Primitive::$DOUBLE)],
+  #  ['@param float', new TypeRef(Primitive::$DOUBLE)]
+  #])]
+  public function type_aliases($declaration, $type) {
+    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
   #  ['@param var[]', new ArrayTypeRef(new TypeRef(Type::$VAR))],
   #  ['@param string[][]', new ArrayTypeRef(new ArrayTypeRef(new TypeRef(Primitive::$STRING)))]
   #])]
