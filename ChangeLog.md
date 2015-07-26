@@ -3,7 +3,7 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
-* Foreign class support:
+* Fixed issue #13 - Native and foreign class support:
   . Added support for the types resource, mixed, null, false and true.
   . Added support for the type aliases float, integer and boolean.
   . Added support for the type "object" (interpreted as Type::$VAR).
