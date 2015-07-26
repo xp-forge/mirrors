@@ -55,31 +55,6 @@ class TagsSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
-  #  ['@param resource', new TypeRef(Type::$VAR)],
-  #  ['@param object', new TypeRef(Type::$VAR)],
-  #  ['@param mixed', new TypeRef(Type::$VAR)],
-  #  ['@param null', new TypeRef(Type::$VOID)],
-  #  ['@param false', new TypeRef(Primitive::$BOOL)],
-  #  ['@param true', new TypeRef(Primitive::$BOOL)],
-  #  ['@param $this', new ReferenceTypeRef('self')]
-  #])]
-  public function foreign_types_param($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
-  #[@test, @values([
-  #  ['@param bool', new TypeRef(Primitive::$BOOL)],
-  #  ['@param boolean', new TypeRef(Primitive::$BOOL)],
-  #  ['@param int', new TypeRef(Primitive::$INT)],
-  #  ['@param integer', new TypeRef(Primitive::$INT)],
-  #  ['@param double', new TypeRef(Primitive::$DOUBLE)],
-  #  ['@param float', new TypeRef(Primitive::$DOUBLE)]
-  #])]
-  public function type_aliases($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
-  #[@test, @values([
   #  ['@param self', new ReferenceTypeRef('self')],
   #  ['@param parent', new ReferenceTypeRef('parent')],
   #  ['@param static', new ReferenceTypeRef('static')]
@@ -195,5 +170,40 @@ class TagsSyntaxTest extends \unittest\TestCase {
       ['see' => [substr($declaration, strlen('@see '))]],
       $this->parse($declaration)
     );
+  }
+
+  #[@test, @values([
+  #  ['@param resource', new TypeRef(Type::$VAR)],
+  #  ['@param object', new TypeRef(Type::$VAR)],
+  #  ['@param mixed', new TypeRef(Type::$VAR)],
+  #  ['@param null', new TypeRef(Type::$VOID)],
+  #  ['@param false', new TypeRef(Primitive::$BOOL)],
+  #  ['@param true', new TypeRef(Primitive::$BOOL)],
+  #  ['@param $this', new ReferenceTypeRef('self')]
+  #])]
+  public function foreign_types_param($declaration, $type) {
+    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
+  #  ['@param boolean', new TypeRef(Primitive::$BOOL)],
+  #  ['@param integer', new TypeRef(Primitive::$INT)],
+  #  ['@param float', new TypeRef(Primitive::$DOUBLE)]
+  #])]
+  public function foreign_type_aliases($declaration, $type) {
+    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
+  #  ['@param \Iterator', new ReferenceTypeRef('\Iterator')],
+  #  ['@param \stubbles\lang\Sequence', new ReferenceTypeRef('\stubbles\lang\Sequence')],
+  #  ['@param \DateTime[]', new ArrayTypeRef(new ReferenceTypeRef('\DateTime'))],
+  #  ['@param \ArrayObject|\DateTime[]', new TypeUnionRef([
+  #    new ReferenceTypeRef('\ArrayObject'),
+  #    new ArrayTypeRef(new ReferenceTypeRef('\DateTime'))
+  #  ])]
+  #])]
+  public function foreign_fully_qualified($declaration, $type) {
+    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
   }
 }
