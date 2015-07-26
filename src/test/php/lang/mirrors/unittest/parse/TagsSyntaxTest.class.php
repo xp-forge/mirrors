@@ -60,7 +60,8 @@ class TagsSyntaxTest extends \unittest\TestCase {
   #  ['@param mixed', new TypeRef(Type::$VAR)],
   #  ['@param null', new TypeRef(Type::$VOID)],
   #  ['@param false', new TypeRef(Primitive::$BOOL)],
-  #  ['@param true', new TypeRef(Primitive::$BOOL)]
+  #  ['@param true', new TypeRef(Primitive::$BOOL)],
+  #  ['@param $this', new ReferenceTypeRef('self')]
   #])]
   public function foreign_types_param($declaration, $type) {
     $this->assertEquals(['param' => [$type]], $this->parse($declaration));
@@ -75,6 +76,15 @@ class TagsSyntaxTest extends \unittest\TestCase {
   #  ['@param float', new TypeRef(Primitive::$DOUBLE)]
   #])]
   public function type_aliases($declaration, $type) {
+    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
+  }
+
+  #[@test, @values([
+  #  ['@param self', new ReferenceTypeRef('self')],
+  #  ['@param parent', new ReferenceTypeRef('parent')],
+  #  ['@param static', new ReferenceTypeRef('static')]
+  #])]
+  public function special_class_parameter($declaration, $type) {
     $this->assertEquals(['param' => [$type]], $this->parse($declaration));
   }
 

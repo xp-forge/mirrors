@@ -60,6 +60,7 @@ class TagsSyntax extends \text\parse\Syntax {
             TagsSource::T_VOID     => new Returns(new TypeRef(Type::$VOID)),
             TagsSource::T_CALLABLE => new Returns(new TypeRef(Type::$CALLABLE)),
             TagsSource::T_ARRAY    => new Returns(new TypeRef(Type::$ARRAY)),
+            TagsSource::T_THIS     => new Returns(new ReferenceTypeRef('self')),
             TagsSource::T_FUNCTION => new Sequence(
               [new Token('('), new Repeated(new Apply('types'), new Token(',')), new Token(')'), new Token(':'), new Apply('type')],
               function($values) { return new FunctionTypeRef([null] === $values[2] ? [] : $values[2], $values[5]); }

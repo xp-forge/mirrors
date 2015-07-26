@@ -7,6 +7,7 @@ Mirrors change log
   . Added support for the types resource, mixed, null, false and true.
   . Added support for the type aliases float, integer and boolean.
   . Added support for the type "object" (interpreted as Type::$VAR).
+  . Added support for the type $this (interpreted as "self").
   (@thekid)
 * Fixed bug with field types not being resolved according to the current
   context, e.g. `self` or unqualified names. Previously already worked
