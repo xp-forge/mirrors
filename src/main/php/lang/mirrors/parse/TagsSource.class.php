@@ -43,6 +43,7 @@ class TagsSource extends \text\parse\Tokens {
     'boolean'   => self::T_BOOL,
 
     'resource'  => self::T_VAR,
+    'object'    => self::T_VAR,
     'mixed'     => self::T_VAR,
     'false'     => self::T_BOOL,
     'true'      => self::T_BOOL,

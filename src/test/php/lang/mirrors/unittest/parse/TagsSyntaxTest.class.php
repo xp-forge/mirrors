@@ -56,6 +56,7 @@ class TagsSyntaxTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  ['@param resource', new TypeRef(Type::$VAR)],
+  #  ['@param object', new TypeRef(Type::$VAR)],
   #  ['@param mixed', new TypeRef(Type::$VAR)],
   #  ['@param null', new TypeRef(Type::$VOID)],
   #  ['@param false', new TypeRef(Primitive::$BOOL)],
