@@ -190,7 +190,7 @@ class FromReflection extends \lang\Object implements Source {
       throw new IllegalArgumentException('Instantiating '.$this->name.': '.$e->getMessage());
     } catch (\Exception $e) {
       throw new TargetInvocationException('Creating a new instance of '.$this->name.': '.$e->getMessage());
-    } catch (\BaseException $e) {
+    } catch (\Throwable $e) {
       throw new TargetInvocationException('Creating a new instance of '.$this->name.': '.$e->getMessage());
     }
   }
@@ -430,7 +430,7 @@ class FromReflection extends \lang\Object implements Source {
       throw new IllegalArgumentException('Verifying '.$reflect->name.'(): '.$e->getMessage());
     } catch (\Exception $e) {
       throw new TargetInvocationException('Invoking '.$reflect->name.'(): '.$e->getMessage());
-    } catch (\BaseException $e) {
+    } catch (\Throwable $e) {
       throw new TargetInvocationException('Invoking '.$reflect->name.'(): '.$e->getMessage());
     }
   }

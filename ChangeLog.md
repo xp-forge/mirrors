@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* **Dropped support for PHP7 alpha1, now requires alpha2!** This second
+  alpha includes the "Throwable" RFC which changes the builtin exception
+  hierarchy: https://wiki.php.net/rfc/throwable-interface
+  (@thekid)
 * Allowed PHP keywords as, break, case, callable, catch, clone, const,
   continue, declare, default, do, else, extends, finally, for, foreach,
   function, global, goto, if, include, instanceof, insteadof, interface,
