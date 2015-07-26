@@ -48,4 +48,17 @@ class Constants extends \lang\Object implements \IteratorAggregate {
       yield new Constant($this->mirror, $name, $value);
     }
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    $s= nameof($this)."@[\n";
+    foreach ($this as $const) {
+      $s.= '  '.(string)$const."\n";
+    }
+    return $s.']';
+  }
 }

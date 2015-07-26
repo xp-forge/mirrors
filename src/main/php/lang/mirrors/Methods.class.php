@@ -79,4 +79,17 @@ class Methods extends \lang\Object implements \IteratorAggregate {
       yield new Method($this->mirror, $method);
     }
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    $s= nameof($this)."@[\n";
+    foreach ($this as $method) {
+      $s.= '  '.(string)$method."\n";
+    }
+    return $s.']';
+  }
 }

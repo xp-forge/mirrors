@@ -80,4 +80,17 @@ class Fields extends \lang\Object implements \IteratorAggregate {
       yield new Field($this->mirror, $field);
     }
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    $s= nameof($this)."@[\n";
+    foreach ($this as $field) {
+      $s.= '  '.(string)$field."\n";
+    }
+    return $s.']';
+  }
 }

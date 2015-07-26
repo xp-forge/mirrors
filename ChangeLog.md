@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Added string representations for the members accessors `constants()`,
+  `fields()` and `methods()`.
+  (@thekid)
+
 ## 1.0.0 / 2015-07-26
 
 * **Dropped support for PHP7 alpha1, now requires alpha2!** This second
