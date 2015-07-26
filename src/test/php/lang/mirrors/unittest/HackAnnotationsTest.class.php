@@ -50,4 +50,13 @@ abstract class HackAnnotationsTest extends \unittest\TestCase {
   public function non_existant_annotation($target) {
     $target->annotations()->named('does.not.exist');
   }
+
+  #[@test, @values(['type', 'num'])]
+  public function hack_keyword_works_as_key($keyword) {
+    $this->assertEquals($keyword, key((new TypeMirror(FixtureHackAnnotations::class, $this->source()))
+      ->fields()->named($keyword)
+      ->annotations()->named('field')
+      ->value()
+    ));
+  }
 }

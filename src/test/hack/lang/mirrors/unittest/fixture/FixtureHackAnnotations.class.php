@@ -14,6 +14,12 @@ class FixtureHackAnnotations extends \lang\Object {
   #[@test, @runtime('~3.6'), @expect(class = 'lang.IllegalArgumentException')]
   public $field;
 
+  #[@field(type= 'varchar(255)')]
+  public $type;
+
+  #[@field(num= 'int')]
+  public $num;
+
   <<test, runtime('~3.6'), expect(['class' => 'lang.IllegalArgumentException'])>>
   public function __construct() { }
 
