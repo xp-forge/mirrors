@@ -3,6 +3,13 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Allowed PHP keywords as, break, case, callable, catch, clone, const,
+  continue, declare, default, do, else, extends, finally, for, foreach,
+  function, global, goto, if, include, instanceof, insteadof, interface,
+  list, namespace, new, require, return, switch, throw, trait, try, use,
+  var, while and yield in annotation keys.
+  (@thekid)
+
 ## 0.9.0 / 2015-07-12
 
 * Added Parameter::declaringRoutine(). See xp-forge/mirrors#15 - @thekid

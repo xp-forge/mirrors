@@ -137,6 +137,7 @@ class AnnotationSyntaxTest extends \unittest\TestCase {
   #  ['limit=1.5, eta=1.0', ['limit' => new Value(1.5), 'eta' => new Value(1.0)]],
   #  ['limit=[1, 2, 3]', ['limit' => new ArrayExpr([new Value(1), new Value(2), new Value(3)])]],
   #  ['class="Test"', ['class' => new Value('Test')]],
+  #  ['use="Test"', ['use' => new Value('Test')]],
   #  ['return="Test"', ['return' => new Value('Test')]],
   #  ['self="Test"', ['self' => new Value('Test')]],
   #  ['implements="Test"', ['implements' => new Value('Test')]]
