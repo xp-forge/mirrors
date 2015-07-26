@@ -189,6 +189,15 @@ class TagsSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  '@var int$fixture',
+  #  '@type int$fixture',
+  #  '@param int$fixture'
+  #])]
+  public function missing_whitespace_between_variable_and_type_ok($declaration) {
+    $this->assertEquals([new TypeRef(Primitive::$INT)], current($this->parse($declaration)));
+  }
+
+  #[@test, @values([
   #  ['@param resource', new TypeRef(Type::$VAR)],
   #  ['@param object', new TypeRef(Type::$VAR)],
   #  ['@param mixed', new TypeRef(Type::$VAR)],

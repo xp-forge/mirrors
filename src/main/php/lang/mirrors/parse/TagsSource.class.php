@@ -58,7 +58,7 @@ class TagsSource extends \text\parse\Tokens {
    * @param  string $input
    */
   public function __construct($input) {
-    $this->tokens= new StringTokenizer($input, "@:()<>[]|, \t\n", true);
+    $this->tokens= new StringTokenizer($input, "@\$:()<>[]|, \t\n", true);
   }
 
   /** @return var */
@@ -67,7 +67,7 @@ class TagsSource extends \text\parse\Tokens {
       $token= $this->tokens->nextToken();
       if (strspn($token, ' ')) {
         continue;
-      } else if ('@' === $token) {
+      } else if ('@' === $token || '$' === $token) {
         $token.= $this->tokens->nextToken();
       }
 
