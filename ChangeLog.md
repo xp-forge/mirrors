@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.1.0 / 2015-07-27
+
 * Fixed issue #13 - Native and foreign class support:
   . Added support for the types resource, mixed, null, false and true.
   . Added support for the type aliases float, integer and boolean.
