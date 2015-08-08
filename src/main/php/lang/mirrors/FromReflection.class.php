@@ -15,6 +15,12 @@ class FromReflection extends \lang\Object implements Source {
   private $unit= null;
   public $name;
 
+  private static $RETAIN_COMMENTS;
+
+  static function __static() {
+    self::$RETAIN_COMMENTS= (bool)ini_get('opcache.save_comments');
+  }
+
   public function __construct(\ReflectionClass $reflect, Sources $source= null) {
     $this->reflect= $reflect;
     $this->name= $reflect->name;
@@ -49,8 +55,12 @@ class FromReflection extends \lang\Object implements Source {
 
   /** @return string */
   public function typeComment() {
-    $comment= $this->reflect->getDocComment();
-    return false === $comment ? null : $comment;
+    if (self::$RETAIN_COMMENTS) {
+      $comment= $this->reflect->getDocComment();
+      return false === $comment ? null : $comment;
+    } else {
+      return $this->codeUnit()->declaration()['comment'];
+    }
   }
 
   /** @return var */
@@ -230,9 +240,20 @@ class FromReflection extends \lang\Object implements Source {
       'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
       'holder'      => $reflect->getDeclaringClass()->name,
       'annotations' => function() use($reflect) { return $this->fieldAnnotations($reflect); },
-      'comment'     => function() use($reflect) { return $reflect->getDocComment(); },
       'read'        => function($instance) use($reflect) { return $this->readField($reflect, $instance); },
-      'modify'      => function($instance, $value) use($reflect) { $this->modifyField($reflect, $instance, $value); }
+      'modify'      => function($instance, $value) use($reflect) { $this->modifyField($reflect, $instance, $value); },
+      'comment'     => function() use($reflect) {
+        if (self::$RETAIN_COMMENTS) {
+          return $reflect->getDocComment();
+        } else {
+          $fields= $this
+            ->resolve('\\'.$reflect->getDeclaringClass()->name)
+            ->codeUnit()
+            ->declaration()['field']
+          ;
+          return isset($fields[$reflect->name]) ? $fields[$reflect->name]['comment'] : null;
+        }
+      }
     ];
   }
 
@@ -399,8 +420,19 @@ class FromReflection extends \lang\Object implements Source {
         return $params;
       },
       'annotations' => function() use($reflect) { return $this->methodAnnotations($reflect); },
-      'comment'     => function() use($reflect) { return $reflect->getDocComment(); },
-      'invoke'      => function($instance, $args) use($reflect) { return $this->invokeMethod($reflect, $instance, $args); }
+      'invoke'      => function($instance, $args) use($reflect) { return $this->invokeMethod($reflect, $instance, $args); },
+      'comment'     => function() use($reflect) {
+        if (self::$RETAIN_COMMENTS) {
+          return $reflect->getDocComment();
+        } else {
+          $methods= $this
+            ->resolve('\\'.$reflect->getDeclaringClass()->name)
+            ->codeUnit()
+            ->declaration()['method']
+          ;
+          return isset($methods[$reflect->name]) ? $methods[$reflect->name]['comment'] : null;
+        }
+      }
     ];
   }
 
