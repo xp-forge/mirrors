@@ -1,10 +1,13 @@
 <?php namespace lang\mirrors;
 
+/**
+ * Base class for fields and methods
+ */
 abstract class Members extends \lang\Object implements \IteratorAggregate {
   protected $mirror;
 
   /**
-   * Creates a new methods instance
+   * Creates a new members instance
    *
    * @param  lang.mirrors.TypeMirror $mirror
    */
@@ -49,6 +52,14 @@ abstract class Members extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public abstract function all($filter= null);
+
+  /**
+   * Iterates over declared members.
+   *
+   * @param  util.Filter $filter
+   * @return php.Generator
+   */
+  public abstract function declared($filter= null);
 
   /**
    * Iterates over all methods
