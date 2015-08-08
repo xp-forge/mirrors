@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.2.0 / 2015-08-08
+
+* Fixed issue #18 - Failing tests with opcache.save_comments=0 - @thekid
+
 ## 1.1.0 / 2015-07-27
 
 * Fixed issue #13 - Native and foreign class support:
