@@ -52,7 +52,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function all_methods() {
+  public function all_methods_by_iterating_methods_directly() {
     $this->assertEquals(
       [
         new Method($this->fixture, 'annotatedClassMethod'),
@@ -67,6 +67,25 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
         new Method($this->fixture, 'traitMethod')
       ],
       $this->sorted($this->fixture->methods())
+    );
+  }
+
+  #[@test]
+  public function all_methods() {
+    $this->assertEquals(
+      [
+        new Method($this->fixture, 'annotatedClassMethod'),
+        new Method($this->fixture, 'annotatedInstanceMethod'),
+        new Method($this->fixture, 'inheritedMethod'),
+        new Method($this->fixture, 'privateClassMethod'),
+        new Method($this->fixture, 'privateInstanceMethod'),
+        new Method($this->fixture, 'protectedClassMethod'),
+        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'publicClassMethod'),
+        new Method($this->fixture, 'publicInstanceMethod'),
+        new Method($this->fixture, 'traitMethod')
+      ],
+      $this->sorted($this->fixture->methods()->all())
     );
   }
 
@@ -127,7 +146,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
         new Method($this->fixture, 'publicInstanceMethod'),
         new Method($this->fixture, 'traitMethod')
       ],
-      $this->sorted($this->fixture->methods()->select(Methods::ofInstance()))
+      $this->sorted($this->fixture->methods()->all(Methods::ofInstance()))
     );
   }
 
@@ -140,7 +159,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
         new Method($this->fixture, 'protectedClassMethod'),
         new Method($this->fixture, 'publicClassMethod'),
       ],
-      $this->sorted($this->fixture->methods()->select(Methods::ofClass()))
+      $this->sorted($this->fixture->methods()->all(Methods::ofClass()))
     );
   }
 
@@ -151,7 +170,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
         new Method($this->fixture, 'annotatedClassMethod'),
         new Method($this->fixture, 'annotatedInstanceMethod'),
       ],
-      $this->sorted($this->fixture->methods()->select(Methods::withAnnotation('annotation')))
+      $this->sorted($this->fixture->methods()->all(Methods::withAnnotation('annotation')))
     );
   }
 }

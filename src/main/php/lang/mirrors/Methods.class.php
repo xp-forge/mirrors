@@ -34,47 +34,37 @@ class Methods extends Members {
   }
 
   /**
-   * Iterates over all methods
-   *
-   * @return php.Generator
-   */
-  public function getIterator() {
-    foreach ($this->mirror->reflect->allMethods() as $name => $method) {
-      if (0 === strncmp($name, '__', 2)) continue;
-      yield new Method($this->mirror, $method);
-    }
-  }
-
-  /**
-   * Iterates over declared methods.
-   *
-   * @return php.Generator
-   */
-  public function declared() {
-    foreach ($this->mirror->reflect->declaredMethods() as $name => $method) {
-      if (0 === strncmp('__', $name, 2)) continue;
-      yield new Method($this->mirror, $method);
-    }
-  }
-
-  /**
-   * Iterates over methods and returns those matching a given filter
+   * Iterates over fields.
    *
    * @param  util.Filter $filter
    * @return php.Generator
    */
-  public function select($filter) {
+  public function all($filter= null) {
     foreach ($this->mirror->reflect->allMethods() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
       $method= new Method($this->mirror, $member);
-      if ($filter->accept($method)) yield $method;
+      if (null === $filter || $filter->accept($method)) yield $method;
+    }
+  }
+
+  /**
+   * Iterates over declared fields.
+   *
+   * @param  util.Filter $filter
+   * @return php.Generator
+   */
+  public function declared($filter= null) {
+    foreach ($this->mirror->reflect->declaredMethods() as $name => $member) {
+      if (0 === strncmp('__', $name, 2)) continue;
+      $method= new Method($this->mirror, $member);
+      if (null === $filter || $filter->accept($method)) yield $method;
     }
   }
 
   /**
    * Iterates over methods.
    *
-   * @deprecated Use select() instead
+   * @deprecated Use all() or declared() instead
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
    * @return php.Generator
    */

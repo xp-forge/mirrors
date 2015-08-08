@@ -43,6 +43,21 @@ abstract class Members extends \lang\Object implements \IteratorAggregate {
   public static function with($predicate) { return (new Predicates())->with($predicate); }
 
   /**
+   * Iterates over members.
+   *
+   * @param  util.Filter $filter
+   * @return php.Generator
+   */
+  public abstract function all($filter= null);
+
+  /**
+   * Iterates over all methods
+   *
+   * @return php.Generator
+   */
+  public function getIterator() { return $this->all(); }
+
+  /**
    * Creates a string representation
    *
    * @return string

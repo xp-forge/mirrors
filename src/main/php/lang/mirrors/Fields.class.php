@@ -16,8 +16,7 @@ class Fields extends Members {
    * @return bool
    */
   public function provides($name) {
-    if (0 === strncmp('__', $name, 2)) return false;
-    return $this->mirror->reflect->hasField($name);
+    return 0 === strncmp($name, '__', 2) ? false : $this->mirror->reflect->hasField($name);
   }
 
   /**
@@ -35,47 +34,37 @@ class Fields extends Members {
   }
 
   /**
-   * Iterates over all fields
+   * Iterates over fields.
    *
+   * @param  util.Filter $filter
    * @return php.Generator
    */
-  public function getIterator() {
-    foreach ($this->mirror->reflect->allFields() as $name => $field) {
+  public function all($filter= null) {
+    foreach ($this->mirror->reflect->allFields() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
-      yield new Field($this->mirror, $field);
+      $field= new Field($this->mirror, $member);
+      if (null === $filter || $filter->accept($field)) yield $field;
     }
   }
 
   /**
    * Iterates over declared fields.
    *
-   * @return php.Generator
-   */
-  public function declared() {
-    foreach ($this->mirror->reflect->declaredFields() as $name => $field) {
-      if (0 === strncmp('__', $name, 2)) continue;
-      yield new Field($this->mirror, $field);
-    }
-  }
-
-  /**
-   * Iterates over methods and returns those matching a given filter
-   *
    * @param  util.Filter $filter
    * @return php.Generator
    */
-  public function select($filter) {
-    foreach ($this->mirror->reflect->allFields() as $name => $member) {
+  public function declared($filter= null) {
+    foreach ($this->mirror->reflect->declaredFields() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
       $field= new Field($this->mirror, $member);
-      if ($filter->accept($field)) yield $field;
+      if (null === $filter || $filter->accept($field)) yield $field;
     }
   }
 
   /**
    * Iterates over fields.
    *
-   * @deprecated Use select() instead
+   * @deprecated Use all() or declared() instead
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
    * @return php.Generator
    */

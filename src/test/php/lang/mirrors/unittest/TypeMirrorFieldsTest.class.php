@@ -47,7 +47,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function all_fields() {
+  public function all_fields_by_iterating_field_directly() {
     $this->assertEquals(
       [
         new Field($this->fixture, 'inheritedField'),
@@ -60,6 +60,23 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
         new Field($this->fixture, 'traitField')
       ],
       $this->sorted($this->fixture->fields())
+    );
+  }
+
+  #[@test]
+  public function all_fields() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'inheritedField'),
+        new Field($this->fixture, 'privateClassField'),
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'protectedClassField'),
+        new Field($this->fixture, 'protectedInstanceField'),
+        new Field($this->fixture, 'publicClassField'),
+        new Field($this->fixture, 'publicInstanceField'),
+        new Field($this->fixture, 'traitField')
+      ],
+      $this->sorted($this->fixture->fields()->all())
     );
   }
 
@@ -115,7 +132,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
         new Field($this->fixture, 'publicInstanceField'),
         new Field($this->fixture, 'traitField')
       ],
-      $this->sorted($this->fixture->fields()->select(Fields::ofInstance()))
+      $this->sorted($this->fixture->fields()->all(Fields::ofInstance()))
     );
   }
 
@@ -127,7 +144,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
         new Field($this->fixture, 'protectedClassField'),
         new Field($this->fixture, 'publicClassField')
       ],
-      $this->sorted($this->fixture->fields()->select(Fields::ofClass()))
+      $this->sorted($this->fixture->fields()->all(Fields::ofClass()))
     );
   }
 
@@ -136,7 +153,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     $namedTrait= function($member) { return (bool)strstr($member->name(), 'trait'); };
     $this->assertEquals(
       [new Field($this->fixture, 'traitField')],
-      $this->sorted($this->fixture->fields()->select(Fields::with($namedTrait)))
+      $this->sorted($this->fixture->fields()->all(Fields::with($namedTrait)))
     );
   }
 }
