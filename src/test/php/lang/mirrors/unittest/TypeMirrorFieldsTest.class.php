@@ -123,7 +123,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function instance_field() {
+  public function instance_fields() {
     $this->assertEquals(
       [
         new Field($this->fixture, 'inheritedField'),

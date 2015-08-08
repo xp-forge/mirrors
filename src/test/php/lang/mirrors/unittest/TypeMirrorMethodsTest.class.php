@@ -173,4 +173,13 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
       $this->sorted($this->fixture->methods()->all(Methods::withAnnotation('annotation')))
     );
   }
+
+  #[@test]
+  public function methods_by_predicate() {
+    $namedTrait= function($member) { return (bool)strstr($member->name(), 'trait'); };
+    $this->assertEquals(
+      [new Method($this->fixture, 'traitMethod')],
+      $this->sorted($this->fixture->methods()->all(Methods::with($namedTrait)))
+    );
+  }
 }
