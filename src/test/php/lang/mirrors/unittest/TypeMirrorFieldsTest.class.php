@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\mirrors\Field;
+use lang\mirrors\Fields;
 use lang\mirrors\Member;
 use lang\ElementNotFoundException;
 use lang\mirrors\unittest\fixture\MemberFixture;
@@ -79,7 +80,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function instance_fields() {
+  public function instance_fields_via_deprecated_of() {
     $this->assertEquals(
       [
         new Field($this->fixture, 'inheritedField'),
@@ -93,7 +94,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function static_fields() {
+  public function static_fields_via_deprecated_of() {
     $this->assertEquals(
       [
         new Field($this->fixture, 'privateClassField'),
@@ -101,6 +102,41 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
         new Field($this->fixture, 'publicClassField')
       ],
       $this->sorted($this->fixture->fields()->of(Member::$STATIC))
+    );
+  }
+
+  #[@test]
+  public function instance_field() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'inheritedField'),
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'protectedInstanceField'),
+        new Field($this->fixture, 'publicInstanceField'),
+        new Field($this->fixture, 'traitField')
+      ],
+      $this->sorted($this->fixture->fields()->select(Fields::ofInstance()))
+    );
+  }
+
+  #[@test]
+  public function static_fields() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'privateClassField'),
+        new Field($this->fixture, 'protectedClassField'),
+        new Field($this->fixture, 'publicClassField')
+      ],
+      $this->sorted($this->fixture->fields()->select(Fields::ofClass()))
+    );
+  }
+
+  #[@test]
+  public function fields_by_predicate() {
+    $namedTrait= function($member) { return (bool)strstr($member->name(), 'trait'); };
+    $this->assertEquals(
+      [new Field($this->fixture, 'traitField')],
+      $this->sorted($this->fixture->fields()->select(Fields::with($namedTrait)))
     );
   }
 }

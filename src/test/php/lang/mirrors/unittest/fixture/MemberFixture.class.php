@@ -17,4 +17,9 @@ class MemberFixture extends AbstractMemberFixture {
   public static function publicClassMethod() { }
   protected static function protectedClassMethod() { }
   private static function privateClassMethod() { }
+
+  #[@annotation]
+  public function annotatedInstanceMethod() { }
+  #[@annotation]
+  public static function annotatedClassMethod() { }
 }

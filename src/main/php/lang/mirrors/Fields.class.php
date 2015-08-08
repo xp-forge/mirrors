@@ -2,17 +2,12 @@
 
 use lang\ElementNotFoundException;
 
-class Fields extends \lang\Object implements \IteratorAggregate {
-  private $mirror;
-
-  /**
-   * Creates a new methods instance
-   *
-   * @param  lang.mirrors.TypeMirror $mirror
-   */
-  public function __construct(TypeMirror $mirror) {
-    $this->mirror= $mirror;
-  }
+/**
+ * A type's fields 
+ *
+ * @test  xp://lang.mirrors.unittest.TypeMirrorFieldsTest
+ */
+class Fields extends Members {
 
   /**
    * Checks whether a given field is provided
@@ -64,6 +59,20 @@ class Fields extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Iterates over methods and returns those matching a given filter
+   *
+   * @param  util.Filter $filter
+   * @return php.Generator
+   */
+  public function select($filter) {
+    foreach ($this->mirror->reflect->allFields() as $name => $member) {
+      if (0 === strncmp('__', $name, 2)) continue;
+      $field= new Field($this->mirror, $member);
+      if ($filter->accept($field)) yield $field;
+    }
+  }
+
+  /**
    * Iterates over fields.
    *
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
@@ -79,18 +88,5 @@ class Fields extends \lang\Object implements \IteratorAggregate {
       if (0 === strncmp('__', $name, 2) || $instance === $field['access']->isStatic()) continue;
       yield new Field($this->mirror, $field);
     }
-  }
-
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    $s= nameof($this)."@[\n";
-    foreach ($this as $field) {
-      $s.= '  '.(string)$field."\n";
-    }
-    return $s.']';
   }
 }

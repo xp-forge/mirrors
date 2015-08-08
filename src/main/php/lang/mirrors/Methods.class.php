@@ -2,17 +2,12 @@
 
 use lang\ElementNotFoundException;
 
-class Methods extends \lang\Object implements \IteratorAggregate {
-  private $mirror;
-
-  /**
-   * Creates a new methods instance
-   *
-   * @param  lang.mirrors.TypeMirror $mirror
-   */
-  public function __construct(TypeMirror $mirror) {
-    $this->mirror= $mirror;
-  }
+/**
+ * A type's methods 
+ *
+ * @test  xp://lang.mirrors.unittest.TypeMirrorMethodsTest
+ */
+class Methods extends Members {
 
   /**
    * Checks whether a given method is provided
@@ -63,6 +58,20 @@ class Methods extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
+   * Iterates over methods and returns those matching a given filter
+   *
+   * @param  util.Filter $filter
+   * @return php.Generator
+   */
+  public function select($filter) {
+    foreach ($this->mirror->reflect->allMethods() as $name => $member) {
+      if (0 === strncmp('__', $name, 2)) continue;
+      $method= new Method($this->mirror, $member);
+      if ($filter->accept($method)) yield $method;
+    }
+  }
+
+  /**
    * Iterates over methods.
    *
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
@@ -78,18 +87,5 @@ class Methods extends \lang\Object implements \IteratorAggregate {
       if (0 === strncmp('__', $name, 2) || $instance === $method['access']->isStatic()) continue;
       yield new Method($this->mirror, $method);
     }
-  }
-
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    $s= nameof($this)."@[\n";
-    foreach ($this as $method) {
-      $s.= '  '.(string)$method."\n";
-    }
-    return $s.']';
   }
 }

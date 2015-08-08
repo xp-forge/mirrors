@@ -320,6 +320,8 @@ abstract class SourceTest extends \unittest\TestCase {
   public function all_methods() {
     $this->assertEquals(
       [
+        'annotatedClassMethod',
+        'annotatedInstanceMethod',
         'inheritedMethod',
         'privateClassMethod',
         'privateInstanceMethod',
@@ -337,6 +339,8 @@ abstract class SourceTest extends \unittest\TestCase {
   public function declared_methods() {
     $this->assertEquals(
       [
+        'annotatedClassMethod',
+        'annotatedInstanceMethod',
         'privateClassMethod',
         'privateInstanceMethod',
         'protectedClassMethod',
