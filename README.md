@@ -77,8 +77,8 @@ public class lang.mirrors.Methods extends lang.Object implements php.IteratorAgg
 
   public bool provides(string $name)
   public lang.reflection.Method named(string $name) throws lang.ElementNotFoundException
-  public php.Generator of(int $kind)
-  public php.Generator declared()
+  public php.Generator all([util.Filter $filter= null])
+  public php.Generator declared([util.Filter $filter= null])
   public php.Generator getIterator()
 }
 
@@ -133,8 +133,8 @@ public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggr
 
   public bool provides(string $name)
   public lang.reflection.Field named(string $name) throws lang.ElementNotFoundException
-  public php.Generator of(int $kind)
-  public php.Generator declared()
+  public php.Generator all([util.Filter $filter= null])
+  public php.Generator declared([util.Filter $filter= null])
   public php.Generator getIterator()
 }
 
