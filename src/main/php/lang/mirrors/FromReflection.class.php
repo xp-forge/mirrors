@@ -21,6 +21,12 @@ class FromReflection extends \lang\Object implements Source {
     self::$RETAIN_COMMENTS= (bool)ini_get('opcache.save_comments');
   }
 
+  /**
+   * Creates a new reflection source
+   *
+   * @param  php.ReflectionClass $reflect
+   * @param  lang.mirrors.Sources $source
+   */
   public function __construct(\ReflectionClass $reflect, Sources $source= null) {
     $this->reflect= $reflect;
     $this->name= $reflect->name;
