@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\mirrors\Field;
+use lang\mirrors\Fields;
 use lang\mirrors\Member;
 use lang\ElementNotFoundException;
 use lang\mirrors\unittest\fixture\MemberFixture;
@@ -46,9 +47,11 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function all_fields() {
+  public function all_fields_by_iterating_field_directly() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'annotatedInstanceField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'privateInstanceField'),
@@ -63,9 +66,30 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function all_fields() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'annotatedInstanceField'),
+        new Field($this->fixture, 'inheritedField'),
+        new Field($this->fixture, 'privateClassField'),
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'protectedClassField'),
+        new Field($this->fixture, 'protectedInstanceField'),
+        new Field($this->fixture, 'publicClassField'),
+        new Field($this->fixture, 'publicInstanceField'),
+        new Field($this->fixture, 'traitField')
+      ],
+      $this->sorted($this->fixture->fields()->all())
+    );
+  }
+
+  #[@test]
   public function declared_fields() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'annotatedInstanceField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'protectedClassField'),
@@ -79,9 +103,10 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function instance_fields() {
+  public function instance_fields_via_deprecated_of() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedInstanceField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'protectedInstanceField'),
@@ -93,14 +118,63 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function static_fields() {
+  public function static_fields_via_deprecated_of() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedClassField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'protectedClassField'),
         new Field($this->fixture, 'publicClassField')
       ],
       $this->sorted($this->fixture->fields()->of(Member::$STATIC))
+    );
+  }
+
+  #[@test]
+  public function instance_fields() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'annotatedInstanceField'),
+        new Field($this->fixture, 'inheritedField'),
+        new Field($this->fixture, 'privateInstanceField'),
+        new Field($this->fixture, 'protectedInstanceField'),
+        new Field($this->fixture, 'publicInstanceField'),
+        new Field($this->fixture, 'traitField')
+      ],
+      $this->sorted($this->fixture->fields()->all(Fields::ofInstance()))
+    );
+  }
+
+  #[@test]
+  public function static_fields() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'privateClassField'),
+        new Field($this->fixture, 'protectedClassField'),
+        new Field($this->fixture, 'publicClassField')
+      ],
+      $this->sorted($this->fixture->fields()->all(Fields::ofClass()))
+    );
+  }
+
+  #[@test]
+  public function annotated_fields() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'annotatedInstanceField'),
+      ],
+      $this->sorted($this->fixture->fields()->all(Fields::withAnnotation('annotation')))
+    );
+  }
+
+  #[@test]
+  public function fields_by_predicate() {
+    $namedTrait= function($member) { return (bool)strstr($member->name(), 'trait'); };
+    $this->assertEquals(
+      [new Field($this->fixture, 'traitField')],
+      $this->sorted($this->fixture->fields()->all(Fields::with($namedTrait)))
     );
   }
 }

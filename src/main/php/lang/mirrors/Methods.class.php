@@ -2,17 +2,12 @@
 
 use lang\ElementNotFoundException;
 
-class Methods extends \lang\Object implements \IteratorAggregate {
-  private $mirror;
-
-  /**
-   * Creates a new methods instance
-   *
-   * @param  lang.mirrors.TypeMirror $mirror
-   */
-  public function __construct(TypeMirror $mirror) {
-    $this->mirror= $mirror;
-  }
+/**
+ * A type's methods 
+ *
+ * @test  xp://lang.mirrors.unittest.TypeMirrorMethodsTest
+ */
+class Methods extends Members {
 
   /**
    * Checks whether a given method is provided
@@ -39,32 +34,37 @@ class Methods extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Iterates over all methods
+   * Iterates over methods.
    *
+   * @param  util.Filter $filter
    * @return php.Generator
    */
-  public function getIterator() {
-    foreach ($this->mirror->reflect->allMethods() as $name => $method) {
-      if (0 === strncmp($name, '__', 2)) continue;
-      yield new Method($this->mirror, $method);
+  public function all($filter= null) {
+    foreach ($this->mirror->reflect->allMethods() as $name => $member) {
+      if (0 === strncmp('__', $name, 2)) continue;
+      $method= new Method($this->mirror, $member);
+      if (null === $filter || $filter->accept($method)) yield $method;
     }
   }
 
   /**
    * Iterates over declared methods.
    *
+   * @param  util.Filter $filter
    * @return php.Generator
    */
-  public function declared() {
-    foreach ($this->mirror->reflect->declaredMethods() as $name => $method) {
+  public function declared($filter= null) {
+    foreach ($this->mirror->reflect->declaredMethods() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
-      yield new Method($this->mirror, $method);
+      $method= new Method($this->mirror, $member);
+      if (null === $filter || $filter->accept($method)) yield $method;
     }
   }
 
   /**
    * Iterates over methods.
    *
+   * @deprecated Use all() or declared() instead
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
    * @return php.Generator
    */
@@ -78,18 +78,5 @@ class Methods extends \lang\Object implements \IteratorAggregate {
       if (0 === strncmp('__', $name, 2) || $instance === $method['access']->isStatic()) continue;
       yield new Method($this->mirror, $method);
     }
-  }
-
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    $s= nameof($this)."@[\n";
-    foreach ($this as $method) {
-      $s.= '  '.(string)$method."\n";
-    }
-    return $s.']';
   }
 }

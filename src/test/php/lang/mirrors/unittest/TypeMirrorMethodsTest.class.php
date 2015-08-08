@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\mirrors\Method;
+use lang\mirrors\Methods;
 use lang\mirrors\Member;
 use lang\ElementNotFoundException;
 use lang\mirrors\unittest\fixture\MemberFixture;
@@ -51,9 +52,11 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function all_methods() {
+  public function all_methods_by_iterating_methods_directly() {
     $this->assertEquals(
       [
+        new Method($this->fixture, 'annotatedClassMethod'),
+        new Method($this->fixture, 'annotatedInstanceMethod'),
         new Method($this->fixture, 'inheritedMethod'),
         new Method($this->fixture, 'privateClassMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
@@ -68,9 +71,30 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function all_methods() {
+    $this->assertEquals(
+      [
+        new Method($this->fixture, 'annotatedClassMethod'),
+        new Method($this->fixture, 'annotatedInstanceMethod'),
+        new Method($this->fixture, 'inheritedMethod'),
+        new Method($this->fixture, 'privateClassMethod'),
+        new Method($this->fixture, 'privateInstanceMethod'),
+        new Method($this->fixture, 'protectedClassMethod'),
+        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'publicClassMethod'),
+        new Method($this->fixture, 'publicInstanceMethod'),
+        new Method($this->fixture, 'traitMethod')
+      ],
+      $this->sorted($this->fixture->methods()->all())
+    );
+  }
+
+  #[@test]
   public function declared_methods() {
     $this->assertEquals(
       [
+        new Method($this->fixture, 'annotatedClassMethod'),
+        new Method($this->fixture, 'annotatedInstanceMethod'),
         new Method($this->fixture, 'privateClassMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
         new Method($this->fixture, 'protectedClassMethod'),
@@ -84,9 +108,10 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function instance_methods() {
+  public function instance_methods_via_deprecated_of() {
     $this->assertEquals(
       [
+        new Method($this->fixture, 'annotatedInstanceMethod'),
         new Method($this->fixture, 'inheritedMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
         new Method($this->fixture, 'protectedInstanceMethod'),
@@ -98,14 +123,63 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function static_methods_via_deprecated_of() {
+    $this->assertEquals(
+      [
+        new Method($this->fixture, 'annotatedClassMethod'),
+        new Method($this->fixture, 'privateClassMethod'),
+        new Method($this->fixture, 'protectedClassMethod'),
+        new Method($this->fixture, 'publicClassMethod'),
+      ],
+      $this->sorted($this->fixture->methods()->of(Member::$STATIC))
+    );
+  }
+
+  #[@test]
+  public function instance_methods() {
+    $this->assertEquals(
+      [
+        new Method($this->fixture, 'annotatedInstanceMethod'),
+        new Method($this->fixture, 'inheritedMethod'),
+        new Method($this->fixture, 'privateInstanceMethod'),
+        new Method($this->fixture, 'protectedInstanceMethod'),
+        new Method($this->fixture, 'publicInstanceMethod'),
+        new Method($this->fixture, 'traitMethod')
+      ],
+      $this->sorted($this->fixture->methods()->all(Methods::ofInstance()))
+    );
+  }
+
+  #[@test]
   public function static_methods() {
     $this->assertEquals(
       [
+        new Method($this->fixture, 'annotatedClassMethod'),
         new Method($this->fixture, 'privateClassMethod'),
         new Method($this->fixture, 'protectedClassMethod'),
-        new Method($this->fixture, 'publicClassMethod')
+        new Method($this->fixture, 'publicClassMethod'),
       ],
-      $this->sorted($this->fixture->methods()->of(Member::$STATIC))
+      $this->sorted($this->fixture->methods()->all(Methods::ofClass()))
+    );
+  }
+
+  #[@test]
+  public function annotated_methods() {
+    $this->assertEquals(
+      [
+        new Method($this->fixture, 'annotatedClassMethod'),
+        new Method($this->fixture, 'annotatedInstanceMethod'),
+      ],
+      $this->sorted($this->fixture->methods()->all(Methods::withAnnotation('annotation')))
+    );
+  }
+
+  #[@test]
+  public function methods_by_predicate() {
+    $namedTrait= function($member) { return (bool)strstr($member->name(), 'trait'); };
+    $this->assertEquals(
+      [new Method($this->fixture, 'traitMethod')],
+      $this->sorted($this->fixture->methods()->all(Methods::with($namedTrait)))
     );
   }
 }

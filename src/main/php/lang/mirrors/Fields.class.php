@@ -2,17 +2,12 @@
 
 use lang\ElementNotFoundException;
 
-class Fields extends \lang\Object implements \IteratorAggregate {
-  private $mirror;
-
-  /**
-   * Creates a new methods instance
-   *
-   * @param  lang.mirrors.TypeMirror $mirror
-   */
-  public function __construct(TypeMirror $mirror) {
-    $this->mirror= $mirror;
-  }
+/**
+ * A type's fields 
+ *
+ * @test  xp://lang.mirrors.unittest.TypeMirrorFieldsTest
+ */
+class Fields extends Members {
 
   /**
    * Checks whether a given field is provided
@@ -21,8 +16,7 @@ class Fields extends \lang\Object implements \IteratorAggregate {
    * @return bool
    */
   public function provides($name) {
-    if (0 === strncmp('__', $name, 2)) return false;
-    return $this->mirror->reflect->hasField($name);
+    return 0 === strncmp($name, '__', 2) ? false : $this->mirror->reflect->hasField($name);
   }
 
   /**
@@ -40,32 +34,37 @@ class Fields extends \lang\Object implements \IteratorAggregate {
   }
 
   /**
-   * Iterates over all fields
+   * Iterates over fields.
    *
+   * @param  util.Filter $filter
    * @return php.Generator
    */
-  public function getIterator() {
-    foreach ($this->mirror->reflect->allFields() as $name => $field) {
+  public function all($filter= null) {
+    foreach ($this->mirror->reflect->allFields() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
-      yield new Field($this->mirror, $field);
+      $field= new Field($this->mirror, $member);
+      if (null === $filter || $filter->accept($field)) yield $field;
     }
   }
 
   /**
    * Iterates over declared fields.
    *
+   * @param  util.Filter $filter
    * @return php.Generator
    */
-  public function declared() {
-    foreach ($this->mirror->reflect->declaredFields() as $name => $field) {
+  public function declared($filter= null) {
+    foreach ($this->mirror->reflect->declaredFields() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
-      yield new Field($this->mirror, $field);
+      $field= new Field($this->mirror, $member);
+      if (null === $filter || $filter->accept($field)) yield $field;
     }
   }
 
   /**
    * Iterates over fields.
    *
+   * @deprecated Use all() or declared() instead
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
    * @return php.Generator
    */
@@ -79,18 +78,5 @@ class Fields extends \lang\Object implements \IteratorAggregate {
       if (0 === strncmp('__', $name, 2) || $instance === $field['access']->isStatic()) continue;
       yield new Field($this->mirror, $field);
     }
-  }
-
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    $s= nameof($this)."@[\n";
-    foreach ($this as $field) {
-      $s.= '  '.(string)$field."\n";
-    }
-    return $s.']';
   }
 }
