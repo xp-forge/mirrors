@@ -50,6 +50,8 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function all_fields_by_iterating_field_directly() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'annotatedInstanceField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'privateInstanceField'),
@@ -67,6 +69,8 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function all_fields() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'annotatedInstanceField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'privateInstanceField'),
@@ -84,6 +88,8 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function declared_fields() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'annotatedInstanceField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'protectedClassField'),
@@ -100,6 +106,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function instance_fields_via_deprecated_of() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedInstanceField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'protectedInstanceField'),
@@ -114,6 +121,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function static_fields_via_deprecated_of() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedClassField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'protectedClassField'),
         new Field($this->fixture, 'publicClassField')
@@ -126,6 +134,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function instance_fields() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedInstanceField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'protectedInstanceField'),
@@ -140,11 +149,23 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   public function static_fields() {
     $this->assertEquals(
       [
+        new Field($this->fixture, 'annotatedClassField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'protectedClassField'),
         new Field($this->fixture, 'publicClassField')
       ],
       $this->sorted($this->fixture->fields()->all(Fields::ofClass()))
+    );
+  }
+
+  #[@test]
+  public function annotated_fields() {
+    $this->assertEquals(
+      [
+        new Field($this->fixture, 'annotatedClassField'),
+        new Field($this->fixture, 'annotatedInstanceField'),
+      ],
+      $this->sorted($this->fixture->fields()->all(Fields::withAnnotation('annotation')))
     );
   }
 

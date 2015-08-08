@@ -11,6 +11,11 @@ class MemberFixture extends AbstractMemberFixture {
   protected static $protectedClassField;
   private static $privateClassField;
 
+  #[@annotation]
+  public $annotatedInstanceField;
+  #[@annotation]
+  public static $annotatedClassField;
+
   public function publicInstanceMethod() { }
   protected function protectedInstanceMethod() { }
   private function privateInstanceMethod() { }

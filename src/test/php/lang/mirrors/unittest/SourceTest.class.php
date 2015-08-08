@@ -234,6 +234,8 @@ abstract class SourceTest extends \unittest\TestCase {
   public function all_fields() {
     $this->assertEquals(
       [
+        'annotatedClassField',
+        'annotatedInstanceField',
         'inheritedField',
         'privateClassField',
         'privateInstanceField',
@@ -251,6 +253,8 @@ abstract class SourceTest extends \unittest\TestCase {
   public function declared_fields() {
     $this->assertEquals(
       [
+        'annotatedClassField',
+        'annotatedInstanceField',
         'privateClassField',
         'privateInstanceField',
         'protectedClassField',
