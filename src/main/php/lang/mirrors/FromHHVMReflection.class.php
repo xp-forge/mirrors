@@ -5,6 +5,12 @@ use lang\mirrors\parse\Value;
 class FromHHVMReflection extends FromReflection {
   private $types;
 
+  /**
+   * Creates a new HHVM reflection source
+   *
+   * @param  php.ReflectionClass $reflect
+   * @param  lang.mirrors.Sources $source
+   */
   public function __construct(\ReflectionClass $reflect, Sources $source= null) {
     parent::__construct($reflect, $source);
     $this->types= new HackTypes($reflect);
