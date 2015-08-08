@@ -7,7 +7,7 @@ use lang\mirrors\parse\TagsSource;
  * Base class for all type members: Fields, methods, constructors.
  */
 abstract class Member extends \lang\Object {
-  public static $STATIC= 0x0001, $INSTANCE= 0x0002, $DECLARED= 0x0004;
+  public static $STATIC= 0x0001, $INSTANCE= 0x0002, $DECLARED= 0x0004;  // Deprecated
   public $reflect;
   protected $mirror;
   private $tags= null;
