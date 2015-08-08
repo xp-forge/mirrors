@@ -75,10 +75,15 @@ Methods can be retrieved by invoke `methods()` on a mirror, which returns a Meth
 public class lang.mirrors.Methods extends lang.Object implements php.IteratorAggregate {
   public __construct(lang.mirrors.TypeMirror $mirror)
 
+  public static lang.mirrors.Predicates ofClass()
+  public static lang.mirrors.Predicates ofInstance()
+  public static lang.mirrors.Predicates withAnnotation(string $annotation)
+  public static lang.mirrors.Predicates with(function(lang.mirrors.Member): bool $predicate)
+
   public bool provides(string $name)
   public lang.reflection.Method named(string $name) throws lang.ElementNotFoundException
-  public php.Generator all([util.Filter $filter= null])
-  public php.Generator declared([util.Filter $filter= null])
+  public php.Generator all([lang.mirrors.Predicates $filter= null])
+  public php.Generator declared([lang.mirrors.Predicates $filter= null])
   public php.Generator getIterator()
 }
 
@@ -131,10 +136,15 @@ Fields can be retrieved by invoke `fields()` on a mirror, which returns a Fields
 public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggregate {
   public __construct(lang.mirrors.TypeMirror $mirror)
 
+  public static lang.mirrors.Predicates ofClass()
+  public static lang.mirrors.Predicates ofInstance()
+  public static lang.mirrors.Predicates withAnnotation(string $annotation)
+  public static lang.mirrors.Predicates with(function(lang.mirrors.Member): bool $predicate)
+
   public bool provides(string $name)
   public lang.reflection.Field named(string $name) throws lang.ElementNotFoundException
-  public php.Generator all([util.Filter $filter= null])
-  public php.Generator declared([util.Filter $filter= null])
+  public php.Generator all([lang.mirrors.Predicates $filter= null])
+  public php.Generator declared([lang.mirrors.Predicates $filter= null])
   public php.Generator getIterator()
 }
 
