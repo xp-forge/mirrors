@@ -74,6 +74,7 @@ class Methods extends Members {
   /**
    * Iterates over methods.
    *
+   * @deprecated Use select() instead
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
    * @return php.Generator
    */

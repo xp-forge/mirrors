@@ -75,6 +75,7 @@ class Fields extends Members {
   /**
    * Iterates over fields.
    *
+   * @deprecated Use select() instead
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
    * @return php.Generator
    */
