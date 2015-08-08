@@ -34,7 +34,7 @@ class Methods extends Members {
   }
 
   /**
-   * Iterates over fields.
+   * Iterates over methods.
    *
    * @param  util.Filter $filter
    * @return php.Generator
@@ -48,7 +48,7 @@ class Methods extends Members {
   }
 
   /**
-   * Iterates over declared fields.
+   * Iterates over declared methods.
    *
    * @param  util.Filter $filter
    * @return php.Generator
