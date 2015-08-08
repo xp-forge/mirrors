@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Implemented PR #21 - Add filtering for methods and fields - @thekid
+
 ## 1.2.0 / 2015-08-08
 
 * Fixed issue #18 - Failing tests with opcache.save_comments=0 - @thekid
