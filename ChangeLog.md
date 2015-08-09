@@ -3,7 +3,11 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
-* Implemented PR #21 - Add filtering for methods and fields - @thekid
+* Implemented PR #21 - Add filtering for methods and fields:
+  . Added optional parameter "filter" to `declared()` method
+  . Added new `all()` method with same signature as declared()
+  . Deprecated the of() method and its bitfield parameter.
+  (@thekid)
 
 ## 1.2.0 / 2015-08-08
 
