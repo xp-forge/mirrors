@@ -60,7 +60,7 @@ public class lang.mirrors.Constructor extends lang.mirrors.Routine {
   public [:var] tags()
   public bool present()
   public lang.mirrors.Modifiers modifiers()
-  public lang.Generic newInstance([var* $args= null]) throws ...
+  public lang.Generic newInstance([var... $args= null]) throws ...
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
   public lang.mirrors.TypeMirror declaredIn()

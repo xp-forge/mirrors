@@ -23,7 +23,7 @@ class Constructor extends Routine {
   /**
    * Creates a new instance using this constructor
    *
-   * @param  var* $args
+   * @param  var... $args
    * @return lang.Generic
    */
   public function newInstance(... $args) { return $this->mirror->reflect->newInstance($args); }
