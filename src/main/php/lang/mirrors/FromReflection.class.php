@@ -2,6 +2,7 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
+use lang\mirrors\parse\Value;
 use lang\XPClass;
 use lang\Type;
 use lang\Enum;
@@ -70,7 +71,18 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /** @return var */
-  public function typeAnnotations() { return $this->codeUnit()->declaration()['annotations'][null]; }
+  public function typeAnnotations() {
+    $class= $this->typeName();
+    if (isset(\xp::$meta[$class])) {
+      $annotations= [];
+      foreach (\xp::$meta[$class]['class'][DETAIL_ANNOTATIONS] as $name => $value) {
+        $annotations[$name]= null === $value ? null : new Value($value);
+      }
+      return $annotations;
+    } else {
+      return $this->codeUnit()->declaration()['annotations'][null];
+    }
+  }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
