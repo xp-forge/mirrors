@@ -238,12 +238,18 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function fieldAnnotations($reflect) {
-    $fields= $this
-      ->resolve('\\'.$reflect->getDeclaringClass()->name)
-      ->codeUnit()
-      ->declaration()['field']
-    ;
-    return isset($fields[$reflect->name]) ? $fields[$reflect->name]['annotations'][null] : null;
+    $declaredIn= $this->resolve('\\'.$reflect->getDeclaringClass()->name);
+    $class= $declaredIn->typeName();
+    if (isset(\xp::$meta[$class])) {
+      $annotations= [];
+      foreach (\xp::$meta[$class][0][$reflect->name][DETAIL_ANNOTATIONS] as $name => $value) {
+        $annotations[$name]= null === $value ? null : new Value($value);
+      }
+      return $annotations;
+    } else {
+      $fields= $declaredIn->codeUnit()->declaration()['field'];
+      return isset($fields[$reflect->name]) ? $fields[$reflect->name]['annotations'][null] : null;
+    }
   }
 
   /**
