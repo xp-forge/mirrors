@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\Parameter;
+use lang\mirrors\Annotation;
 use lang\mirrors\TypeMirror;
 use lang\Type;
 use lang\Object;
@@ -36,6 +37,9 @@ class MethodParametersTest extends AbstractMethodTest {
    * @return void
    */
   private function longFormParameterFixture($fixture, $other) { }
+
+  #[@$fixture: annotation]
+  private function annotatedParameterFixture($fixture) { }
 
   #[@test, @values([
   #  ['noParameterFixture', false],
@@ -118,6 +122,14 @@ class MethodParametersTest extends AbstractMethodTest {
     $this->assertEquals(
       Type::forName('lang.mirrors.Parameter'),
       $this->fixture('resolvedParameterFixture')->parameters()->named('fixture')->type()
+    );
+  }
+
+  #[@test]
+  public function annotations() {
+    $this->assertEquals(
+      [new Annotation($this->type, 'annotation', null)],
+      iterator_to_array($this->fixture('annotatedParameterFixture')->parameters()->first()->annotations())
     );
   }
 }
