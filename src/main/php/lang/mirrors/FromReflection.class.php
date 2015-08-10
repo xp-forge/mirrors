@@ -363,14 +363,20 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function paramAnnotations($reflect) {
-    $methods= $this
-      ->resolve('\\'.$reflect->getDeclaringClass()->name)
-      ->codeUnit()
-      ->declaration()['method']
-    ;
     $method= $reflect->getDeclaringFunction()->name;
     $target= '$'.$reflect->name;
-    return isset($methods[$method]['annotations'][$target]) ? $methods[$method]['annotations'][$target] : null;
+    $declaredIn= $this->resolve('\\'.$reflect->getDeclaringClass()->name);
+    $class= $declaredIn->typeName();
+    if (isset(\xp::$meta[$class])) {
+      $annotations= [];
+      foreach (\xp::$meta[$class][1][$method][DETAIL_TARGET_ANNO][$target] as $name => $value) {
+        $annotations[$name]= null === $value ? null : new Value($value);
+      }
+      return $annotations;
+    } else {
+      $methods= $declaredIn->codeUnit()->declaration()['method'];
+      return isset($methods[$method]['annotations'][$target]) ? $methods[$method]['annotations'][$target] : null;
+    }
   }
 
   /**
