@@ -419,16 +419,6 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function one_variadic_param() {
-    $method= $this->reflect(FixtureParams::class)->methodNamed('oneVariadicParam');
-    $param= $method['params']()[0];
-    $this->assertEquals(
-      [0, 'arg', null, false, true, null],
-      [$param['pos'], $param['name'], $param['type'], $param['ref'], $param['var'], $param['default']]
-    );
-  }
-
-  #[@test]
   public function typed_param() {
     $method= $this->reflect(FixtureParams::class)->methodNamed('oneTypeHintedParam');
     $param= $method['params']()[0];

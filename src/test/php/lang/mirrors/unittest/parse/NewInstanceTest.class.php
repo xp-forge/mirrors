@@ -17,7 +17,7 @@ class NewInstanceTest extends ResolveableTest {
   public function passes_args_to_constructor() {
     $fixture= newinstance('lang.Object', [], [
       'passed'      => null,
-      '__construct' => function(... $args) { $this->passed= $args; }
+      '__construct' => function() { $this->passed= func_get_args(); }
     ]);
     $this->assertEquals(
       ['Test', 1],

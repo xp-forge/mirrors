@@ -15,8 +15,6 @@ class FixtureParams extends \lang\Object {
 
   private function oneArrayOptionalParam($arg= [1, 2, 3]) { }
 
-  private function oneVariadicParam(... $arg) { }
-
   private function oneTypeHintedParam(Type $arg) { }
 
   private function oneSelfTypeHintedParam(self $arg) { }
