@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.3.0 / 2015-08-25
+
 * Implemented PR #22 - Annotations via compiled meta data. This is a
   huge performance improvement for code previously handled with core
   reflection or loaded via XP compiler.
