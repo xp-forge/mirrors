@@ -17,6 +17,10 @@ use lang\Primitive;
 class PhpSyntax extends \text\parse\Syntax {
   protected $typeName, $collectMembers, $collectElements, $collectAnnotations;
 
+  static function __static() {
+    defined('T_ELLIPSIS') ||define('T_ELLIPSIS', 389);
+  }
+
   /**
    * Initialize members.
    */
