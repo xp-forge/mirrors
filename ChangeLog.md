@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Implemented PR #22 - Annotations via compiled meta data. This is a
+  huge performance improvement for code previously handled with core
+  reflection or loaded via XP compiler.
+  (@thekid)
 * Implemented PR #21 - Add filtering for methods and fields:
   . Added optional parameter "filter" to `declared()` method
   . Added new `all()` method with same signature as declared()
