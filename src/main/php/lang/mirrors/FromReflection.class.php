@@ -16,10 +16,11 @@ class FromReflection extends \lang\Object implements Source {
   private $unit= null;
   public $name;
 
-  private static $RETAIN_COMMENTS;
+  private static $RETAIN_COMMENTS, $VARIADIC_SUPPORTED;
 
   static function __static() {
     self::$RETAIN_COMMENTS= (bool)ini_get('opcache.save_comments');
+    self::$VARIADIC_SUPPORTED= method_exists(\ReflectionParameter::class, 'isVariadic');
   }
 
   /**
@@ -400,7 +401,7 @@ class FromReflection extends \lang\Object implements Source {
       $type= null;
     }
 
-    if ($var= $reflect->isVariadic()) {
+    if ($var= self::$VARIADIC_SUPPORTED && $reflect->isVariadic()) {
       $default= null;
     } else if ($reflect->isOptional()) {
       $default= function() use($reflect) { return $reflect->getDefaultValue(); };
