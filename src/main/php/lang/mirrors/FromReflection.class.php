@@ -2,6 +2,7 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
+use lang\mirrors\parse\Value;
 use lang\XPClass;
 use lang\Type;
 use lang\Enum;
@@ -69,8 +70,29 @@ class FromReflection extends \lang\Object implements Source {
     }
   }
 
+  /**
+   * Extracts annotations from compiled meta information
+   *
+   * @param  [:var] $compiled
+   * @param  [:lang.mirrors.parse.Value] $annotations
+   */
+  private function annotationsOf($compiled) {
+    $annotations= [];
+    foreach ($compiled as $name => $value) {
+      $annotations[$name]= null === $value ? null : new Value($value);
+    }
+    return $annotations;
+  }
+
   /** @return var */
-  public function typeAnnotations() { return $this->codeUnit()->declaration()['annotations'][null]; }
+  public function typeAnnotations() {
+    $class= $this->typeName();
+    if (isset(\xp::$meta[$class])) {
+      return $this->annotationsOf(\xp::$meta[$class]['class'][DETAIL_ANNOTATIONS]);
+    } else {
+      return $this->codeUnit()->declaration()['annotations'][null];
+    }
+  }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
@@ -226,12 +248,14 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function fieldAnnotations($reflect) {
-    $fields= $this
-      ->resolve('\\'.$reflect->getDeclaringClass()->name)
-      ->codeUnit()
-      ->declaration()['field']
-    ;
-    return isset($fields[$reflect->name]) ? $fields[$reflect->name]['annotations'][null] : null;
+    $declaredIn= $this->resolve('\\'.$reflect->getDeclaringClass()->name);
+    $class= $declaredIn->typeName();
+    if (isset(\xp::$meta[$class])) {
+      return $this->annotationsOf(\xp::$meta[$class][0][$reflect->name][DETAIL_ANNOTATIONS]);
+    } else {
+      $fields= $declaredIn->codeUnit()->declaration()['field'];
+      return isset($fields[$reflect->name]) ? $fields[$reflect->name]['annotations'][null] : null;
+    }
   }
 
   /**
@@ -345,14 +369,17 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function paramAnnotations($reflect) {
-    $methods= $this
-      ->resolve('\\'.$reflect->getDeclaringClass()->name)
-      ->codeUnit()
-      ->declaration()['method']
-    ;
     $method= $reflect->getDeclaringFunction()->name;
     $target= '$'.$reflect->name;
-    return isset($methods[$method]['annotations'][$target]) ? $methods[$method]['annotations'][$target] : null;
+    $declaredIn= $this->resolve('\\'.$reflect->getDeclaringClass()->name);
+    $class= $declaredIn->typeName();
+    if (isset(\xp::$meta[$class])) {
+      $annotations= \xp::$meta[$class][1][$method][DETAIL_TARGET_ANNO];
+      return isset($annotations[$target]) ? $this->annotationsOf($annotations[$target]) : null;
+    } else {
+      $methods= $declaredIn->codeUnit()->declaration()['method'];
+      return isset($methods[$method]['annotations'][$target]) ? $methods[$method]['annotations'][$target] : null;
+    }
   }
 
   /**
@@ -399,12 +426,14 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function methodAnnotations($reflect) {
-    $methods= $this
-      ->resolve('\\'.$reflect->getDeclaringClass()->name)
-      ->codeUnit()
-      ->declaration()['method']
-    ;
-    return isset($methods[$reflect->name]) ? $methods[$reflect->name]['annotations'][null] : null;
+    $declaredIn= $this->resolve('\\'.$reflect->getDeclaringClass()->name);
+    $class= $declaredIn->typeName();
+    if (isset(\xp::$meta[$class])) {
+      return $this->annotationsOf(\xp::$meta[$class][1][$reflect->name][DETAIL_ANNOTATIONS]);
+    } else {
+      $methods= $declaredIn->codeUnit()->declaration()['method'];
+      return isset($methods[$reflect->name]) ? $methods[$reflect->name]['annotations'][null] : null;
+    }
   }
 
   /**
