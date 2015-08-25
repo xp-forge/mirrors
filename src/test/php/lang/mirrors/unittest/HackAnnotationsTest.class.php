@@ -13,7 +13,7 @@ abstract class HackAnnotationsTest extends \unittest\TestCase {
 
   /** @return var[][] */
   private function targets() {
-    $mirror= new TypeMirror('lang.mirrors.unittext.fixture.FixtureHackAnnotations', $this->source());
+    $mirror= new TypeMirror('lang.mirrors.unittest.fixture.FixtureHackAnnotations', $this->source());
     return [
       [$mirror],
       [$mirror->constructor()],
@@ -55,7 +55,7 @@ abstract class HackAnnotationsTest extends \unittest\TestCase {
 
   #[@test, @values(['type', 'num'])]
   public function hack_keyword_works_as_key($keyword) {
-    $this->assertEquals($keyword, key((new TypeMirror('lang.mirrors.unittext.fixture.FixtureHackAnnotations', $this->source()))
+    $this->assertEquals($keyword, key((new TypeMirror('lang.mirrors.unittest.fixture.FixtureHackAnnotations', $this->source()))
       ->fields()->named($keyword)
       ->annotations()->named('field')
       ->value()
