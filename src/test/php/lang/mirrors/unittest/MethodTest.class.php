@@ -31,7 +31,7 @@ class MethodTest extends AbstractMethodTest {
 
   #[@test]
   public function can_create_from_reflection_method() {
-    new Method($this->type, new \ReflectionMethod(self::class, __FUNCTION__));
+    new Method($this->type, new \ReflectionMethod(__CLASS__, __FUNCTION__));
   }
 
   #[@test, @expect(ElementNotFoundException::class)]
@@ -70,7 +70,7 @@ class MethodTest extends AbstractMethodTest {
   #[@test]
   public function one_thrown_exception() {
     $this->assertEquals(
-      [new TypeMirror(IllegalArgumentException::class)],
+      [new TypeMirror('lang.IllegalArgumentException')],
       iterator_to_array($this->fixture('raisesOne')->throws())
     );
   }
@@ -78,7 +78,7 @@ class MethodTest extends AbstractMethodTest {
   #[@test]
   public function more_than_one_thrown_exception() {
     $this->assertEquals(
-      [new TypeMirror(IllegalArgumentException::class), new TypeMirror(IllegalAccessException::class)],
+      [new TypeMirror('lang.IllegalArgumentException'), new TypeMirror('lang.IllegalAccessException')],
       iterator_to_array($this->fixture('raisesMore')->throws())
     );
   }

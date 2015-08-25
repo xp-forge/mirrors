@@ -12,7 +12,7 @@ class HackTypesTest extends \unittest\TestCase {
   private $types;
 
   public function setUp() {
-    $this->types= new HackTypes(new \ReflectionClass(self::class));
+    $this->types= new HackTypes(new \ReflectionClass(__CLASS__));
   }
 
   #[@test]
@@ -97,17 +97,17 @@ class HackTypesTest extends \unittest\TestCase {
 
   #[@test]
   public function self_reference() {
-    $this->assertEquals(new XPClass(self::class), $this->types->map('self'));
+    $this->assertEquals(new XPClass(__CLASS__), $this->types->map('self'));
   }
 
   #[@test]
   public function parent_reference() {
-    $this->assertEquals(new XPClass(parent::class), $this->types->map('parent'));
+    $this->assertEquals(new XPClass(get_parent_class($this)), $this->types->map('parent'));
   }
 
   #[@test]
   public function hh_this_reference() {
-    $this->assertEquals(new XPClass(self::class), $this->types->map('HH\this'));
+    $this->assertEquals(new XPClass(__CLASS__), $this->types->map('HH\this'));
   }
 
   #[@test, @values([

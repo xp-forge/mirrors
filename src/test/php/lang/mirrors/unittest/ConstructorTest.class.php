@@ -19,13 +19,13 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test]
   public function this_class_constructors_declaring_type() {
-    $type= new TypeMirror(self::class);
+    $type= new TypeMirror(__CLASS__);
     $this->assertEquals($type->parent(), (new Constructor($type))->declaredIn());
   }
 
   #[@test]
   public function this_classes_constructor_has_one_parameter() {
-    $type= new TypeMirror(self::class);
+    $type= new TypeMirror(__CLASS__);
     $this->assertEquals(1, (new Constructor($type))->parameters()->length());
   }
 
@@ -81,17 +81,17 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_interfaces() {
-    (new Constructor(new TypeMirror(FixtureInterface::class)))->newInstance();
+    (new Constructor(new TypeMirror('lang.mirrors.unittest.fixture.FixtureInterface')))->newInstance();
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_traits() {
-    (new Constructor(new TypeMirror(FixtureTrait::class)))->newInstance();
+    (new Constructor(new TypeMirror('lang.mirrors.unittest.fixture.FixtureTrait')))->newInstance();
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_abstract_classes() {
-    (new Constructor(new TypeMirror(FixtureAbstract::class)))->newInstance();
+    (new Constructor(new TypeMirror('lang.mirrors.unittest.fixture.FixtureAbstract')))->newInstance();
   }
 
   #[@test]

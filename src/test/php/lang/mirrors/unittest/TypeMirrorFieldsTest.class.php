@@ -23,7 +23,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
   }
 
   public function setUp() {
-    $this->fixture= new TypeMirror(MemberFixture::class);
+    $this->fixture= new TypeMirror('lang.mirrors.unittest.fixture.MemberFixture');
   }
 
   #[@test]

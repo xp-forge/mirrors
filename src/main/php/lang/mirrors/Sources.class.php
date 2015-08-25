@@ -23,7 +23,7 @@ abstract class Sources extends \lang\Enum {
       $reflect= 'FromPhp7';
     }
 
-    self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], sprintf('{
+    self::$REFLECTION= newinstance(__CLASS__, [1, 'REFLECTION'], sprintf('{
       static function __static() { }
 
       public function reflect($class, $source= null) {
@@ -46,7 +46,7 @@ abstract class Sources extends \lang\Enum {
         }
       }
     }', $reflect));
-    self::$CODE= newinstance(self::class, [2, 'CODE'], sprintf('{
+    self::$CODE= newinstance(__CLASS__, [2, 'CODE'], sprintf('{
       static function __static() { }
 
       public function reflect($class, $source= null) {

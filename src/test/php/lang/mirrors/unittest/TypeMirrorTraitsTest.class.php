@@ -8,22 +8,22 @@ class TypeMirrorTraitsTest extends \unittest\TestCase {
   private $fixture;
 
   public function setUp() {
-    $this->fixture= new TypeMirror(self::class);
+    $this->fixture= new TypeMirror(__CLASS__);
   }
 
   #[@test]
   public function contains_trait_class() {
-    $this->assertTrue($this->fixture->traits()->contains(FixtureTrait::class));
+    $this->assertTrue($this->fixture->traits()->contains('lang.mirrors.unittest.fixture.FixtureTrait'));
   }
 
   #[@test]
   public function contains_trait_mirror() {
-    $this->assertTrue($this->fixture->traits()->contains(new TypeMirror(FixtureTrait::class)));
+    $this->assertTrue($this->fixture->traits()->contains(new TypeMirror('lang.mirrors.unittest.fixture.FixtureTrait')));
   }
 
 
   #[@test]
   public function all_traits() {
-    $this->assertEquals([new TypeMirror(FixtureTrait::class)], iterator_to_array($this->fixture->traits()));
+    $this->assertEquals([new TypeMirror('lang.mirrors.unittest.fixture.FixtureTrait')], iterator_to_array($this->fixture->traits()));
   }
 }

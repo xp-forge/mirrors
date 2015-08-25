@@ -2,6 +2,7 @@
 
 use lang\mirrors\Sources;
 
+#[@action(new OnlyOnHHVM())]
 class HackTypingCodeTest extends HackTypingTest {
 
   /** @return lang.mirrors.Sources */

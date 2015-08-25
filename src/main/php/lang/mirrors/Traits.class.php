@@ -31,10 +31,12 @@ class Traits extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
+    $return= [];
     foreach ($this->mirror->reflect->allTraits() as $trait) {
       if (0 === strncmp($trait->name, '__', 2)) continue;
-      yield new TypeMirror($trait);
+      $return[]= new TypeMirror($trait);
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -43,9 +45,11 @@ class Traits extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function declared() {
+    $return= [];
     foreach ($this->mirror->reflect->declaredTraits() as $trait) {
       if (0 === strncmp($trait->name, '__', 2)) continue;
-      yield new TypeMirror($trait);
+      $return[]= new TypeMirror($trait);
     }
+    return new \ArrayIterator($return);
   }
 }

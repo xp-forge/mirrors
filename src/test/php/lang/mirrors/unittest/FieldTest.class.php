@@ -22,7 +22,7 @@ class FieldTest extends AbstractFieldTest {
 
   #[@test]
   public function can_create_from_reflection_field() {
-    new Field($this->type, new \ReflectionProperty(self::class, 'fixture'));
+    new Field($this->type, new \ReflectionProperty(__CLASS__, 'fixture'));
   }
 
   #[@test, @expect(ElementNotFoundException::class)]

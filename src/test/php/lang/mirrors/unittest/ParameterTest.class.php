@@ -22,7 +22,7 @@ class ParameterTest extends \unittest\TestCase {
    */
   private function newFixture($method, $num) {
     if (null === self::$type) {
-      self::$type= new TypeMirror(FixtureParams::class);
+      self::$type= new TypeMirror('lang.mirrors.unittest.fixture.FixtureParams');
     }
 
     return new Parameter(new Method(self::$type, $method), $num);
@@ -30,14 +30,14 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_from_method_and_offset() {
-    new Parameter(new Method(new TypeMirror(FixtureParams::class), 'oneParam'), 0);
+    new Parameter(new Method(new TypeMirror('lang.mirrors.unittest.fixture.FixtureParams'), 'oneParam'), 0);
   }
 
   #[@test]
   public function can_create_from_method_and_parameter() {
     new Parameter(
-      new Method(new TypeMirror(FixtureParams::class), 'oneParam'),
-      new \ReflectionParameter([FixtureParams::class, 'oneParam'], 0)
+      new Method(new TypeMirror('lang.mirrors.unittest.fixture.FixtureParams'), 'oneParam'),
+      new \ReflectionParameter(['lang\mirrors\unittest\fixture\FixtureParams', 'oneParam'], 0)
     );
   }
 
@@ -84,12 +84,12 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test]
   public function type_hint() {
-    $this->assertEquals(new XPClass(Type::class), $this->newFixture('oneTypeHintedParam', 0)->type());
+    $this->assertEquals(new XPClass('lang.Type'), $this->newFixture('oneTypeHintedParam', 0)->type());
   }
 
   #[@test]
   public function self_type_hint() {
-    $this->assertEquals(new XPClass(FixtureParams::class), $this->newFixture('oneSelfTypeHintedParam', 0)->type());
+    $this->assertEquals(new XPClass('lang.mirrors.unittest.fixture.FixtureParams'), $this->newFixture('oneSelfTypeHintedParam', 0)->type());
   }
 
   #[@test]
@@ -104,12 +104,12 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test]
   public function documented_type_hint_using_short_form() {
-    $this->assertEquals(new XPClass(Type::class), $this->newFixture('oneDocumentedTypeParam', 0)->type());
+    $this->assertEquals(new XPClass('lang.Type'), $this->newFixture('oneDocumentedTypeParam', 0)->type());
   }
 
   #[@test]
   public function documented_type_hint_using_long_form() {
-    $this->assertEquals(new XPClass(Type::class), $this->newFixture('twoDocumentedTypeParams', 0)->type());
+    $this->assertEquals(new XPClass('lang.Type'), $this->newFixture('twoDocumentedTypeParams', 0)->type());
   }
 
   #[@test, @expect(IllegalStateException::class), @values([
@@ -143,7 +143,7 @@ class ParameterTest extends \unittest\TestCase {
   public function annotated_parameter() {
     $fixture= $this->newFixture('oneAnnotatedParam', 0);
     $this->assertEquals(
-      [new Annotation(new TypeMirror(self::class), 'test', null)],
+      [new Annotation(new TypeMirror(__CLASS__), 'test', null)],
       iterator_to_array($fixture->annotations())
     );
   }
