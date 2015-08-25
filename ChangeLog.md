@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.3.1 / 2015-08-25
+
 * Fixed default constructor's modifiers() method returning an integer
   instead of a `lang.reflect.Modifiers` instance as declared.
   (@thekid)
