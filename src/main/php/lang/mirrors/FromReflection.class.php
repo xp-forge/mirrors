@@ -199,7 +199,7 @@ class FromReflection extends \lang\Object implements Source {
     if (null === $ctor) {
       return [
         'name'        => '__default',
-        'access'      => Modifiers::IS_PUBLIC,
+        'access'      => new Modifiers(Modifiers::IS_PUBLIC),
         'holder'      => $this->reflect->name,
         'comment'     => function() { return null; },
         'params'      => function() { return []; },

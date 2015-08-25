@@ -201,7 +201,7 @@ class FromCode extends \lang\Object implements Source {
 
     return [
       'name'        => '__default',
-      'access'      => Modifiers::IS_PUBLIC,
+      'access'      => new Modifiers(Modifiers::IS_PUBLIC),
       'holder'      => $this->name,
       'comment'     => function() { return null; },
       'annotations' => function() { return []; },

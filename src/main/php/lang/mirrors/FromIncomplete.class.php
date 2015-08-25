@@ -90,7 +90,7 @@ class FromIncomplete extends \lang\Object implements Source {
   public function constructor() {
     return [
       'name'    => '__default',
-      'access'  => Modifiers::IS_PUBLIC,
+      'access'  => new Modifiers(Modifiers::IS_PUBLIC),
       'holder'  => $this->name,
       'comment' => function() { return null; },
       'params'  => function() { return []; }

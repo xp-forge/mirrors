@@ -2,6 +2,7 @@
 
 use lang\mirrors\Constructor;
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Modifiers;
 use lang\IllegalArgumentException;
 use lang\mirrors\TargetInvocationException;
 use lang\mirrors\unittest\fixture\FixtureInterface;
@@ -33,6 +34,12 @@ class ConstructorTest extends \unittest\TestCase {
   public function object_classes_constructor_has_no_params() {
     $type= new TypeMirror('lang.Object');
     $this->assertEquals(0, (new Constructor($type))->parameters()->length());
+  }
+
+  #[@test]
+  public function object_classes_constructor_is_public() {
+    $type= new TypeMirror('lang.Object');
+    $this->assertEquals(new Modifiers('public'), (new Constructor($type))->modifiers());
   }
 
   #[@test]
