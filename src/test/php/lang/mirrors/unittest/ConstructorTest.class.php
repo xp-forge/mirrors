@@ -52,10 +52,10 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test]
   public function creating_instances_invokes_constructor() {
-    $fixture= newinstance('lang.Object', [], [
-      'passed'      => null,
-      '__construct' => function(... $args) { $this->passed= $args; }
-    ]);
+    $fixture= newinstance('lang.Object', [], '{
+      public $passed= null;
+      public function __construct() { $this->passed= func_get_args(); }
+    }');
     $this->assertEquals(
       [1, 2, 3],
       (new Constructor(new TypeMirror(typeof($fixture))))->newInstance(1, 2, 3)->passed
