@@ -459,7 +459,7 @@ class FromCode extends \lang\Object implements Source {
   public function constantNamed($name) {
     if (isset($this->decl['const'][$name])) return $this->decl['const'][$name]['value']->resolve($this->mirror);
     foreach ($this->merge(true, true) as $reflect) {
-      foreach ($reflect->allFields() as $cmp => $const) {
+      foreach ($reflect->allConstants() as $cmp => $const) {
         if ($cmp === $name) return $const;
       }
     }
@@ -469,8 +469,10 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allConstants() {
-    foreach ($this->decl['const'] as $name => $const) {
-      yield $name => $const['value']->resolve($this->mirror);
+    if (isset($this->decl['const'])) {
+      foreach ($this->decl['const'] as $name => $const) {
+        yield $name => $const['value']->resolve($this->mirror);
+      }
     }
     foreach ($this->merge(true, false) as $reflect) {
       foreach ($reflect->allConstants() as $name => $const) {

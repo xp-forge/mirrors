@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed allConstants() and constantNamed() in `lang.mirrors.FromCode`
+  (@thekid)
+
 ## 1.3.1 / 2015-08-25
 
 * Fixed default constructor's modifiers() method returning an integer
