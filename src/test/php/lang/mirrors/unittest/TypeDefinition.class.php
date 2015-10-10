@@ -5,14 +5,8 @@ use lang\mirrors\unittest\fixture\Identity;
 use lang\ClassLoader;
 use lang\Object;
 
-abstract class AbstractMemberTest extends \unittest\TestCase {
+trait TypeDefinition {
   private static $uniq= 0;
-  protected $type;
-
-  /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(static::class);
-  }
 
   /**
    * Defines a type

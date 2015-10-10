@@ -2,12 +2,11 @@
 
 use lang\Primitive;
 use lang\Type;
-use lang\Object;
 use lang\XPClass;
-use lang\ClassLoader;
 use lang\mirrors\TypeMirror;
 
 abstract class Php7TypesTest extends \unittest\TestCase {
+  use TypeDefinition;
 
   /**
    * Returns a fixture for a given class declaration
@@ -16,16 +15,6 @@ abstract class Php7TypesTest extends \unittest\TestCase {
    * @return lang.mirrors.TypeMirror
    */
   protected abstract function newFixture($class);
-
-  /**
-   * Defines a type
-   *
-   * @param  string $declaration
-   * @return lang.XPClass
-   */
-  protected function define($declaration) {
-    return ClassLoader::defineClass($this->name, Object::class, [], $declaration);
-  }
 
   #[@test]
   public function primitive_return_type() {

@@ -48,7 +48,7 @@ class FieldTest extends AbstractFieldTest {
 
   #[@test]
   public function type_fields_declaring_type() {
-    $this->assertEquals($this->type->parent()->parent(), $this->fixture('type')->declaredIn());
+    $this->assertEquals($this->type->parent(), $this->fixture('type')->declaredIn());
   }
 
   #[@test]
