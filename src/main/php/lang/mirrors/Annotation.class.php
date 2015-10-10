@@ -22,7 +22,7 @@ class Annotation extends \lang\Object {
   public function name() { return $this->name; }
 
   /** @return var */
-  public function value() { return $this->value ? $this->value->resolve($this->mirror->unit()) : null; }
+  public function value() { return $this->value ? $this->value->resolve($this->mirror) : null; }
 
   /**
    * Returns the type this member was declared in.

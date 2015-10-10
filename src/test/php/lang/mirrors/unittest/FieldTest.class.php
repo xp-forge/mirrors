@@ -41,16 +41,6 @@ class FieldTest extends AbstractFieldTest {
   }
 
   #[@test]
-  public function type() {
-    $this->assertEquals(Type::forName('lang.mirrors.Field'), $this->fixture('fixture')->type());
-  }
-
-  #[@test]
-  public function type_is_resolved() {
-    $this->assertEquals(Type::forName('lang.mirrors.Field'), $this->fixture('resolved')->type());
-  }
-
-  #[@test]
   public function fixture_fields_declaring_type() {
     $this->assertEquals($this->type, $this->fixture('fixture')->declaredIn());
   }
@@ -73,6 +63,24 @@ class FieldTest extends AbstractFieldTest {
     $this->assertEquals(
       'lang.mirrors.Field(protected var $type)',
       $this->fixture('type')->toString()
+    );
+  }
+
+  #[@test, @values([
+  #  ['/** @var lang.mirrors.Field */', Field::class],
+  #  ['/** @var \lang\mirrors\Field */', Field::class],
+  #  ['/** @var Field */', Field::class],
+  #  ['/** @var int */', 'int'],
+  #  ['/** @var string[] */', 'string[]'],
+  #  ['/** @var [:bool] */', '[:bool]'],
+  #  ['/** @type lang.mirrors.Field */', Field::class],
+  #  ['/** @type \lang\mirrors\Field */', Field::class],
+  #  ['/** @type Field */', Field::class]
+  #])]
+  public function type_determined_via_apidoc($comment, $expected) {
+    $this->assertEquals(
+      Type::forName($expected),
+      $this->define('{ '.$comment.' public $fixture; }')->fields()->named('fixture')->type()
     );
   }
 }

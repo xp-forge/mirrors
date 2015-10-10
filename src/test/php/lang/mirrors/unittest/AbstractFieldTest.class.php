@@ -1,8 +1,12 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Field;
+use lang\ClassLoader;
+use lang\Object;
 
 abstract class AbstractFieldTest extends \unittest\TestCase {
+  private static $uniq= 0;
   protected $type;
 
   /** @return void */
@@ -18,5 +22,22 @@ abstract class AbstractFieldTest extends \unittest\TestCase {
    */
   protected function fixture($name) {
     return $this->type->fields()->named($name);
+  }
+
+  /**
+   * Defines a type
+   *
+   * @param  string $body
+   * @return lang.mirrors.TypeMirror
+   */
+  protected function define($body) {
+    $declaration= [
+      'kind'       => 'class',
+      'extends'    => [Object::class],
+      'implements' => [],
+      'use'        => [],
+      'imports'    => [Field::class => 'Field']
+    ];
+    return new TypeMirror(ClassLoader::defineType(nameof($this).self::$uniq++, $declaration, $body));
   }
 }
