@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #23: Backport to PHP 5.5. Minimum PHP version required is
+  now **PHP 5.5.0**.
+  (@thekid)
 * Fixed member references to class constants, the `::class` literal and
   static type members inside annotations
   (@thekid)
