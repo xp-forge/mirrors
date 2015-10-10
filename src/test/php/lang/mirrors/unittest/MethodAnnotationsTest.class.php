@@ -92,9 +92,17 @@ class MethodAnnotationsTest extends AbstractMethodTest {
   #  ['#[@fixture(Identity::class)]', Identity::class]
   #])]
   public function values($annotation, $expected) {
+    $type= $this->define("{ ".$annotation."\npublic function fixture() { } }");
     $this->assertEquals(
       $expected,
-      $this->define("{ ".$annotation."\npublic function fixture() { } }")->methods()->named('fixture')->annotations()->named('fixture')->value()
+      $type->methods()->named('fixture')->annotations()->named('fixture')->value()
     );
+  }
+
+  #[@test]
+  public function closures() {
+    $type= $this->define("{ #[@fixture(function() { return 'Test'; })]\npublic function fixture() { } }");
+    $function= $type->methods()->named('fixture')->annotations()->named('fixture')->value();
+    $this->assertEquals('Test', $function());
   }
 }
