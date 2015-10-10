@@ -19,11 +19,12 @@ class Member extends Resolveable {
   public function resolve($type) {
     $resolved= $type->resolve($this->type);
     if ('class' === $this->name) {
-      return literal($resolved->name());
+      return literal($resolved->typeName());
     } else if ('$' === $this->name{0}) {
-      return $resolved->fields()->named(substr($this->name, 1))->value(null);
+      $field= $resolved->fieldNamed(substr($this->name, 1));
+      return $field['read'](null);
     } else {
-      return $resolved->constants()->named($this->name)->value();
+      return $resolved->constantNamed($this->name);
     }
   }
 

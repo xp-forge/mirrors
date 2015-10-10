@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed member references to class constants, the `::class` literal and
+  static type members inside annotations
+  (@thekid)
 * Fixed allConstants() and constantNamed() in `lang.mirrors.FromCode`
   (@thekid)
 
