@@ -2,7 +2,7 @@
 
 use lang\mirrors\Annotation;
 use lang\mirrors\TypeMirror;
-use lang\mirrors\unittest\fixture\IdentityFixture;
+use lang\mirrors\unittest\fixture\Identity;
 use lang\mirrors\parse\Value;
 use lang\mirrors\parse\Member;
 use lang\mirrors\parse\NewInstance;
@@ -51,8 +51,8 @@ class AnnotationTest extends \unittest\TestCase {
   #[@test]
   public function newinstance() {
     $this->assertEquals(
-      new IdentityFixture('Test'),
-      (new Annotation($this->type, 'name', new NewInstance('IdentityFixture', [new Value('Test')])))->value()
+      new Identity('Test'),
+      (new Annotation($this->type, 'name', new NewInstance('Identity', [new Value('Test')])))->value()
     );
   }
 
