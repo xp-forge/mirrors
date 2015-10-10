@@ -6,6 +6,7 @@ use lang\mirrors\Modifiers;
 use lang\mirrors\TypeMirror;
 use lang\IllegalArgumentException;
 use lang\ElementNotFoundException;
+use lang\mirrors\unittest\fixture\Identity;
 
 class FieldTest extends AbstractFieldTest {
 
@@ -67,15 +68,15 @@ class FieldTest extends AbstractFieldTest {
   }
 
   #[@test, @values([
-  #  ['/** @var lang.mirrors.Field */', Field::class],
-  #  ['/** @var \lang\mirrors\Field */', Field::class],
-  #  ['/** @var Field */', Field::class],
+  #  ['/** @var lang.mirrors.unittest.fixture.Identity */', Identity::class],
+  #  ['/** @var \lang\mirrors\unittest\fixture\Identity */', Identity::class],
+  #  ['/** @var Identity */', Identity::class],
   #  ['/** @var int */', 'int'],
   #  ['/** @var string[] */', 'string[]'],
   #  ['/** @var [:bool] */', '[:bool]'],
-  #  ['/** @type lang.mirrors.Field */', Field::class],
-  #  ['/** @type \lang\mirrors\Field */', Field::class],
-  #  ['/** @type Field */', Field::class]
+  #  ['/** @type lang.mirrors.unittest.fixture.Identity */', Identity::class],
+  #  ['/** @type \lang\mirrors\unittest\fixture\Identity */', Identity::class],
+  #  ['/** @type Identity */', Identity::class]
   #])]
   public function type_determined_via_apidoc($comment, $expected) {
     $this->assertEquals(

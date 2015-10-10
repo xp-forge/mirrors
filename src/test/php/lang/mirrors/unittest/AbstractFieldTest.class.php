@@ -1,7 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
-use lang\mirrors\Field;
+use lang\mirrors\unittest\fixture\Identity;
 use lang\ClassLoader;
 use lang\Object;
 
@@ -36,7 +36,7 @@ abstract class AbstractFieldTest extends \unittest\TestCase {
       'extends'    => [Object::class],
       'implements' => [],
       'use'        => [],
-      'imports'    => [Field::class => 'Field']
+      'imports'    => [Identity::class => 'Identity']
     ];
     return new TypeMirror(ClassLoader::defineType(nameof($this).self::$uniq++, $declaration, $body));
   }
