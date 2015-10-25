@@ -244,6 +244,8 @@ class FromCode extends \lang\Object implements Source {
       'type'        => isset($field['type']) ? $this->type($field['type']) : null,
       'access'      => new Modifiers($field['access']),
       'holder'      => $holder,
+      'read'        => function($instance) { throw new IllegalArgumentException('Cannot read field when using code reflection'); },
+      'modify'      => function($instance) { throw new IllegalArgumentException('Cannot modify field when using code reflection'); },
       'annotations' => function() use($field) { return $field['annotations'][null]; },
       'comment'     => function() use($field) { return $field['comment']; }
     ];
