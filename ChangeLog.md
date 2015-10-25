@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.4.0 / 2015-10-25
+
 * Merged PR #23: Backport to PHP 5.5. Minimum PHP version required is
   now **PHP 5.5.0**.
   (@thekid)
