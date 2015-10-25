@@ -379,8 +379,9 @@ class FromReflection extends \lang\Object implements Source {
   /** @return php.Generator */
   public function declaredFields() {
     foreach ($this->reflect->getProperties() as $field) {
-      if ($field->getDeclaringClass()->name !== $this->reflect->name) continue;
-      yield $field->name => $this->field($field);
+      if ($field->getDeclaringClass()->name === $this->reflect->name) {
+        yield $field->name => $this->field($field);
+      }
     }
   }
 
@@ -545,8 +546,9 @@ class FromReflection extends \lang\Object implements Source {
   /** @return php.Generator */
   public function declaredMethods() {
     foreach ($this->reflect->getMethods() as $method) {
-      if ($method->getDeclaringClass()->name !== $this->reflect->name) continue;
-      yield $method->name => $this->method($method);
+      if ($method->getDeclaringClass()->name === $this->reflect->name) {
+        yield $method->name => $this->method($method);
+      }
     }
   }
 
