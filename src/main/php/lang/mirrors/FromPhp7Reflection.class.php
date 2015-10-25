@@ -5,6 +5,8 @@ use lang\XPClass;
 
 class FromPhp7Reflection extends FromReflection {
 
+  static function __static() { }
+
   /**
    * Maps reflection type
    *

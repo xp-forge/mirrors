@@ -5,6 +5,8 @@ use lang\mirrors\parse\Value;
 class FromHHVMReflection extends FromReflection {
   private $types;
 
+  static function __static() { }
+
   /**
    * Creates a new HHVM reflection source
    *
