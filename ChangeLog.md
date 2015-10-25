@@ -3,6 +3,11 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed not handling parent types correctly when type has no parent
+  (@thekid)
+* Improved performance when OpCache extension is not loaded
+  (@thekid)
+
 ## 1.4.1 / 2015-10-25
 
 * Fixed issue #25: Errors with opcache.save_comments=0
