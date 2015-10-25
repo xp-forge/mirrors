@@ -2,11 +2,29 @@
 
 use lang\Primitive;
 use lang\Type;
+use lang\Object;
 use lang\XPClass;
+use lang\ClassLoader;
 use lang\mirrors\TypeMirror;
 
 abstract class Php7TypesTest extends \unittest\TestCase {
-  use TypeDefinition;
+  private static $uniq= 0;
+
+  /**
+   * Defines a type
+   *
+   * @param  string $body
+   * @return lang.XPClass
+   */
+  protected function define($body) {
+    $declaration= [
+      'kind'       => 'class',
+      'extends'    => [Object::class],
+      'implements' => [],
+      'use'        => []
+    ];
+    return ClassLoader::defineType(nameof($this).self::$uniq++, $declaration, $body);
+  }
 
   /**
    * Returns a fixture for a given class declaration
