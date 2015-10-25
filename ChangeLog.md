@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed issue #25: Errors with opcache.save_comments=0
+  (@thekid)
+
 ## 1.4.0 / 2015-10-25
 
 * Merged PR #23: Backport to PHP 5.5. Minimum PHP version required is

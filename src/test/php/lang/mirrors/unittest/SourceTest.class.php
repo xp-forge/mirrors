@@ -236,6 +236,7 @@ abstract class SourceTest extends \unittest\TestCase {
       [
         'annotatedClassField',
         'annotatedInstanceField',
+        'annotatedTraitField',
         'inheritedField',
         'privateClassField',
         'privateInstanceField',
@@ -255,6 +256,7 @@ abstract class SourceTest extends \unittest\TestCase {
       [
         'annotatedClassField',
         'annotatedInstanceField',
+        'annotatedTraitField',
         'privateClassField',
         'privateInstanceField',
         'protectedClassField',
@@ -270,7 +272,7 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function trait_fields() {
     $this->assertEquals(
-      ['traitField'],
+      ['annotatedTraitField', 'traitField'],
       $this->sorted($this->reflect(FixtureTrait::class)->allFields())
     );
   }
@@ -326,6 +328,7 @@ abstract class SourceTest extends \unittest\TestCase {
       [
         'annotatedClassMethod',
         'annotatedInstanceMethod',
+        'annotatedTraitMethod',
         'inheritedMethod',
         'privateClassMethod',
         'privateInstanceMethod',
@@ -345,6 +348,7 @@ abstract class SourceTest extends \unittest\TestCase {
       [
         'annotatedClassMethod',
         'annotatedInstanceMethod',
+        'annotatedTraitMethod',
         'privateClassMethod',
         'privateInstanceMethod',
         'protectedClassMethod',
@@ -354,6 +358,14 @@ abstract class SourceTest extends \unittest\TestCase {
         'traitMethod'
       ],
       $this->sorted($this->reflect(MemberFixture::class)->declaredMethods())
+    );
+  }
+
+  #[@test]
+  public function trait_methods() {
+    $this->assertEquals(
+      ['annotatedTraitMethod', 'traitMethod'],
+      $this->sorted($this->reflect(FixtureTrait::class)->allMethods())
     );
   }
 
@@ -485,5 +497,29 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function isSubtypeOf_implemented_interface() {
     $this->assertTrue($this->reflect(FixtureImpl::class)->isSubtypeOf(FixtureInterface::class));
+  }
+
+  #[@test]
+  public function trait_field_comment() {
+    $field= $this->reflect(MemberFixture::class)->fieldNamed('traitField');
+    $this->assertEquals('/** @type int */', $field['comment']());
+  }
+
+  #[@test]
+  public function trait_field_annotations() {
+    $field= $this->reflect(MemberFixture::class)->fieldNamed('annotatedTraitField');
+    $this->assertEquals(['fixture' => null], $field['annotations']());
+  }
+
+  #[@test]
+  public function trait_method_comment() {
+    $field= $this->reflect(MemberFixture::class)->methodNamed('traitMethod');
+    $this->assertEquals('/** @return void */', $field['comment']());
+  }
+
+  #[@test]
+  public function trait_method_annotations() {
+    $field= $this->reflect(MemberFixture::class)->methodNamed('annotatedTraitMethod');
+    $this->assertEquals(['fixture' => null], $field['annotations']());
   }
 }

@@ -57,6 +57,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
       [
         new Method($this->fixture, 'annotatedClassMethod'),
         new Method($this->fixture, 'annotatedInstanceMethod'),
+        new Method($this->fixture, 'annotatedTraitMethod'),
         new Method($this->fixture, 'inheritedMethod'),
         new Method($this->fixture, 'privateClassMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
@@ -76,6 +77,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
       [
         new Method($this->fixture, 'annotatedClassMethod'),
         new Method($this->fixture, 'annotatedInstanceMethod'),
+        new Method($this->fixture, 'annotatedTraitMethod'),
         new Method($this->fixture, 'inheritedMethod'),
         new Method($this->fixture, 'privateClassMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
@@ -95,6 +97,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
       [
         new Method($this->fixture, 'annotatedClassMethod'),
         new Method($this->fixture, 'annotatedInstanceMethod'),
+        new Method($this->fixture, 'annotatedTraitMethod'),
         new Method($this->fixture, 'privateClassMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
         new Method($this->fixture, 'protectedClassMethod'),
@@ -112,6 +115,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     $this->assertEquals(
       [
         new Method($this->fixture, 'annotatedInstanceMethod'),
+        new Method($this->fixture, 'annotatedTraitMethod'),
         new Method($this->fixture, 'inheritedMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
         new Method($this->fixture, 'protectedInstanceMethod'),
@@ -140,6 +144,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     $this->assertEquals(
       [
         new Method($this->fixture, 'annotatedInstanceMethod'),
+        new Method($this->fixture, 'annotatedTraitMethod'),
         new Method($this->fixture, 'inheritedMethod'),
         new Method($this->fixture, 'privateInstanceMethod'),
         new Method($this->fixture, 'protectedInstanceMethod'),

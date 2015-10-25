@@ -8,6 +8,7 @@ use lang\Type;
 use lang\Enum;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 use lang\Throwable;
 
 class FromReflection extends \lang\Object implements Source {
@@ -97,18 +98,18 @@ class FromReflection extends \lang\Object implements Source {
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
+    $modifiers= Modifiers::IS_PUBLIC | ($this->reflect->isInternal() ? Modifiers::IS_NATIVE : 0);
 
     // HHVM and PHP differ in this. We'll handle traits as *always* abstract (needs
     // to be implemented) and *never* final (couldn't be implemented otherwise).
     if ($this->reflect->isTrait()) {
-      return new Modifiers(Modifiers::IS_PUBLIC | Modifiers::IS_ABSTRACT);
+      return new Modifiers($modifiers | Modifiers::IS_ABSTRACT);
     } else {
-      $r= Modifiers::IS_PUBLIC;
       $m= $this->reflect->getModifiers();
-      $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
-      $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= Modifiers::IS_ABSTRACT;
-      $m & \ReflectionClass::IS_FINAL && $r |= Modifiers::IS_FINAL;
-      return new Modifiers($r);
+      $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $modifiers |= Modifiers::IS_ABSTRACT;
+      $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $modifiers |= Modifiers::IS_ABSTRACT;
+      $m & \ReflectionClass::IS_FINAL && $modifiers |= Modifiers::IS_FINAL;
+      return new Modifiers($modifiers);
     }
   }
 
@@ -235,6 +236,30 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /**
+   * Finds the member declaration
+   *
+   * @param  lang.mirrors.Source $declaredIn
+   * @param  string $kind
+   * @param  string $name
+   * @return [:var]
+   */
+  private function memberDeclaration($declaredIn, $kind, $name) {
+    if ($declaredIn->typeModifiers()->isNative()) {
+      return null;
+    } else {
+      $declaration= $declaredIn->codeUnit()->declaration();
+      if (isset($declaration[$kind][$name])) return $declaration[$kind][$name];
+
+      foreach ($declaredIn->allTraits() as $trait) {
+        $declaration= $trait->codeUnit()->declaration();
+        if (isset($declaration[$kind][$name])) return $declaration[$kind][$name];
+      }
+
+      throw new IllegalStateException('The '.$kind.' declaration of '.$declaredIn->name.'::'.$name.' could not be located');
+    }
+  }
+
+  /**
    * Checks whether a given field exists
    *
    * @param  string $name
@@ -254,8 +279,8 @@ class FromReflection extends \lang\Object implements Source {
     if (isset(\xp::$meta[$class])) {
       return $this->annotationsOf(\xp::$meta[$class][0][$reflect->name][DETAIL_ANNOTATIONS]);
     } else {
-      $fields= $declaredIn->codeUnit()->declaration()['field'];
-      return isset($fields[$reflect->name]) ? $fields[$reflect->name]['annotations'][null] : null;
+      $field= $this->memberDeclaration($declaredIn, 'field', $reflect->name);
+      return isset($field['annotations']) ? $field['annotations'][null] : null;
     }
   }
 
@@ -277,12 +302,8 @@ class FromReflection extends \lang\Object implements Source {
         if (self::$RETAIN_COMMENTS) {
           return $reflect->getDocComment();
         } else {
-          $fields= $this
-            ->resolve('\\'.$reflect->getDeclaringClass()->name)
-            ->codeUnit()
-            ->declaration()['field']
-          ;
-          return isset($fields[$reflect->name]) ? $fields[$reflect->name]['comment'] : null;
+          $field= $this->memberDeclaration($this->resolve('\\'.$reflect->getDeclaringClass()->name), 'field', $reflect->name);
+          return isset($field['comment']) ? $field['comment'] : null;
         }
       }
     ];
@@ -370,16 +391,16 @@ class FromReflection extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function paramAnnotations($reflect) {
-    $method= $reflect->getDeclaringFunction()->name;
+    $name= $reflect->getDeclaringFunction()->name;
     $target= '$'.$reflect->name;
     $declaredIn= $this->resolve('\\'.$reflect->getDeclaringClass()->name);
     $class= $declaredIn->typeName();
     if (isset(\xp::$meta[$class])) {
-      $annotations= \xp::$meta[$class][1][$method][DETAIL_TARGET_ANNO];
+      $annotations= \xp::$meta[$class][1][$name][DETAIL_TARGET_ANNO];
       return isset($annotations[$target]) ? $this->annotationsOf($annotations[$target]) : null;
     } else {
-      $methods= $declaredIn->codeUnit()->declaration()['method'];
-      return isset($methods[$method]['annotations'][$target]) ? $methods[$method]['annotations'][$target] : null;
+      $method= $this->memberDeclaration($declaredIn, 'method', $name);
+      return isset($method['annotations'][$target]) ? $method['annotations'][$target] : null;
     }
   }
 
@@ -432,8 +453,8 @@ class FromReflection extends \lang\Object implements Source {
     if (isset(\xp::$meta[$class])) {
       return $this->annotationsOf(\xp::$meta[$class][1][$reflect->name][DETAIL_ANNOTATIONS]);
     } else {
-      $methods= $declaredIn->codeUnit()->declaration()['method'];
-      return isset($methods[$reflect->name]) ? $methods[$reflect->name]['annotations'][null] : null;
+      $method= $this->memberDeclaration($declaredIn, 'method', $reflect->name);
+      return isset($method['annotations']) ? $method['annotations'][null] : null;
     }
   }
 
@@ -461,12 +482,8 @@ class FromReflection extends \lang\Object implements Source {
         if (self::$RETAIN_COMMENTS) {
           return $reflect->getDocComment();
         } else {
-          $methods= $this
-            ->resolve('\\'.$reflect->getDeclaringClass()->name)
-            ->codeUnit()
-            ->declaration()['method']
-          ;
-          return isset($methods[$reflect->name]) ? $methods[$reflect->name]['comment'] : null;
+          $method= $this->memberDeclaration($this->resolve('\\'.$reflect->getDeclaringClass()->name), 'method', $reflect->name);
+          return isset($method['comment']) ? $method['comment'] : null;
         }
       }
     ];
