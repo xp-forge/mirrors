@@ -2,6 +2,7 @@
 
 use lang\Type;
 use lang\XPClass;
+use lang\IllegalStateException;
 
 class FromPhp7Reflection extends FromReflection {
 
@@ -18,7 +19,10 @@ class FromPhp7Reflection extends FromReflection {
     if ('self' === $name) {
       return function() use($reflect) { return new XPClass($reflect->getDeclaringClass()); };
     } else if ('parent' === $name) {
-      return function() use($reflect) { return new XPClass($reflect->getDeclaringClass()->getParentClass()); };
+      return function() use($reflect) {
+        if ($parent= $reflect->getDeclaringClass()->getParentClass()) return new XPClass($parent);
+        throw new IllegalStateException('Cannot resolve parent type of class without parent');
+      };
     } else {
       return function() use($name) { return Type::forName($name); };
     }
