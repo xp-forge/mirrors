@@ -4,4 +4,6 @@ use lang\mirrors\parse\Value;
 
 class FromPhp7Code extends FromCode {
 
+  static function __static() { }
+
 }

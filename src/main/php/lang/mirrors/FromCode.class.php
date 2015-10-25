@@ -6,6 +6,8 @@ use lang\Type;
 use lang\XPClass;
 use lang\Primitive;
 use lang\ElementNotFoundException;
+use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 
 class FromCode extends \lang\Object implements Source {
   private static $syntax;
@@ -492,7 +494,8 @@ class FromCode extends \lang\Object implements Source {
     if ('self' === $name || $name === $this->decl['name']) {
       return $this->name;
     } else if ('parent' === $name) {
-      return $this->resolve0($this->decl['parent']);
+      if ($this->decl['parent']) return $this->resolve0($this->decl['parent']);
+      throw new IllegalStateException('Cannot resolve parent type of class without parent');
     } else if ('\\' === $name{0}) {
       return substr($name, 1);
     } else if (strstr($name, '\\')) {

@@ -8,6 +8,8 @@ use lang\FunctionType;
 
 class FromHHVMCode extends FromCode {
 
+  static function __static() { }
+
   /**
    * Checks whether a given field exists
    *
