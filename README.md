@@ -173,6 +173,7 @@ public class lang.mirrors.Modifiers extends lang.Object {
   const IS_PUBLIC = 256
   const IS_PROTECTED = 512
   const IS_PRIVATE = 1024
+  const IS_NATIVE = 61440
 
   public __construct(var $arg)
 
@@ -184,6 +185,7 @@ public class lang.mirrors.Modifiers extends lang.Object {
   public bool isPublic()
   public bool isProtected()
   public bool isPrivate()
+  public bool isNative()
 }
 ```
 
