@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.4.2 / 2015-10-26
+
 * Fixed not handling parent types correctly when type has no parent
   (@thekid)
 * Improved performance when OpCache extension is not loaded
