@@ -8,6 +8,7 @@ use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 use lang\Type;
 use lang\XPClass;
+use lang\Primitive;
 use lang\ClassLoader;
 use lang\mirrors\unittest\fixture\FixtureParams;
 
@@ -107,9 +108,14 @@ class ParameterTest extends \unittest\TestCase {
     $this->assertEquals(new XPClass(Type::class), $this->newFixture('oneDocumentedTypeParam', 0)->type());
   }
 
-  #[@test]
-  public function documented_type_hint_using_long_form() {
-    $this->assertEquals(new XPClass(Type::class), $this->newFixture('twoDocumentedTypeParams', 0)->type());
+  #[@test, @values(['twoDocumentedTypeParamsWithNames', 'twoDocumentedTypeParamsWithoutNames'])]
+  public function first_parameter_in_documented_type_hint_using_long_form($variation) {
+    $this->assertEquals(new XPClass(Type::class), $this->newFixture($variation, 0)->type());
+  }
+
+  #[@test, @values(['twoDocumentedTypeParamsWithNames', 'twoDocumentedTypeParamsWithoutNames'])]
+  public function second_parameter_in_documented_type_hint_using_long_form($variation) {
+    $this->assertEquals(Primitive::$STRING, $this->newFixture($variation, 1)->type());
   }
 
   #[@test, @expect(IllegalStateException::class), @values([

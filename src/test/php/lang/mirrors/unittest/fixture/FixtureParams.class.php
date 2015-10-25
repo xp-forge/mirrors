@@ -30,9 +30,17 @@ class FixtureParams extends \lang\Object {
    * Fixture
    *
    * @param lang.Type $a
-   * @param var $b
+   * @param string $b
    */
-  private function twoDocumentedTypeParams($a, $b) { }
+  private function twoDocumentedTypeParamsWithNames($a, $b) { }
+
+  /**
+   * Fixture
+   *
+   * @param lang.Type
+   * @param string
+   */
+  private function twoDocumentedTypeParamsWithoutNames($a, $b) { }
 
   #[@$arg: test]
   private function oneAnnotatedParam($arg) { }
