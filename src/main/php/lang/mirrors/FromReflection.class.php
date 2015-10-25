@@ -592,7 +592,8 @@ class FromReflection extends \lang\Object implements Source {
     if ('self' === $name || $name === $this->reflect->getShortName()) {
       return $this->source->reflect($this->reflect);
     } else if ('parent' === $name) {
-      return $this->source->reflect($this->reflect->getParentClass());
+      if ($parent= $this->reflect->getParentClass()) return $this->source->reflect($parent);
+      throw new IllegalStateException('Cannot resolve parent type of class without parent');
     } else if ('\\' === $name{0}) {
       return $this->source->reflect(strtr(substr($name, 1), '.', '\\'));
     } else if (strstr($name, '\\')) {
