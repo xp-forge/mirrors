@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.4.1 / 2015-10-25
+
 * Fixed issue #25: Errors with opcache.save_comments=0
   (@thekid)
 
