@@ -20,7 +20,8 @@ class FromReflection extends \lang\Object implements Source {
   private static $RETAIN_COMMENTS, $VARIADIC_SUPPORTED;
 
   static function __static() {
-    self::$RETAIN_COMMENTS= (bool)ini_get('opcache.save_comments');
+    $save= ini_get('opcache.save_comments');
+    self::$RETAIN_COMMENTS= false === $save ? true : (bool)$save;
     self::$VARIADIC_SUPPORTED= method_exists(\ReflectionParameter::class, 'isVariadic');
   }
 
