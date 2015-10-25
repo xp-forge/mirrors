@@ -81,7 +81,7 @@ class FieldTest extends AbstractFieldTest {
   public function type_determined_via_apidoc($comment, $expected) {
     $this->assertEquals(
       Type::forName($expected),
-      $this->define('{ '.$comment.' public $fixture; }')->fields()->named('fixture')->type()
+      $this->mirror('{ '.$comment.' public $fixture; }')->fields()->named('fixture')->type()
     );
   }
 }

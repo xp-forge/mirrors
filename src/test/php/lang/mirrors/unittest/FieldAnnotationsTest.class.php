@@ -88,7 +88,7 @@ class FieldAnnotationsTest extends AbstractFieldTest {
   #  ['#[@fixture(Identity::class)]', Identity::class]
   #])]
   public function values($annotation, $expected) {
-    $type= $this->define("{ ".$annotation."\npublic \$fixture; }");
+    $type= $this->mirror("{ ".$annotation."\npublic \$fixture; }");
     $this->assertEquals(
       $expected,
       $type->fields()->named('fixture')->annotations()->named('fixture')->value()
@@ -97,7 +97,7 @@ class FieldAnnotationsTest extends AbstractFieldTest {
 
   #[@test]
   public function closures() {
-    $type= $this->define("{ #[@fixture(function() { return 'Test'; })]\npublic \$fixture; }");
+    $type= $this->mirror("{ #[@fixture(function() { return 'Test'; })]\npublic \$fixture; }");
     $function= $type->fields()->named('fixture')->annotations()->named('fixture')->value();
     $this->assertEquals('Test', $function());
   }
