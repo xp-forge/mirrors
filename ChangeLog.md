@@ -3,6 +3,11 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.4.3 / 2015-10-27
+
+* Fixed issue #28: Parsing multiline annotation swallows whitespace
+  (@thekid)
+
 ## 1.4.2 / 2015-10-26
 
 * Fixed not handling parent types correctly when type has no parent
