@@ -4,6 +4,8 @@ use lang\mirrors\parse\PhpSyntax;
 use lang\mirrors\parse\CodeUnit;
 use lang\mirrors\parse\Value;
 use lang\mirrors\parse\TypeRef;
+use lang\mirrors\parse\NewInstance;
+use lang\mirrors\parse\Closure;
 use lang\Primitive;
 
 class PhpSyntaxTest extends \unittest\TestCase {
@@ -274,6 +276,23 @@ class PhpSyntaxTest extends \unittest\TestCase {
         ]
       ],
       $this->parse('<?php class Test { function a(): int; }')->declaration()['method']
+    );
+  }
+
+  #[@test]
+  public function multi_line_annotation() {
+    $parsed= $this->parse('<?php 
+      #[@action(new \unittest\actions\VerifyThat(function() {
+      #  throw new \lang\IllegalStateException("Test");
+      #}))]
+      class Test { }
+    ');
+    $this->assertEquals(
+      new NewInstance(
+        '\unittest\actions\VerifyThat',
+        [new Closure([], 'throw new \lang\IllegalStateException("Test");')]
+      ),
+      $parsed->declaration()['annotations'][null]['action']
     );
   }
 }

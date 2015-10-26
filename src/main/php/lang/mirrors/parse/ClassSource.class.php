@@ -9,6 +9,7 @@ use lang\ClassFormatException;
 class ClassSource extends \text\parse\Tokens {
   protected $tokens;
   private $comment, $syntax;
+  private $raw= false;
 
   /**
    * Creates a new class source
@@ -61,7 +62,9 @@ class ClassSource extends \text\parse\Tokens {
 
     do {
       $token= array_shift($this->tokens);
-      if (T_WHITESPACE === $token[0]) {
+      if ($this->raw) {
+        return $token;
+      } else if (T_WHITESPACE === $token[0]) {
         // Skip
       } else if (T_COMMENT === $token[0]) {
         if ('#' === $token[1]{0}) {
@@ -78,6 +81,34 @@ class ClassSource extends \text\parse\Tokens {
         return $token;
       }
     } while (true);
+  }
+
+  public function block($open, $close) {
+    $braces= 1;
+    $block= '';
+    $this->raw= true;
+
+    do {
+      $token= $this->token();
+      if ($open === $token) {
+        $braces++;
+        $block.= $open;
+      } else if ($close === $token) {
+        $braces--;
+        if ($braces <= 0) {
+          $this->raw= false;
+          $this->forward();
+          return $block;
+        }
+        $block.= $close;
+      } else {
+        $block.= is_array($token) ? $token[1] : $token;
+      }
+      $this->forward();
+    } while ($token);
+
+    $this->raw= false;
+    return null;
   }
 
   /**
