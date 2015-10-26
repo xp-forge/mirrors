@@ -38,26 +38,10 @@ class Block extends \text\parse\Rule {
       }
     }
 
-    $braces= 1;
-    $block= '';
-    do {
-      $token= $tokens->token();
-      if ($this->open === $token) {
-        $braces++;
-        $block.= $this->open;
-      } else if ($this->close === $token) {
-        $braces--;
-        if ($braces <= 0) {
-          $tokens->forward();
-          return new Values(trim($block));
-        }
-        $block.= $this->close;
-      } else {
-        $block.= is_array($token) ? $token[1] : $token;
-      }
-      $tokens->forward();
-    } while ($token);
-
-    return new Unexpected('End of file', $tokens->line());
+    if (null === ($block= $tokens->block($this->open, $this->close))) {
+      return new Unexpected('End of file', $tokens->line());
+    } else {
+      return new Values(trim($block));
+    }
   }
 }
