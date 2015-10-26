@@ -25,6 +25,17 @@ abstract class Routine extends Member {
   /** @return lang.mirrors.Parameters */
   public function parameters() { return $this->parameters; }
 
+  /**
+   * Returns a parameter by a given name
+   *
+   * @param  string|int $arg
+   * @return lang.mirrors.Parameter
+   * @throws lang.ElementNotFoundException
+   */
+  public function parameter($arg) {
+    return is_int($arg) ? $this->parameters->at($arg) : $this->parameters->named($arg);
+  }
+
   /** @return lang.mirrors.Throws */
   public function throws() { return new Throws($this); }
 }

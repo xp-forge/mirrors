@@ -82,6 +82,15 @@ abstract class Member extends \lang\Object {
   }
 
   /**
+   * Returns a annotation by a given name
+   *
+   * @param  string $name
+   * @return lang.mirrors.Annotation
+   * @throws lang.ElementNotFoundException
+   */
+  public function annotation($named) { return $this->annotations()->named($named); }
+
+  /**
    * Returns whether a given value is equal to this member
    *
    * @param  var $cmp

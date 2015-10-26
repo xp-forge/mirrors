@@ -88,6 +88,19 @@ class Parameter extends \lang\Object {
   }
 
   /**
+   * Returns whether a given value is equal to this parameter
+   *
+   * @param  var $cmp
+   * @return bool
+   */
+  public function equals($cmp) {
+    return $cmp instanceof self && (
+      $this->mirror->equals($cmp->mirror) &&
+      $this->reflect['pos'] === $cmp->reflect['pos']
+    );
+  }
+
+  /**
    * Creates a string representation
    *
    * @return string

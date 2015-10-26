@@ -79,23 +79,50 @@ class TypeMirror extends \lang\Object {
   /** @return lang.mirrors.Kind */
   public function kind() { return $this->reflect->typeKind(); }
 
+  /** @return lang.mirrors.Modifiers */
+  public function modifiers() { return $this->reflect->typeModifiers(); }
+
   /** @return lang.mirrors.Constructor */
   public function constructor() { return new Constructor($this); }
-
-  /** @return lang.mirrors.Methods */
-  public function methods() { return $this->methods; }
-
-  /** @return lang.mirrors.Fields */
-  public function fields() { return $this->fields; }
 
   /** @return lang.mirrors.Constants */
   public function constants() { return new Constants($this); }
 
-  /** @return lang.mirrors.Modifiers */
-  public function modifiers() { return $this->reflect->typeModifiers(); }
+  /** @return lang.mirrors.Methods */
+  public function methods() { return $this->methods; }
+
+  /**
+   * Returns a method by a given name
+   *
+   * @param  string $name
+   * @return lang.mirrors.Method
+   * @throws lang.ElementNotFoundException
+   */
+  public function method($named) { return $this->methods->named($named); }
+
+  /** @return lang.mirrors.Fields */
+  public function fields() { return $this->fields; }
+
+  /**
+   * Returns a field by a given name
+   *
+   * @param  string $name
+   * @return lang.mirrors.Field
+   * @throws lang.ElementNotFoundException
+   */
+  public function field($named) { return $this->fields->named($named); }
 
   /** @return lang.mirrors.Annotations */
   public function annotations() { return new Annotations($this, (array)$this->reflect->typeAnnotations()); }
+
+  /**
+   * Returns a annotation by a given name
+   *
+   * @param  string $name
+   * @return lang.mirrors.Annotation
+   * @throws lang.ElementNotFoundException
+   */
+  public function annotation($named) { return $this->annotations()->named($named); }
 
   /**
    * Resolves a type name in the context of this mirror
