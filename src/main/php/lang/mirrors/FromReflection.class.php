@@ -10,6 +10,7 @@ use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 use lang\Throwable;
+use lang\Error;
 
 class FromReflection extends \lang\Object implements Source {
   protected $reflect;
@@ -230,9 +231,9 @@ class FromReflection extends \lang\Object implements Source {
     } catch (\ReflectionException $e) {
       throw new IllegalArgumentException('Instantiating '.$this->name.': '.$e->getMessage());
     } catch (\Exception $e) {
-      throw new TargetInvocationException('Creating a new instance of '.$this->name.': '.$e->getMessage());
+      throw new TargetInvocationException('Creating a new instance of '.$this->name.' raised '.get_class($e), new Error($e->getMessage()));
     } catch (\Throwable $e) {
-      throw new TargetInvocationException('Creating a new instance of '.$this->name.': '.$e->getMessage());
+      throw new TargetInvocationException('Creating a new instance of '.$this->name.' raised '.get_class($e), new Error($e->getMessage()));
     }
   }
 
@@ -516,9 +517,9 @@ class FromReflection extends \lang\Object implements Source {
     } catch (\ReflectionException $e) {
       throw new IllegalArgumentException('Verifying '.$reflect->name.'(): '.$e->getMessage());
     } catch (\Exception $e) {
-      throw new TargetInvocationException('Invoking '.$reflect->name.'(): '.$e->getMessage());
+      throw new TargetInvocationException('Invoking '.$reflect->name.'() raised '.get_class($e), new Error($e->getMessage()));
     } catch (\Throwable $e) {
-      throw new TargetInvocationException('Invoking '.$reflect->name.'(): '.$e->getMessage());
+      throw new TargetInvocationException('Invoking '.$reflect->name.'() raised '.get_class($e), new Error($e->getMessage()));
     }
   }
 
