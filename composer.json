@@ -11,7 +11,7 @@
     "php" : ">=5.5.0"
   },
   "require-dev" : {
-    "xp-forge/measure" : "^0.1"
+    "xp-forge/measure" : "^0.4"
   },
   "autoload" : {
     "files" : ["src/main/php/autoload.php"]
