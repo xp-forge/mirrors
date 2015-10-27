@@ -20,3 +20,4 @@ before_script:
 
 script:
   - ./unittest src/test/php
+  - ./xp util.profiling.Measure lang.mirrors.performance.ClassParsingPerformance -n 100
