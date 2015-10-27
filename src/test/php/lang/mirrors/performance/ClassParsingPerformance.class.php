@@ -2,7 +2,6 @@
 
 use lang\mirrors\parse\ClassSyntax;
 use lang\mirrors\parse\ClassSource;
-use lang\reflect\ClassParser;
 use lang\XPClass;
 
 class ClassParsingPerformance extends \util\profiling\Measurable {
