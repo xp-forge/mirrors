@@ -3,6 +3,7 @@
 use lang\mirrors\TypeMirror;
 use lang\mirrors\TargetInvocationException;
 use lang\Object;
+use lang\Error;
 use lang\IllegalArgumentException;
 use unittest\actions\RuntimeVersion;
 
@@ -66,5 +67,25 @@ class MethodInvocationTest extends AbstractMethodTest {
   #[@test, @expect(TargetInvocationException::class)]
   public function wraps_exceptions_raised_from_argument_mismatch() {
     $this->fixture('typeHintedFixture')->invoke($this, ['not.an.obhject']);
+  }
+
+  #[@test]
+  public function sets_cause_for_exceptions_thrown_from_invoked_method() {
+    try {
+      $this->fixture('throwsExceptionFixture')->invoke($this, []);
+      $this->fail('No exception raised', null, TargetInvocationException::class);
+    } catch (TargetInvocationException $expected) {
+      $this->assertInstanceOf(IllegalArgumentException::class, $expected->getCause());
+    }
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.0.0-dev'))]
+  public function sets_cause_for_errors_raised_from_invoked_method() {
+    try {
+      $this->fixture('raisesErrorFixture')->invoke($this, []);
+      $this->fail('No exception raised', null, TargetInvocationException::class);
+    } catch (TargetInvocationException $expected) {
+      $this->assertInstanceOf(Error::class, $expected->getCause());
+    }
   }
 }

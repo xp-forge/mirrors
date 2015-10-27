@@ -3,6 +3,12 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.4.4 / 2015-10-27
+
+* Fixed constructor and method invocations leaving exception cause of
+  TargetInvocationExceptions empty when native exceptions are raised.
+  (@thekid)
+
 ## 1.4.3 / 2015-10-27
 
 * Fixed issue #28: Parsing multiline annotation swallows whitespace

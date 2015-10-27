@@ -10,6 +10,7 @@ use lang\mirrors\unittest\fixture\FixtureTrait;
 use lang\mirrors\unittest\fixture\FixtureAbstract;
 use lang\ClassLoader;
 use lang\Object;
+use lang\Error;
 use unittest\actions\RuntimeVersion;
 
 class ConstructorTest extends \unittest\TestCase {
@@ -85,6 +86,32 @@ class ConstructorTest extends \unittest\TestCase {
       '__construct' => function($arg) { $arg->invoke(); }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
+  }
+
+  #[@test]
+  public function sets_cause_for_exceptions_thrown() {
+    try {
+      $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+        '__construct' => function($arg) { throw new IllegalArgumentException('Test'); }
+      ]);
+      (new Constructor(new TypeMirror($fixture)))->newInstance(null);
+      $this->fail('No exception raised', null, TargetInvocationException::class);
+    } catch (TargetInvocationException $expected) {
+      $this->assertInstanceOf(IllegalArgumentException::class, $expected->getCause());
+    }
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.0.0-dev'))]
+  public function sets_cause_for_errors_raised() {
+    try {
+      $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+        '__construct' => function($arg) { $arg->invoke(); }
+      ]);
+      (new Constructor(new TypeMirror($fixture)))->newInstance(null);
+      $this->fail('No exception raised', null, TargetInvocationException::class);
+    } catch (TargetInvocationException $expected) {
+      $this->assertInstanceOf(Error::class, $expected->getCause());
+    }
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
