@@ -10,6 +10,9 @@
     "xp-forge/parse": "^0.2",
     "php" : ">=5.5.0"
   },
+  "require-dev" : {
+    "xp-forge/measure" : "^0.1"
+  },
   "autoload" : {
     "files" : ["src/main/php/autoload.php"]
   }
