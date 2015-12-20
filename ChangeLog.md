@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.5.0 / 2015-12-20
+
+* Merged pull request #27: Additional shortcuts - @thekid
+
 ## 1.4.5 / 2015-12-20
 
 * Added dependency on tokenize library which has since been extracted
