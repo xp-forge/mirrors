@@ -41,9 +41,12 @@ public class lang.mirrors.TypeMirror extends lang.Object {
   public lang.mirrors.Interfaces interfaces()
   public lang.mirrors.Constructor constructor()
   public lang.mirrors.Methods methods()
+  public lang.mirrors.Method method(string $named) throws lang.ElementNotFoundException
   public lang.mirrors.Fields fields()
+  public lang.mirrors.Field field(string $named) throws lang.ElementNotFoundException
   public lang.mirrors.Constants constants()
   public lang.mirrors.Annotations annotations()
+  public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
   public self resolve(string $name)
 }
 ```
@@ -63,8 +66,10 @@ public class lang.mirrors.Constructor extends lang.mirrors.Routine {
   public lang.Generic newInstance([var... $args= null]) throws ...
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
+  public lang.mirrors.Parameter parameter(string|int $arg) throws lang.ElementNotFoundException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
+  public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
 }
 ```
 
@@ -98,8 +103,10 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
   public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
+  public lang.mirrors.Parameter parameter(string|int $arg) throws lang.ElementNotFoundException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
+  public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
 }
 
 public class lang.mirrors.Parameters extends lang.Object implements php.IteratorAggregate {
@@ -159,6 +166,7 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
   public void modify(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
+  public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
 }
 ```
 
