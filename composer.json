@@ -7,6 +7,7 @@
   "keywords": ["module", "xp"],
   "require" : {
     "xp-framework/core": "^6.3.1",
+    "xp-framework/tokenize": "^6.6",
     "xp-forge/parse": "^0.2",
     "php" : ">=5.5.0"
   },

@@ -3,6 +3,12 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.4.2 / 2015-12-20
+
+* Added dependency on tokenize library which has since been extracted
+  from XP core.
+  (@thekid)
+
 ## 1.4.4 / 2015-10-27
 
 * Fixed constructor and method invocations leaving exception cause of
