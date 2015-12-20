@@ -3,7 +3,7 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
-## 1.4.2 / 2015-12-20
+## 1.4.5 / 2015-12-20
 
 * Added dependency on tokenize library which has since been extracted
   from XP core.
