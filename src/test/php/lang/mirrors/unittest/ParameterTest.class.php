@@ -11,6 +11,7 @@ use lang\XPClass;
 use lang\Primitive;
 use lang\ClassLoader;
 use lang\mirrors\unittest\fixture\Identity;
+use unittest\actions\RuntimeVersion;
 
 class ParameterTest extends \unittest\TestCase {
   use TypeDefinition;
@@ -72,6 +73,36 @@ class ParameterTest extends \unittest\TestCase {
   #[@test, @values([['($arg)', false]])]
   public function isVariadic($signature, $result) {
     $this->assertEquals($result, (new Parameter($this->method(null, $signature), 0))->isVariadic());
+  }
+
+  #[@test, @ignore, @action(new RuntimeVersion('>=7.0'))]
+  public function variadic_via_syntax_with_type() {
+    $param= new Parameter($this->method(null, '(string... $args)'), 0);
+    $this->assertEquals(
+      ['variadic' => true, 'optional' => true, 'type' => Primitive::$STRING],
+      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->type()]
+    );
+  }
+
+  #[@test, @ignore, @action(new RuntimeVersion('>=5.6'))]
+  public function variadic_via_syntax() {
+    $param= new Parameter($this->method(null, '(... $args)'), 0);
+    $this->assertEquals(
+      ['variadic' => true, 'optional' => true, 'type' => Type::$VAR],
+      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->type()]
+    );
+  }
+
+  #[@test, @ignore, @values([
+  #  '/** @param var... $args */',
+  #  '/** @param var* $args */'
+  #])]
+  public function variadic_via_apidoc($signature) {
+    $param= new Parameter($this->method($signature, '($args= null)'), 0);
+    $this->assertEquals(
+      ['variadic' => true, 'optional' => true, 'type' => Type::$VAR],
+      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->type()]
+    );
   }
 
   #[@test]
