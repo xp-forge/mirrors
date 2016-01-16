@@ -10,7 +10,7 @@ use lang\Type;
 use lang\XPClass;
 use lang\Primitive;
 use lang\ClassLoader;
-use lang\mirrors\unittest\fixture\FixtureParams;
+use lang\mirrors\unittest\fixture\Identity;
 
 class ParameterTest extends \unittest\TestCase {
   use TypeDefinition;
@@ -131,9 +131,12 @@ class ParameterTest extends \unittest\TestCase {
     $this->assertEquals(null, (new Parameter($this->method(null, '($arg= null)'), 0))->defaultValue());
   }
 
-  #[@test]
-  public function constant_default_value_for_optional() {
-    $this->assertEquals(FixtureParams::CONSTANT, (new Parameter($this->method(null, '($arg= \lang\mirrors\unittest\fixture\FixtureParams::CONSTANT)'), 0))->defaultValue());
+  #[@test, @values([
+  #  '($arg= \lang\mirrors\unittest\fixture\Identity::NAME)',
+  #  '($arg= Identity::NAME)'
+  #])]
+  public function constant_default_value_for_optional($signature) {
+    $this->assertEquals(Identity::NAME, (new Parameter($this->method(null, $signature), 0))->defaultValue());
   }
 
   #[@test]
