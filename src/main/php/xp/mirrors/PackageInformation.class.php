@@ -1,19 +1,18 @@
 <?php namespace xp\mirrors;
 
 use lang\ClassLoader;
-use lang\mirrors\TypeMirror;
 use lang\mirrors\Package;
 
-class PackageInformation extends Information {
+class PackageInformation extends CollectionInformation {
   private $package;
 
   /**
    * Creates a new type information instance
    *
-   * @param  lang.mirrors.Package $package
+   * @param  string|lang.mirrors.Package $package
    */
   public function __construct($package) {
-    $this->package= $package;
+    $this->package= $package instanceof Package ? $package : new Package($package);
   }
 
   /** @return php.Generator */
@@ -32,34 +31,7 @@ class PackageInformation extends Information {
    */
   public function display($out) {
     $out->writeLine('package ', $this->package->name(), ' {');
-
-    // Child packages
-    $reflect= \lang\reflect\Package::forName($this->package->name());
-    foreach ($reflect->getPackages() as $child) {
-      $out->writeLine('  package ', $child->getName());
-    }
-    
-    // Types
-    $order= [
-      'interface' => [],
-      'trait'     => [],
-      'enum'      => [],
-      'class'     => []
-    ];
-    foreach ($reflect->getClassNames() as $class) {
-      $mirror= new TypeMirror($class);
-      $order[$mirror->kind()->name()][]= self::declarationOf($mirror);
-    }
-    foreach ($order as $type => $classes) {
-      if (empty($classes)) continue;
-
-      $out->writeLine();
-      sort($classes);
-      foreach ($classes as $name) {
-        $out->writeLine('  ', $name);
-      }
-    }
-
+    $this->displayCollection($this->package, ClassLoader::getDefault(), $out);
     $out->writeLine('}');
   }
 }
