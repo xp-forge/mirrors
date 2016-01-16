@@ -48,6 +48,9 @@ class TypeMirror extends \lang\Object {
   /** @return string */
   public function declaration() { return $this->reflect->typeDeclaration(); }
 
+  /** @return lang.Type */
+  public function type() { return $this->reflect->typeInstance(); }
+
   /** @return string */
   public function comment() {
     $comment= $this->reflect->typeComment();

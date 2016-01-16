@@ -58,6 +58,9 @@ class FromCode extends \lang\Object implements Source {
   /** @return string */
   public function typeDeclaration() { return $this->decl['name']; }
 
+  /** @return lang.Type */
+  public function typeInstance() { return new XPClass($this->name); }
+
   /** @return string */
   public function packageName() { return strtr($this->unit->package(), '\\', '.'); }
 
