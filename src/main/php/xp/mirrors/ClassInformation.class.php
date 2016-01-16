@@ -18,7 +18,7 @@ class ClassInformation extends TypeKindInformation {
     $separator= false;
     $out->writeLine(' {');
     $this->displayMembers($this->mirror->constants(), $out, $separator);
-    $this->displayMembers($this->mirror->fields(), $out, $separator);
+    $this->displayMembers($this->mirror->fields()->declared(), $out, $separator);
     $constructor= $this->mirror->constructor();
     if ($constructor->present()) {
       $this->displayMembers([$constructor], $out, $separator);
