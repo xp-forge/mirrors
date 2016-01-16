@@ -48,7 +48,7 @@ class Parameter extends \lang\Object {
   public function isVariadic() { return $this->reflect['var']; }
 
   /** @return bool */
-  public function isOptional() { return isset($this->reflect['default']); }
+  public function isOptional() { return $this->reflect['var'] || isset($this->reflect['default']); }
 
   /** @return bool */
   public function isVerified() { return isset($this->reflect['type']); }
