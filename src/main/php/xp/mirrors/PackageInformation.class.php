@@ -16,6 +16,7 @@ class PackageInformation {
     $this->package= $package;
   }
 
+  /** @return php.Generator */
   public function sources() {
     $name= $this->package->getName();
     foreach (ClassLoader::getLoaders() as $loader) {

@@ -27,6 +27,7 @@ class TypeInformation {
     }
   }
 
+  /** @return php.Generator */
   public function sources() {
     foreach ($this->delegate->sources() as $source) {
       yield $source;
