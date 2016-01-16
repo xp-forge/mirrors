@@ -58,7 +58,12 @@ class MirrorRunner {
     foreach ($info->sources() as $source) {
       Console::writeLine("\e[33m@", $source, "\e[0m");
     }
-    $info->display(Console::$out);
+    $info->display(new Highlighting(Console::$out, [
+      '/(class|enum|trait|interface|package|directory) (.+)/' => "\e[1;35m\$1\e[0m \$2",
+      '/(extends|implements) (.+)/'                           => "\e[1;35m\$1\e[0m \$2",
+      '/(public|private|protected|abstract|final|static)/'    => "\e[1;35m\$1\e[0m",
+      '/(\$[a-zA-Z0-9_]+)/'                                   => "\e[1;31m\$1\e[0m",
+    ]));
     return 0;
   }
 }
