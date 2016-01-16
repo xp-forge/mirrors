@@ -29,7 +29,7 @@ trait TypeDefinition {
         'imports'    => [Identity::class => 'Identity']
       ];
       self::$fixtures[$declaration]= ClassLoader::defineType(
-        self::class.sizeof(self::$fixtures),
+        nameof($this).sizeof(self::$fixtures),
         $definition,
         $declaration
       );
