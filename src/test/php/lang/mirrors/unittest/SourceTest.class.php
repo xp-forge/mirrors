@@ -425,7 +425,7 @@ abstract class SourceTest extends \unittest\TestCase {
     $method= $this->reflect(FixtureParams::class)->methodNamed('oneOptionalParam');
     $param= $method['params']()[0];
     $this->assertEquals(
-      [0, 'arg', null, false, false, null],
+      [0, 'arg', null, false, null, null],
       [$param['pos'], $param['name'], $param['type'], $param['ref'], $param['var'], $param['default']()]
     );
   }

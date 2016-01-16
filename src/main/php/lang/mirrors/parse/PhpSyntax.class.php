@@ -207,8 +207,8 @@ class PhpSyntax extends \text\parse\Syntax {
           'ref'         => isset($values[4]),
           'var'         => isset($values[3]),
           'this'        => $values[1],
-          'default'     => $values[6]];
-        }
+          'default'     => $values[6]
+        ]; }
       ),
       'aliases' => new Match([';' => null, '{' => new Block(true)]), 
       'method' => new Match([';' => null, '{' => new Block(true)]),

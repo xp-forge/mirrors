@@ -425,11 +425,14 @@ class FromReflection extends \lang\Object implements Source {
       $type= null;
     }
 
-    if ($var= self::$VARIADIC_SUPPORTED && $reflect->isVariadic()) {
+    if (self::$VARIADIC_SUPPORTED && $reflect->isVariadic()) {
+      $var= true;
       $default= null;
     } else if ($reflect->isOptional()) {
+      $var= null;
       $default= function() use($reflect) { return $reflect->getDefaultValue(); };
     } else {
+      $var= false;
       $default= null;
     }
 

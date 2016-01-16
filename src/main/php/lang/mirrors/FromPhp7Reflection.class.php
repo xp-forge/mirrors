@@ -42,11 +42,14 @@ class FromPhp7Reflection extends FromReflection {
       $type= null;
     }
 
-    if ($var= $reflect->isVariadic()) {
+    if ($reflect->isVariadic()) {
+      $var= true;
       $default= null;
     } else if ($reflect->isOptional()) {
+      $var= null;
       $default= function() use($reflect) { return $reflect->getDefaultValue(); };
     } else {
+      $var= false;
       $default= null;
     }
 
