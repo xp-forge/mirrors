@@ -13,7 +13,7 @@ class EnumInformation extends TypeKindInformation {
    * @return void
    */
   public function display($out) {
-    $out->write($this->mirror->modifiers()->names(), ' enum ', $this->mirror->name());
+    $out->write(self::declarationOf($this->mirror));
     $parent= $this->mirror->parent();
     if ('lang.Enum' !== $parent->name()) {
       $out->write(' extends ', $parent->name());

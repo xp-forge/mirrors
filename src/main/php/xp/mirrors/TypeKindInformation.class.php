@@ -3,7 +3,7 @@
 use lang\mirrors\TypeMirror;
 use lang\ClassLoader;
 
-abstract class TypeKindInformation {
+abstract class TypeKindInformation extends Information {
   protected $mirror;
 
   /**
@@ -17,14 +17,6 @@ abstract class TypeKindInformation {
 
   /** @return php.Generator */
   public function sources() { yield ClassLoader::findClass($this->mirror->name()); }
-
-  /**
-   * Display information
-   *
-   * @param  io.StringWriter $out
-   * @return void
-   */
-  public abstract function display($out);
 
   protected function displayConstants($mirror, $out, &$separator) {
     $separator && $out->writeLine();

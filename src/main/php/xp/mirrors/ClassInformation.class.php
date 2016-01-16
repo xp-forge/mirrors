@@ -11,7 +11,7 @@ class ClassInformation extends TypeKindInformation {
    * @return void
    */
   public function display($out) {
-    $out->write($this->mirror->modifiers()->names(), ' class ', $this->mirror->name());
+    $out->write(self::declarationOf($this->mirror));
     if ($parent= $this->mirror->parent()) {
       $out->write(' extends ', $parent->name());
     }

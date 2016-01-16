@@ -3,10 +3,11 @@
 use lang\ClassLoader;
 use lang\mirrors\Package;
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Kind;
 use io\Folder;
 use lang\IllegalArgumentException;
 
-class DirectoryInformation {
+class DirectoryInformation extends Information {
   private $folder, $loader, $package;
 
   /**
@@ -59,8 +60,7 @@ class DirectoryInformation {
         $out->writeLine('  package ', $base.substr($entry, 0, -1));
       } else if (0 === substr_compare($entry, \xp::CLASS_FILE_EXT, -$ext)) {
         $mirror= new TypeMirror($base.substr($entry, 0, -$ext));
-        $kind= $mirror->kind()->name();
-        $order[$kind][]= $mirror->modifiers()->names().' '.$kind.' '.$mirror->name();
+        $order[$mirror->kind()->name()][]= self::declarationOf($mirror);
       }
     }
 

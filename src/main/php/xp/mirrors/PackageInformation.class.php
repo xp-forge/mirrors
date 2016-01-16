@@ -4,7 +4,7 @@ use lang\ClassLoader;
 use lang\mirrors\TypeMirror;
 use lang\mirrors\Package;
 
-class PackageInformation {
+class PackageInformation extends Information {
   private $package;
 
   /**
@@ -48,8 +48,7 @@ class PackageInformation {
     ];
     foreach ($reflect->getClassNames() as $class) {
       $mirror= new TypeMirror($class);
-      $kind= $mirror->kind()->name();
-      $order[$kind][]= $mirror->modifiers()->names().' '.$kind.' '.$class;
+      $order[$mirror->kind()->name()][]= self::declarationOf($mirror);
     }
     foreach ($order as $type => $classes) {
       if (empty($classes)) continue;
