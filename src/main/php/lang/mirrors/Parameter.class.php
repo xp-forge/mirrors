@@ -50,7 +50,7 @@ class Parameter extends \lang\Object {
     if (null === $this->reflect['var']) {
       $params= $this->mirror->tags()['param'];
       $n= $this->reflect['pos'];
-      return isset($params[$n]) && $params[$n] instanceof VariadicTypeRef;
+      $this->reflect['var']= isset($params[$n]) && $params[$n] instanceof VariadicTypeRef;
     }
     return $this->reflect['var'];
   }

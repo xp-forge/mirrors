@@ -3,6 +3,16 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 1.6.0 / 2016-01-17
+
+* Merged pull request #32: Fix variadics.
+  . Via PHP 5.6 syntax *(also supported in HHVM)*
+  . Via PHP 7 syntax
+  . Declared via `var...` in api documentation
+  . Declared via `var*` in api documentation
+  . Now consistent with xp-framework/core, plus fixes #31
+  (@thekid)
+
 ## 1.5.0 / 2015-12-20
 
 * Merged pull request #27: Additional shortcuts - @thekid
