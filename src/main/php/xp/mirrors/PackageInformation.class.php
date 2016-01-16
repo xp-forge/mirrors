@@ -1,8 +1,8 @@
 <?php namespace xp\mirrors;
 
-use lang\reflect\Package;
 use lang\ClassLoader;
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Package;
 
 class PackageInformation {
   private $package;
@@ -10,7 +10,7 @@ class PackageInformation {
   /**
    * Creates a new type information instance
    *
-   * @param  lang.reflect.Package $package
+   * @param  lang.mirrors.Package $package
    */
   public function __construct($package) {
     $this->package= $package;
@@ -18,7 +18,7 @@ class PackageInformation {
 
   /** @return php.Generator */
   public function sources() {
-    $name= $this->package->getName();
+    $name= $this->package->name();
     foreach (ClassLoader::getLoaders() as $loader) {
       if ($loader->providesPackage($name)) yield $loader;
     }
@@ -31,21 +31,22 @@ class PackageInformation {
    * @return void
    */
   public function display($out) {
-    $out->writeLine('package ', $this->package->getName(), ' {');
+    $out->writeLine('package ', $this->package->name(), ' {');
 
     // Child packages
-    foreach ($this->package->getPackages() as $child) {
+    $reflect= \lang\reflect\Package::forName($this->package->name());
+    foreach ($reflect->getPackages() as $child) {
       $out->writeLine('  package ', $child->getName());
     }
     
-    // Classes
+    // Types
     $order= [
       'interface' => [],
       'trait'     => [],
       'enum'      => [],
       'class'     => []
     ];
-    foreach ($this->package->getClassNames() as $class) {
+    foreach ($reflect->getClassNames() as $class) {
       $mirror= new TypeMirror($class);
       $kind= $mirror->kind()->name();
       $order[$kind][]= $mirror->modifiers()->names().' '.$kind.' '.$class;
