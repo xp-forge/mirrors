@@ -3,7 +3,7 @@
 use lang\mirrors\TypeMirror;
 use lang\IllegalStateException;
 
-class TypeInformation {
+class TypeInformation extends Information {
   private $delegate;
 
   /**
@@ -42,29 +42,5 @@ class TypeInformation {
    */
   public function display($out) {
     $this->delegate->display($out);
-  }
-
-  protected function displayConstants($mirror, $out, &$separator) {
-    $separator && $out->writeLine();
-    foreach ($mirror->constants() as $constant) {
-      $out->writeLine('  ', (string)$constant);
-      $separator= true;
-    }
-  }
-
-  protected function displayFields($mirror, $out, &$separator) {
-    $separator && $out->writeLine();
-    foreach ($mirror->fields()->declared() as $fields) {
-      $out->writeLine('  ', (string)$fields);
-      $separator= true;
-    }
-  }
-
-  protected function displayMethods($mirror, $out, &$separator) {
-    $separator && $out->writeLine();
-    foreach ($mirror->methods()->declared() as $method) {
-      $out->writeLine('  ', (string)$method);
-      $separator= true;
-    }
   }
 }
