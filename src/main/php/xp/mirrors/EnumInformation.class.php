@@ -2,7 +2,6 @@
 
 use lang\mirrors\TypeMirror;
 use lang\Enum;
-use lang\XPClass;
 
 class EnumInformation extends TypeKindInformation {
 
@@ -24,7 +23,7 @@ class EnumInformation extends TypeKindInformation {
     $out->writeLine(' {');
     $this->displayMembers($this->mirror->constants(), $out, $separator);
 
-    foreach (Enum::valuesOf(XPClass::forName($this->mirror->name())) as $member) {
+    foreach (Enum::valuesOf($this->mirror->type()) as $member) {
       $out->write('  ', $member->name(), '(', $member->ordinal(), ')');
       $mirror= new TypeMirror(typeof($member));
       if ($mirror->isSubtypeOf($this->mirror)) {
