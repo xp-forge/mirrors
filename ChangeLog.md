@@ -5,6 +5,8 @@ Mirrors change log
 
 ## 2.0.0 / ????-??-??
 
+* Implemented #33: Added new method `lang.mirrors.TypeMirror::type()`
+  (@thekid)
 * Implemented #30: Added "xp mirror" command. See xp-framework/rfc#303
   (@thekid)
 
