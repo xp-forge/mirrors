@@ -14,9 +14,18 @@ class EnumInformation extends TypeKindInformation {
    */
   public function display($out) {
     $out->write(self::declarationOf($this->mirror));
+
     $parent= $this->mirror->parent();
     if ('lang.Enum' !== $parent->name()) {
       $out->write(' extends ', $parent->name());
+    }
+
+    $implements= [];
+    foreach ($this->mirror->interfaces()->declared() as $type) {
+      $implements[]= $type->name();
+    }
+    if ($implements) {
+      $out->write(' implements ', implode(', ', $implements));
     }
 
     $separator= false;
@@ -39,6 +48,10 @@ class EnumInformation extends TypeKindInformation {
       }
     }
 
+    $constructor= $this->mirror->constructor();
+    if ($constructor->present()) {
+      $this->displayMembers([$constructor], $out, $separator);
+    }
     $this->displayMembers($this->mirror->methods(), $out, $separator);
     $out->writeLine('}');
   }
