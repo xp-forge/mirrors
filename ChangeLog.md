@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Implemented #30: Added "xp mirror" command. See xp-framework/rfc#303
+  (@thekid)
+
 ## 1.6.0 / 2016-01-17
 
 * Merged pull request #32: Fix variadics.
