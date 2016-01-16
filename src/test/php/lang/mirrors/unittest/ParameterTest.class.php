@@ -13,32 +13,7 @@ use lang\ClassLoader;
 use lang\mirrors\unittest\fixture\FixtureParams;
 
 class ParameterTest extends \unittest\TestCase {
-  private static $fixtures= [];
-
-  /**
-   * Creates a new anonymous type
-   *
-   * @param  string $declaration
-   * @return lang.mirrors.TypeMirror
-   */
-  private function type($declaration) {
-    if (!isset(self::$fixtures[$declaration])) {
-      $definition= [
-        'modifiers'  => '',
-        'kind'       => 'class',
-        'extends'    => [],
-        'implements' => [],
-        'use'        => [],
-        'imports'    => []
-      ];
-      self::$fixtures[$declaration]= new TypeMirror(ClassLoader::defineType(
-        self::class.sizeof(self::$fixtures),
-        $definition,
-        $declaration
-      ));
-    }
-    return self::$fixtures[$declaration];
-  }
+  use TypeDefinition;
 
   /**
    * Creates a fixture method
@@ -49,7 +24,7 @@ class ParameterTest extends \unittest\TestCase {
    */
   private function method($comment, $signature) {
     return new Method(
-      $this->type('{'.$comment."\npublic function fixture".$signature.' { } }'),
+      $this->mirror('{'.$comment."\npublic function fixture".$signature.' { } }'),
       'fixture'
     );
   }

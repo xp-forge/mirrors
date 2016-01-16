@@ -7,7 +7,7 @@ use lang\ClassLoader;
 use lang\Object;
 
 trait TypeDefinition {
-  private static $uniq= 0;
+  private static $fixtures= [];
 
   /** @return lang.mirrors.Source */
   protected function source() { return Sources::$REFLECTION; }
@@ -15,19 +15,26 @@ trait TypeDefinition {
   /**
    * Defines a type
    *
-   * @param  string $body
+   * @param  string $declaration
    * @param  string[] $extends
    * @return lang.XPClass
    */
-  protected function define($body, $extends= [Object::class]) {
-    $declaration= [
-      'kind'       => 'class',
-      'extends'    => $extends,
-      'implements' => [],
-      'use'        => [],
-      'imports'    => [Identity::class => 'Identity']
-    ];
-    return ClassLoader::defineType(nameof($this).self::$uniq++, $declaration, $body);
+  protected function define($declaration, $extends= [Object::class]) {
+    if (!isset(self::$fixtures[$declaration])) {
+      $definition= [
+        'kind'       => 'class',
+        'extends'    => $extends,
+        'implements' => [],
+        'use'        => [],
+        'imports'    => [Identity::class => 'Identity']
+      ];
+      self::$fixtures[$declaration]= ClassLoader::defineType(
+        self::class.sizeof(self::$fixtures),
+        $definition,
+        $declaration
+      );
+    }
+    return self::$fixtures[$declaration];
   }
 
   /**
