@@ -1,10 +1,9 @@
 <?php namespace xp\mirrors;
 
+use io\Folder;
 use lang\ClassLoader;
 use lang\mirrors\Package;
 use lang\mirrors\TypeMirror;
-use lang\mirrors\Kind;
-use io\Folder;
 use lang\IllegalArgumentException;
 
 class DirectoryInformation extends Information {
@@ -59,7 +58,7 @@ class DirectoryInformation extends Information {
       if ('/' === $entry{strlen($entry) - 1}) {
         $out->writeLine('  package ', $base.substr($entry, 0, -1));
       } else if (0 === substr_compare($entry, \xp::CLASS_FILE_EXT, -$ext)) {
-        $mirror= new TypeMirror($base.substr($entry, 0, -$ext));
+        $mirror= new TypeMirror($this->loader->loadClass($base.substr($entry, 0, -$ext)));
         $order[$mirror->kind()->name()][]= self::declarationOf($mirror);
       }
     }
