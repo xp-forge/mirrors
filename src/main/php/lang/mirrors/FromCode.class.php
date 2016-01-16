@@ -325,9 +325,14 @@ class FromCode extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function param($pos, $param, $annotations) {
-    if ($param['default']) {
-      $default= function() use($param) { return $param['default']->resolve($this->mirror); };
+    if ($param['var']) {
+      $var= true;
+      $default= null;
+    } else if ($param['default']) {
+      $var= null;
+      $default= function() use($param) { return $param['default']->resolve($this->mirror); };      
     } else {
+      $var= false;
       $default= null;
     }
 
@@ -336,7 +341,7 @@ class FromCode extends \lang\Object implements Source {
       'name'        => $param['name'],
       'type'        => isset($param['type']) ? $this->type($param['type']) : null,
       'ref'         => $param['ref'],
-      'var'         => $param['var'],
+      'var'         => $var,
       'default'     => $default,
       'annotations' => function() use($annotations) { return $annotations; }
     ];

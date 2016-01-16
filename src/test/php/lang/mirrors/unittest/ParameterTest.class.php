@@ -93,9 +93,9 @@ class ParameterTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @ignore, @values([
-  #  '/** @param var... $args */',
-  #  '/** @param var* $args */'
+  #[@test, @values([
+  #  '/** @param var* $args */',
+  #  '/** @param var... $args */'
   #])]
   public function variadic_via_apidoc($signature) {
     $param= new Parameter($this->method($signature, '($args= null)'), 0);

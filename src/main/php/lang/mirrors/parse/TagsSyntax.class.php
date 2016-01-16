@@ -85,12 +85,12 @@ class TagsSyntax extends \text\parse\Syntax {
             )
           ]),
           new Repeated(new Sequence([new Token('['), new Token(']')], function() { return true; })),
+          new Optional(new Sequence([new Token('*')], function() { return true; }))
         ],
         function($values) {
           $return= $values[0];
-          foreach ($values[1] as $do) {
-            $return= new ArrayTypeRef($return);
-          }
+          foreach ($values[1] as $do) { $return= new ArrayTypeRef($return); }
+          if (isset($values[2])) { $return= new VariadicTypeRef($return); }
           return $return;
         }
       )

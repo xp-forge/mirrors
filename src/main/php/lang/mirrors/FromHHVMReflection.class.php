@@ -57,11 +57,14 @@ class FromHHVMReflection extends FromReflection {
       $type= function() use ($hint) { return $this->types->map($hint); };
     }
 
-    if ($var= $reflect->isVariadic()) {
+    if ($reflect->isVariadic()) {
+      $var= true;
       $default= null;
     } else if ($reflect->isOptional()) {
+      $var= null;
       $default= function() use($reflect) { return $reflect->getDefaultValue(); };
     } else {
+      $var= false;
       $default= null;
     }
 
