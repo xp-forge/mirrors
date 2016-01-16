@@ -55,6 +55,9 @@ class FromReflection extends \lang\Object implements Source {
   /** @return string */
   public function typeDeclaration() { return $this->reflect->getShortName(); }
 
+  /** @return lang.Type */
+  public function typeInstance() { return new XPClass($this->reflect); }
+
   /** @return string */
   public function packageName() { return strtr($this->reflect->getNamespaceName(), '\\', '.'); }
 

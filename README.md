@@ -31,6 +31,7 @@ public class lang.mirrors.TypeMirror extends lang.Object {
 
   public bool present()
   public string name()
+  public lang.Type type()
   public string comment()
   public self parent()
   public lang.mirrors.Kind kind()

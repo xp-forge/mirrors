@@ -63,6 +63,11 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function typeInstance() {
+    $this->assertEquals(new XPClass(self::class), $this->reflect(self::class)->typeInstance());
+  }
+
+  #[@test]
   public function typeComment() {
     $this->assertEquals(
       "/**\n * Base class for source implementation testing\n */",
