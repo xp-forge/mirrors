@@ -47,7 +47,7 @@ class MirrorRunner {
     } else if (is_dir($name)) {
       $info= new DirectoryInformation($name);
     } else if ($cl->providesClass($name)) {
-      $info= new TypeInformation($cl->loadClass($name, $cl));
+      $info= new TypeInformation($cl->loadClass($name));
     } else if ($cl->providesPackage($name)) {
       $info= new PackageInformation(new Package($name));
     } else {
