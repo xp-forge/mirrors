@@ -30,7 +30,7 @@ class EnumInformation extends TypeKindInformation {
 
     $separator= false;
     $out->writeLine(' {');
-    $this->displayConstants($this->mirror, $out, $separator);
+    $this->displayMembers($this->mirror->constants(), $out, $separator);
 
     foreach (Enum::valuesOf(XPClass::forName($this->mirror->name())) as $member) {
       $out->write('  ',  $member->ordinal(), ': ', $member->name());
