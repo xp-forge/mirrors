@@ -27,7 +27,11 @@ class TypeInformation {
     }
   }
 
-  public function source() { return $this->delegate->source(); }
+  public function sources() {
+    foreach ($this->delegate->sources() as $source) {
+      yield $source;
+    }
+  }
 
   /**
    * Display information

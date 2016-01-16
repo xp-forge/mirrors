@@ -16,7 +16,12 @@ class PackageInformation {
     $this->package= $package;
   }
 
-  public function source() { return $this->package; }
+  public function sources() {
+    $name= $this->package->getName();
+    foreach (ClassLoader::getLoaders() as $loader) {
+      if ($loader->providesPackage($name)) yield $loader;
+    }
+  }
 
   /**
    * Display information

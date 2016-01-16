@@ -55,7 +55,9 @@ class MirrorRunner {
       return 2;
     }
 
-    Console::writeLine("\e[33m@", $info->source(), "\e[0m");
+    foreach ($info->sources() as $source) {
+      Console::writeLine("\e[33m@", $source, "\e[0m");
+    }
     $info->display(Console::$out);
     return 0;
   }

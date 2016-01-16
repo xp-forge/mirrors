@@ -15,7 +15,7 @@ abstract class TypeKindInformation {
     $this->mirror= $arg instanceof TypeMirror ? $arg : new TypeMirror($arg);
   }
 
-  public function source() { return ClassLoader::findClass($this->mirror->name()); }
+  public function sources() { yield ClassLoader::findClass($this->mirror->name()); }
 
   /**
    * Display information
