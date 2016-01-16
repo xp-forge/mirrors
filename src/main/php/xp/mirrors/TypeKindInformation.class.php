@@ -18,26 +18,18 @@ abstract class TypeKindInformation extends Information {
   /** @return php.Generator */
   public function sources() { yield ClassLoader::findClass($this->mirror->name()); }
 
-  protected function displayConstants($mirror, $out, &$separator) {
+  /**
+   * Display members
+   *
+   * @param  lang.mirrors.TypeMirror $mirror
+   * @param  io.StringWriter $out
+   * @param  bool $separator
+   * @return void
+   */
+  protected function displayMembers($members, $out, &$separator) {
     $separator && $out->writeLine();
-    foreach ($mirror->constants() as $constant) {
-      $out->writeLine('  ', (string)$constant);
-      $separator= true;
-    }
-  }
-
-  protected function displayFields($mirror, $out, &$separator) {
-    $separator && $out->writeLine();
-    foreach ($mirror->fields()->declared() as $fields) {
-      $out->writeLine('  ', (string)$fields);
-      $separator= true;
-    }
-  }
-
-  protected function displayMethods($mirror, $out, &$separator) {
-    $separator && $out->writeLine();
-    foreach ($mirror->methods()->declared() as $method) {
-      $out->writeLine('  ', (string)$method);
+    foreach ($members as $members) {
+      $out->writeLine('  ', (string)$members);
       $separator= true;
     }
   }

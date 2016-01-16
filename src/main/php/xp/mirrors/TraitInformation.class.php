@@ -11,9 +11,13 @@ class TraitInformation extends TypeKindInformation {
   public function display($out) {
     $separator= false;
     $out->write(self::declarationOf($this->mirror), ' {');
-    $this->displayConstants($this->mirror, $out, $separator);
-    $this->displayFields($this->mirror, $out, $separator);
-    $this->displayMethods($this->mirror, $out, $separator);
+    $this->displayMembers($this->mirror->constants(), $out, $separator);
+    $this->displayMembers($this->mirror->fields(), $out, $separator);
+    $constructor= $this->mirror->constructor();
+    if ($constructor->present()) {
+      $this->displayMembers([$constructor], $out, $separator);
+    }
+    $this->displayMembers($this->mirror->methods(), $out, $separator);
     $out->writeLine('}');
   }
 }

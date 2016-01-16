@@ -11,8 +11,8 @@ class InterfaceInformation extends TypeKindInformation {
   public function display($out) {
     $separator= false;
     $out->write(self::declarationOf($this->mirror), ' {');
-    $this->displayConstants($this->mirror, $out, $separator);
-    $this->displayMethods($this->mirror, $out, $separator);
+    $this->displayMembers($this->mirror->constants(), $out, $separator);
+    $this->displayMembers($this->mirror->methods(), $out, $separator);
     $out->writeLine('}');
   }
 }

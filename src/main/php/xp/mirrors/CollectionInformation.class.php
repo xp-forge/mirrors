@@ -4,6 +4,14 @@ use lang\mirrors\TypeMirror;
 
 abstract class CollectionInformation extends Information {
 
+  /**
+   * Display information about a collection
+   *
+   * @param  lang.mirrors.Package $package
+   * @param  lang.ClassLoader $loader
+   * @param  io.StringWriter $out
+   * @return void
+   */
   protected function displayCollection($package, $loader, $out) {
     $ext= strlen(\xp::CLASS_FILE_EXT);
     $order= [

@@ -39,7 +39,7 @@ class EnumInformation extends TypeKindInformation {
       }
     }
 
-    $this->displayMethods($this->mirror, $out, $separator);
+    $this->displayMembers($this->mirror->methods(), $out, $separator);
     $out->writeLine('}');
   }
 }

@@ -18,17 +18,13 @@ class ClassInformation extends TypeKindInformation {
 
     $separator= false;
     $out->writeLine(' {');
-    $this->displayConstants($this->mirror, $out, $separator);
-    $this->displayFields($this->mirror, $out, $separator);
-
+    $this->displayMembers($this->mirror->constants(), $out, $separator);
+    $this->displayMembers($this->mirror->fields(), $out, $separator);
     $constructor= $this->mirror->constructor();
     if ($constructor->present()) {
-      $separator && $out->writeLine();
-      $out->writeLine('  ', (string)$constructor);
-      $separator= true;
+      $this->displayMembers([$constructor], $out, $separator);
     }
-
-    $this->displayMethods($this->mirror, $out, $separator);
+    $this->displayMembers($this->mirror->methods(), $out, $separator);
     $out->writeLine('}');
   }
 }
