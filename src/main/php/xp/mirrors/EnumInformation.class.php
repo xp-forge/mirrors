@@ -25,7 +25,7 @@ class EnumInformation extends TypeKindInformation {
     $this->displayMembers($this->mirror->constants(), $out, $separator);
 
     foreach (Enum::valuesOf(XPClass::forName($this->mirror->name())) as $member) {
-      $out->write('  ',  $member->ordinal(), ': ', $member->name());
+      $out->write('  ', $member->name(), '(', $member->ordinal(), ')');
       $mirror= new TypeMirror(typeof($member));
       if ($mirror->isSubtypeOf($this->mirror)) {
         $out->writeLine(' {');
