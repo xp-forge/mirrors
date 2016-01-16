@@ -16,12 +16,30 @@ abstract class TypeKindInformation extends Information {
   }
 
   /** @return php.Generator */
-  public function sources() { yield ClassLoader::findClass($this->mirror->name()); }
+  public function sources() { yield ClassLoader::getDefault()->findClass($this->mirror->name()); }
+
+  /**
+   * Display type extensions
+   *
+   * @param  php.Generator $types
+   * @param  io.StringWriter $out
+   * @param  string $kinde
+   * @return void
+   */
+  protected function displayExtensions($types, $out, $kind) {
+    $extensions= [];
+    foreach ($types as $type) {
+      $type && $extensions[]= $type->name();
+    }
+    if ($extensions) {
+      $out->write(' '.$kind.' ', implode(', ', $extensions));
+    }
+  }
 
   /**
    * Display members
    *
-   * @param  lang.mirrors.TypeMirror $mirror
+   * @param  php.Generator $members
    * @param  io.StringWriter $out
    * @param  bool $separator
    * @return void

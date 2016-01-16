@@ -12,18 +12,8 @@ class ClassInformation extends TypeKindInformation {
    */
   public function display($out) {
     $out->write(self::declarationOf($this->mirror));
-
-    if ($parent= $this->mirror->parent()) {
-      $out->write(' extends ', $parent->name());
-    }
-
-    $implements= [];
-    foreach ($this->mirror->interfaces()->declared() as $type) {
-      $implements[]= $type->name();
-    }
-    if ($implements) {
-      $out->write(' implements ', implode(', ', $implements));
-    }
+    $this->displayExtensions([$this->mirror->parent()], $out, 'extends');
+    $this->displayExtensions($this->mirror->interfaces()->declared(), $out, 'implements');
 
     $separator= false;
     $out->writeLine(' {');
