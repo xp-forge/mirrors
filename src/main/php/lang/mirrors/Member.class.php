@@ -11,6 +11,7 @@ abstract class Member extends \lang\Object {
   public $reflect;
   protected $mirror;
   private $tags= null;
+  private $annotations= null;
 
   /**
    * Creates a new member
@@ -77,8 +78,11 @@ abstract class Member extends \lang\Object {
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
-    $annotations= $this->reflect['annotations']();
-    return new Annotations($this->mirror, (array)$annotations);
+    if (null === $this->annotations) {
+      $annotations= $this->reflect['annotations']();
+      $this->annotations= new Annotations($this->mirror, (array)$annotations);
+    }
+    return $this->annotations;
   }
 
   /**

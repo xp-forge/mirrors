@@ -17,7 +17,9 @@ use lang\IllegalArgumentException;
  * @test   xp://lang.mirrors.unittest.TypeMirrorTraitsTest
  */
 class TypeMirror extends \lang\Object {
-  protected $methods, $fields;
+  private $methods= null;
+  private $fields= null;
+  private $annotations= null;
   public $reflect;
 
   /**
@@ -34,9 +36,6 @@ class TypeMirror extends \lang\Object {
     } else {
       $this->reflect= $source->reflect($arg);
     }
-
-    $this->methods= new Methods($this);
-    $this->fields= new Fields($this);
   }
 
   /** @return bool */
@@ -92,7 +91,7 @@ class TypeMirror extends \lang\Object {
   public function constants() { return new Constants($this); }
 
   /** @return lang.mirrors.Methods */
-  public function methods() { return $this->methods; }
+  public function methods() { return $this->methods ?: $this->methods= new Methods($this); }
 
   /**
    * Returns a method by a given name
@@ -101,10 +100,10 @@ class TypeMirror extends \lang\Object {
    * @return lang.mirrors.Method
    * @throws lang.ElementNotFoundException
    */
-  public function method($named) { return $this->methods->named($named); }
+  public function method($named) { return $this->methods()->named($named); }
 
   /** @return lang.mirrors.Fields */
-  public function fields() { return $this->fields; }
+  public function fields() { return $this->fields ?: $this->fields= new Fields($this); }
 
   /**
    * Returns a field by a given name
@@ -113,10 +112,10 @@ class TypeMirror extends \lang\Object {
    * @return lang.mirrors.Field
    * @throws lang.ElementNotFoundException
    */
-  public function field($named) { return $this->fields->named($named); }
+  public function field($named) { return $this->fields()->named($named); }
 
   /** @return lang.mirrors.Annotations */
-  public function annotations() { return new Annotations($this, (array)$this->reflect->typeAnnotations()); }
+  public function annotations() { return $this->annotations ?: $this->annotations= new Annotations($this, (array)$this->reflect->typeAnnotations()); }
 
   /**
    * Returns a annotation by a given name
