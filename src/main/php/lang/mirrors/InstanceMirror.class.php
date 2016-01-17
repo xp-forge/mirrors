@@ -14,8 +14,6 @@ class InstanceMirror extends TypeMirror {
 
       // Parent constructor inlined
       $this->reflect= Sources::$REFLECTION->reflect(new \ReflectionObject($value));
-      $this->methods= new Methods($this);
-      $this->fields= new Fields($this);
     } else {
       throw new IllegalArgumentException('Given value is not an object, '.typeof($value).' given');
     }
