@@ -17,6 +17,9 @@ interface Source {
   /** @return string */
   public function typeDeclaration();
 
+  /** @return lang.Type */
+  public function typeInstance();
+
   /** @return self */
   public function typeParent();
 
