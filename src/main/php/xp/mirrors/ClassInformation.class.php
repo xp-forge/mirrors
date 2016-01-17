@@ -1,6 +1,7 @@
 <?php namespace xp\mirrors;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Methods;
 
 class ClassInformation extends TypeKindInformation {
 
@@ -23,7 +24,8 @@ class ClassInformation extends TypeKindInformation {
     if ($constructor->present()) {
       $this->displayMembers([$constructor], $out, $separator);
     }
-    $this->displayMembers($this->mirror->methods(), $out, $separator);
+    $this->displayMembers($this->mirror->methods()->all(Methods::ofClass()), $out, $separator);
+    $this->displayMembers($this->mirror->methods()->all(Methods::ofInstance()), $out, $separator);
     $out->writeLine('}');
   }
 }
