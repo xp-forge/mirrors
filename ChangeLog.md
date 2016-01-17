@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Merged pull request #34: Lazy initialization for members, caching 
+  (@thekid)
+
 ## 2.1.0 / 2016-01-17
 
 * Added a new `lang.mirrors.InstanceMirror` class as a shortcut to
