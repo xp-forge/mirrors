@@ -3,6 +3,12 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 2.1.0 / 2016-01-17
+
+* Added a new `lang.mirrors.InstanceMirror` class as a shortcut to
+  creating a TypeMirror and pass `get_class($arg)`.
+  (@thekid)
+
 ## 2.0.0 / 2016-01-17
 
 * Implemented #33: Added new method `lang.mirrors.TypeMirror::type()`
