@@ -3,7 +3,7 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
-## 2.0.0 / ????-??-??
+## 2.0.0 / 2016-01-17
 
 * Implemented #33: Added new method `lang.mirrors.TypeMirror::type()`
   (@thekid)
