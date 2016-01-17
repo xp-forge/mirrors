@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\IllegalStateException;
+use lang\ClassFormatException;
 
 abstract class NoParentTest extends \unittest\TestCase {
   use TypeDefinition;
@@ -26,7 +27,7 @@ abstract class NoParentTest extends \unittest\TestCase {
     ;
   }
 
-  #[@test, @expect(IllegalStateException::class)]
+  #[@test, @expect(ClassFormatException::class)]
   public function annotation_value() {
     $this->mirror("{ #[@fixture(new parent())]\npublic function fixture() { } }", [])
       ->methods()
