@@ -2,6 +2,7 @@
 
 use util\cmd\Console;
 use lang\ClassLoader;
+use lang\IllegalArgumentException;
 
 /**
  * Displays information about types or packages
@@ -41,16 +42,21 @@ class MirrorRunner {
 
     // Check whether a file, class or a package directory or name is given
     $cl= ClassLoader::getDefault();
-    if (strstr($name, \xp::CLASS_FILE_EXT)) {
-      $info= new TypeInformation($cl->loadUri(realpath($name)));
-    } else if (is_dir($name)) {
-      $info= new DirectoryInformation($name);
-    } else if ($cl->providesClass($name)) {
-      $info= new TypeInformation($cl->loadClass($name));
-    } else if ($cl->providesPackage($name)) {
-      $info= new PackageInformation($name);
-    } else {
-      Console::$err->writeLine('*** No classloader provides '.$name);
+    try {
+      if (strstr($name, \xp::CLASS_FILE_EXT)) {
+        $info= new TypeInformation($cl->loadUri(realpath($name)));
+      } else if (is_dir($name)) {
+        $info= new DirectoryInformation($name);
+      } else if ($cl->providesClass($name)) {
+        $info= new TypeInformation($cl->loadClass($name));
+      } else if ($cl->providesPackage($name)) {
+        $info= new PackageInformation($name);
+      } else {
+        Console::$err->writeLine('*** No classloader provides '.$name);
+        return 2;
+      }
+    } catch (IllegalArgumentException $e) {
+      Console::$err->writeLine('*** '.$e->getMessage());
       return 2;
     }
 

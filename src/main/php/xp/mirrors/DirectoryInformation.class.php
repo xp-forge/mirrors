@@ -27,7 +27,7 @@ class DirectoryInformation extends CollectionInformation {
         return;
       }
     }
-    throw new IllegalArgumentException('Cannot derive package name from '.$uri);
+    throw new IllegalArgumentException('Cannot find '.$uri.' in class path');
   }
 
   /** @return php.Generator */
