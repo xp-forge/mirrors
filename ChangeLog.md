@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed parse errors in files with newline after `<?php`/`<?hh` tag
+  (@thekid)
 * Merged pull request #34: Lazy initialization for members, caching 
   (@thekid)
 
