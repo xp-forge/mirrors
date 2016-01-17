@@ -17,8 +17,9 @@ use lang\IllegalArgumentException;
  * @test   xp://lang.mirrors.unittest.TypeMirrorTraitsTest
  */
 class TypeMirror extends \lang\Object {
-  protected $methods= null;
-  protected $fields= null;
+  private $methods= null;
+  private $fields= null;
+  private $annotations= null;
   public $reflect;
 
   /**
@@ -114,7 +115,7 @@ class TypeMirror extends \lang\Object {
   public function field($named) { return $this->fields()->named($named); }
 
   /** @return lang.mirrors.Annotations */
-  public function annotations() { return new Annotations($this, (array)$this->reflect->typeAnnotations()); }
+  public function annotations() { return $this->annotations ?: $this->annotations= new Annotations($this, (array)$this->reflect->typeAnnotations()); }
 
   /**
    * Returns a annotation by a given name
