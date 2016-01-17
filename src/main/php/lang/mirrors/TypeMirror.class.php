@@ -17,7 +17,7 @@ use lang\IllegalArgumentException;
  * @test   xp://lang.mirrors.unittest.TypeMirrorTraitsTest
  */
 class TypeMirror extends \lang\Object {
-  private $methods, $fields;
+  protected $methods, $fields;
   public $reflect;
 
   /**
