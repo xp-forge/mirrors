@@ -13,7 +13,7 @@ The *Mirrors* library provides a replacement for the XP Framework's reflection A
 
 Features
 --------
-**Concise and fluent**: This library aims at reducing the amount of `if` statements in the calling code when working with reflection. One example is constructor handling - if a type doesn't declare a constructor, a default constructor is returned. Another is the `of()` iterator which can filter on instance and static members, instead of having to loop and check whether the modifiers.
+**Concise and fluent**: This library aims at reducing the amount of `if` statements in the calling code when working with reflection. One example is constructor handling - if a type doesn't declare a constructor, a default constructor is returned. Another is the `all()` iterator which can optionally filter on instance and static members, instead of having to loop and check whether the modifiers.
 
 **Sources**: This library supports reflecting classes either by using PHP's reflection classes or directly from their source code. The latter can be useful to prevent classes from being loaded, and in situations where we want to reflect classes during the class loading process (e.g. for compile-time metaprogramming, see the [Kinds library](https://github.com/xp-forge/kinds)).
 
