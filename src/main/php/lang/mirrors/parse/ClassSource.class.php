@@ -6,6 +6,11 @@ use lang\IClassLoader;
 use lang\ClassNotFoundException;
 use lang\ClassFormatException;
 
+/**
+ * Parser source from a class
+ *
+ * @test  xp://lang.mirrors.unittest.parse.ClassSourceTest
+ */
 class ClassSource extends \text\parse\Tokens {
   protected $tokens;
   private $comment, $syntax;
@@ -37,10 +42,10 @@ class ClassSource extends \text\parse\Tokens {
    * @throws lang.ClassFormatException
    */
   protected function tokenize($code, $class) {
-    if (0 === strncmp($code, '<?hh ', 5)) {
+    if (0 === strncmp($code, '<?hh', 4)) {
       $this->syntax= 'hh';
-      $this->tokens= token_get_all('<?php '.substr($code, 5));
-    } else if (0 === strncmp($code, '<?php ', 6)) {
+      $this->tokens= token_get_all('<?php'.substr($code, 4));
+    } else if (0 === strncmp($code, '<?php', 5)) {
       $this->syntax= 'php';
       $this->tokens= token_get_all($code);
     } else {
