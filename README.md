@@ -21,6 +21,8 @@ Features
 
 **PHP7**: This library supports PHP7's [scalar type hints](https://wiki.php.net/rfc/scalar_type_hints_v5) and [return type syntax](https://wiki.php.net/rfc/return_types) using both runtime reflection and static code sources.
 
+**Subcommand**: This library provides an [RFC #0303 integration](https://github.com/xp-framework/rfc/issues/303) and offers a "mirror" subcommand for the new XP runners. See `xp help mirror` on how to use it.
+
 API
 ---
 The entry point class is the type mirror. It can be constructed by passing either type literals (e.g. `util\Date`), fully qualified class names (e.g. `util.Date`), XPClass instances or PHP's ReflectionClass; and optionally supplying a source to load the information from. The constructor does not throw exceptions for non-existant types: Instead, use `present()` to check of the type exists.
