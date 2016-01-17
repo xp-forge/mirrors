@@ -68,9 +68,9 @@ class HackSyntax extends PhpSyntax {
     ]);
 
     $rules['annotations']= new Match([
-      '[' => new Sequence(
-        [new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations), new Token(']')],
-        function($values) { return $values[1]; }
+      '#' => new Sequence(
+        [new Token('['), new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations), new Token(']')],
+        function($values) { return $values[2]; }
       ),
       T_SL => new Sequence(
         [new Repeated(new Apply('attribute'), new Token(','), $this->collectAnnotations), new Token(T_SR)],

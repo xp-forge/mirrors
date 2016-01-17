@@ -78,7 +78,10 @@ class ClassSource extends \text\parse\Tokens {
             $annotation.= trim(substr($token[1], 1));
             $token= array_shift($this->tokens);
           } while (in_array($token[0], $annotations));
-          $this->tokens= array_merge(array_slice(token_get_all($annotation), 1), [$token], $this->tokens);
+
+          $expand= token_get_all($annotation);
+          $expand[0]= '#';
+          $this->tokens= array_merge($expand, [$token], $this->tokens);
         }
       } else if (T_DOC_COMMENT === $token[0]) {
         $this->comment= $token[1];

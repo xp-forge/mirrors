@@ -25,7 +25,7 @@ class AnnotationSyntaxTest extends \unittest\TestCase {
    */
   private function parse($input, $target= null) {
     $unit= (new PhpSyntax())->parse(new StringInput(
-      "<?php class Test {\n  $input\n  function fixture() { } }"
+      "<?php class Test {\n  #$input\n  function fixture() { } }"
     ));
     return $unit->declaration()['method']['fixture']['annotations'][$target];
   }
