@@ -2,7 +2,6 @@
 
 use util\cmd\Console;
 use lang\ClassLoader;
-use lang\mirrors\Package;
 
 /**
  * Displays information about types or packages
@@ -49,7 +48,7 @@ class MirrorRunner {
     } else if ($cl->providesClass($name)) {
       $info= new TypeInformation($cl->loadClass($name));
     } else if ($cl->providesPackage($name)) {
-      $info= new PackageInformation(new Package($name));
+      $info= new PackageInformation($name);
     } else {
       Console::$err->writeLine('*** No classloader provides '.$name);
       return 2;

@@ -12,7 +12,7 @@ class PackageInformation extends CollectionInformation {
    * @param  string|lang.mirrors.Package $package
    */
   public function __construct($package) {
-    $this->package= $package instanceof Package ? $package : new Package($package);
+    $this->package= $package instanceof Package ? $package : new Package(rtrim($package, '.'));
   }
 
   /** @return php.Generator */
