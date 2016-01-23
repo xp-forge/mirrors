@@ -45,7 +45,10 @@ abstract class TypeKindInformation extends Information {
    * @return void
    */
   protected function displayMembers($members, $out, &$separator) {
-    $separator && $out->writeLine();
+    if ($separator) {
+      $out->writeLine();
+      $separator= false;
+    }
     foreach ($members as $members) {
       $out->writeLine('  ', (string)$members);
       $separator= true;
