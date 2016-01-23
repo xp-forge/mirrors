@@ -102,7 +102,7 @@ abstract class Member extends \lang\Object {
    */
   public function equals($cmp) {
     return $cmp instanceof self && (
-      $this->name === $cmp->name &&
+      $this->reflect['name'] === $cmp->reflect['name'] &&
       $this->reflect['holder'] === $cmp->reflect['holder']
     );
   }
