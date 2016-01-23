@@ -47,6 +47,6 @@ class Package extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'<'.($this->isGlobal() ? '(global)' : $this->name).'>';
+    return nameof($this).'<'.($this->isGlobal() ? '(global)' : $this->name).'>';
   }
 }

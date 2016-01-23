@@ -3,6 +3,12 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 2.1.2 / 2016-01-23
+
+* Fix code to use `nameof()` instead of the deprecated `getClassName()`
+  method from lang.Generic. See xp-framework/core#120
+  (@thekid)
+
 ## 2.1.1 / 2016-01-23
 
 * Fixed `declaredInterfaces()` and `allInterfaces()` methods to behave

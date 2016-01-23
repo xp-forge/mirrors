@@ -108,6 +108,6 @@ class Modifiers extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->names().'>';
+    return nameof($this).'<'.$this->names().'>';
   }
 }

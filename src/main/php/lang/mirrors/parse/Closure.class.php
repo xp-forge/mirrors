@@ -43,7 +43,7 @@ class Closure extends \lang\Object {
    */
   public function toString() {
     $params= $this->params ? Objects::stringOf($this->params) : '';
-    return $this->getClassName().'<('.$params.') -> '.$this->code.'>';
+    return nameof($this).'<('.$params.') -> '.$this->code.'>';
   }
 
   /**
