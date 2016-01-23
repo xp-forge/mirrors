@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 2.1.1 / 2016-01-23
+
 * Fixed `declaredInterfaces()` and `allInterfaces()` methods to behave
   consistently across the respective implementations.
   (@thekid)
