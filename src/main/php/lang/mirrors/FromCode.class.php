@@ -333,7 +333,7 @@ class FromCode extends \lang\Object implements Source {
       $default= null;
     } else if ($param['default']) {
       $var= null;
-      $default= function() use($param) { return $param['default']->resolve($this->mirror); };      
+      $default= function() use($param) { return $param['default']->resolve($this); };
     } else {
       $var= false;
       $default= null;
@@ -469,7 +469,7 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function constantNamed($name) {
-    if (isset($this->decl['const'][$name])) return $this->decl['const'][$name]['value']->resolve($this->mirror);
+    if (isset($this->decl['const'][$name])) return $this->decl['const'][$name]['value']->resolve($this);
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allConstants() as $cmp => $const) {
         if ($cmp === $name) return $const;
@@ -483,7 +483,7 @@ class FromCode extends \lang\Object implements Source {
   public function allConstants() {
     if (isset($this->decl['const'])) {
       foreach ($this->decl['const'] as $name => $const) {
-        yield $name => $const['value']->resolve($this->mirror);
+        yield $name => $const['value']->resolve($this);
       }
     }
     foreach ($this->merge(true, false) as $reflect) {
