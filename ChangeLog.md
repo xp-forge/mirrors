@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed `declaredInterfaces()` and `allInterfaces()` methods to behave
+  consistently across the respective implementations.
+  (@thekid)
 * Fixed parse errors in files with newline after `<?php`/`<?hh` tag
   (@thekid)
 * Merged pull request #34: Lazy initialization for members, caching 

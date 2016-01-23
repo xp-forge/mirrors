@@ -122,8 +122,9 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function typeImplements($name) {
-    foreach ($this->decl['implements'] as $interface) {
+    foreach ((array)$this->decl['implements'] as $interface) {
       if ($name === $this->resolve0($interface)) return true;
+      if ($this->source->reflect($name)->typeImplements($name)) return true;
     }
     foreach ($this->merge(true, false) as $reflect) {
       if ($reflect->typeImplements($name)) return true;
@@ -133,9 +134,13 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allInterfaces() {
-    foreach ($this->decl['implements'] as $interface) {
+    foreach ((array)$this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
-      yield $name => $this->source->reflect($name);
+      $reflect= $this->source->reflect($name);
+      yield $name => $reflect;
+      foreach ($reflect->allInterfaces() as $name => $interface) {
+        yield $name => $reflect;
+      }
     }
     foreach ($this->merge(true, false) as $reflect) {
       foreach ($reflect->allInterfaces($name) as $name => $reflect) {
@@ -146,7 +151,7 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function declaredInterfaces() {
-    foreach ($this->decl['implements'] as $interface) {
+    foreach ((array)$this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
       yield $name => $this->source->reflect($name);
     }

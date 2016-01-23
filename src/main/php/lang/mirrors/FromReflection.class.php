@@ -162,8 +162,12 @@ class FromReflection extends \lang\Object implements Source {
   public function declaredInterfaces() {
     $parent= $this->reflect->getParentClass();
     $inherited= $parent ? array_flip($parent->getInterfaceNames()) : [];
-    foreach ($this->reflect->getInterfaces() as $interface) {
-      if (isset($inherited[$interface->getName()])) continue;
+    $local= $this->reflect->getInterfaces();
+    foreach ($local as $interface) {
+      if (isset($inherited[$interface->name])) continue;
+      foreach ($local as $compare) {
+        if ($compare->isSubclassOf($interface)) continue 2;
+      }
       yield $interface->name => $this->source->reflect($interface);
     }
   }

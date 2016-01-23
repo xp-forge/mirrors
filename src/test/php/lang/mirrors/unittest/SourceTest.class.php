@@ -156,14 +156,19 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function typeImplements() {
-    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(FixtureInterface::class));
+  public function typeImplements_declared_interface() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(\IteratorAggregate::class));
+  }
+
+  #[@test]
+  public function typeImplements_inherited_interface() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(\Traversable::class));
   }
 
   #[@test]
   public function all_interfaces() {
     $this->assertEquals(
-      [Closeable::class, FixtureInterface::class],
+      [\IteratorAggregate::class, \Traversable::class, Closeable::class, FixtureInterface::class],
       $this->sorted($this->reflect(FixtureImpl::class)->allInterfaces())
     );
   }
@@ -171,7 +176,7 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function declared_interfaces() {
     $this->assertEquals(
-      [Closeable::class],
+      [\IteratorAggregate::class, Closeable::class],
       $this->sorted($this->reflect(FixtureImpl::class)->declaredInterfaces())
     );
   }
