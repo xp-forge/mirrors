@@ -1,10 +1,16 @@
 <?php namespace xp\mirrors;
 
-class Highlighting implements \io\streams\OutputStreamWriter {
+class Highlighting {
   private $out;
   private $patterns= [];
   private $replacements= [];
 
+  /**
+   * Creates a highlighting instance
+   *
+   * @param  io.streams.OutputStreamWriter $out
+   * @param  [:var] $replace
+   */
   public function __construct($out, $replace= []) {
     $this->out= $out;
     foreach ($replace as $pattern => $replacement) {
@@ -21,32 +27,22 @@ class Highlighting implements \io\streams\OutputStreamWriter {
     $this->out->write(preg_replace($this->patterns, $this->replacements, $line));
   }
 
+  /**
+   * Write
+   *
+   * @param  string... $args
+   */
   public function write() {
     $this->write0(func_get_args());
   }
 
+  /**
+   * Write line
+   *
+   * @param  string... $args
+   */
   public function writeLine() {
     $this->write0(func_get_args());
     $this->out->write("\n");
-  }
-
-  public function writef() {
-    $a= func_get_args();
-    $this->write0(vsprintf(array_shift($a), $a));
-  }
-
-  public function writeLinef() {
-    $a= func_get_args();
-    $this->write0(vsprintf(array_shift($a), $a));
-    $this->out->write("\n");
-  }
-
-  /**
-   * Flush output buffer
-   *
-   * @return void
-   */
-  public function flush() {
-    $this->out->flush();
   }
 }
