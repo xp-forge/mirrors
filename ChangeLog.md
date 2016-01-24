@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 2.1.3 / 2016-01-24
+
+* Fixed highlighting to work with both XP6 and XP7 - @thekid
+
 ## 2.1.2 / 2016-01-23
 
 * Fix code to use `nameof()` instead of the deprecated `getClassName()`
