@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 3.0.0 / 2016-02-21
+
+* Added version compatibility with XP 7 - @thekid
+
 ## 2.1.3 / 2016-01-24
 
 * Fixed highlighting to work with both XP6 and XP7 - @thekid
