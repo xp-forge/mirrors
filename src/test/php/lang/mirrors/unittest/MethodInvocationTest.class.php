@@ -85,7 +85,7 @@ class MethodInvocationTest extends AbstractMethodTest {
       $this->fixture('raisesErrorFixture')->invoke($this, []);
       $this->fail('No exception raised', null, 'lang.reflect.TargetInvocationException');
     } catch (TargetInvocationException $expected) {
-      $this->assertInstanceOf('Error', $expected->getCause());
+      $this->assertInstanceOf('lang.Error', $expected->getCause());
     }
   }
 }

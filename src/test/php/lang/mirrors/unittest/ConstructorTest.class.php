@@ -110,7 +110,7 @@ class ConstructorTest extends \unittest\TestCase {
       (new Constructor(new TypeMirror($fixture)))->newInstance(null);
       $this->fail('No exception raised', null, 'lang.reflect.TargetInvocationException');
     } catch (TargetInvocationException $expected) {
-      $this->assertInstanceOf('Error', $expected->getCause());
+      $this->assertInstanceOf('lang.Error', $expected->getCause());
     }
   }
 
