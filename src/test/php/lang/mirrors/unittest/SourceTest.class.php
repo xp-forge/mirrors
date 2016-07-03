@@ -64,7 +64,7 @@ abstract class SourceTest extends \unittest\TestCase {
 
   #[@test]
   public function typeInstance() {
-    $this->assertEquals(new XPClass(self::class), $this->reflect(self::class)->typeInstance());
+    $this->assertEquals(new XPClass(__CLASS__), $this->reflect(__CLASS__)->typeInstance());
   }
 
   #[@test]
@@ -157,12 +157,12 @@ abstract class SourceTest extends \unittest\TestCase {
 
   #[@test]
   public function typeImplements_declared_interface() {
-    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(\IteratorAggregate::class));
+    $this->assertTrue($this->reflect('lang.mirrors.unittest.fixture.FixtureImpl')->typeImplements('IteratorAggregate'));
   }
 
   #[@test]
   public function typeImplements_inherited_interface() {
-    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(\Traversable::class));
+    $this->assertTrue($this->reflect('lang.mirrors.unittest.fixture.FixtureImpl')->typeImplements('Traversable'));
   }
 
   #[@test]
@@ -375,7 +375,7 @@ abstract class SourceTest extends \unittest\TestCase {
   public function trait_methods() {
     $this->assertEquals(
       ['annotatedTraitMethod', 'traitMethod'],
-      $this->sorted($this->reflect(FixtureTrait::class)->allMethods())
+      $this->sorted($this->reflect('lang.mirrors.unittest.fixture.FixtureTrait')->allMethods())
     );
   }
 
@@ -511,25 +511,25 @@ abstract class SourceTest extends \unittest\TestCase {
 
   #[@test]
   public function trait_field_comment() {
-    $field= $this->reflect(MemberFixture::class)->fieldNamed('traitField');
+    $field= $this->reflect('lang.mirrors.unittest.fixture.MemberFixture')->fieldNamed('traitField');
     $this->assertEquals('/** @type int */', $field['comment']());
   }
 
   #[@test]
   public function trait_field_annotations() {
-    $field= $this->reflect(MemberFixture::class)->fieldNamed('annotatedTraitField');
+    $field= $this->reflect('lang.mirrors.unittest.fixture.MemberFixture')->fieldNamed('annotatedTraitField');
     $this->assertEquals(['fixture' => null], $field['annotations']());
   }
 
   #[@test]
   public function trait_method_comment() {
-    $field= $this->reflect(MemberFixture::class)->methodNamed('traitMethod');
+    $field= $this->reflect('lang.mirrors.unittest.fixture.MemberFixture')->methodNamed('traitMethod');
     $this->assertEquals('/** @return void */', $field['comment']());
   }
 
   #[@test]
   public function trait_method_annotations() {
-    $field= $this->reflect(MemberFixture::class)->methodNamed('annotatedTraitMethod');
+    $field= $this->reflect('lang.mirrors.unittest.fixture.MemberFixture')->methodNamed('annotatedTraitMethod');
     $this->assertEquals(['fixture' => null], $field['annotations']());
   }
 }

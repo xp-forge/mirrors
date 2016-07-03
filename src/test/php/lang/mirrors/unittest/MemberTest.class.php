@@ -11,7 +11,7 @@ class MemberTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->type= new TypeMirror(self::class);
+    $this->type= new TypeMirror(__CLASS__);
   }
 
   #[@test, @values(['self', '\lang\mirrors\unittest\MemberTest', 'MemberTest'])]
@@ -26,6 +26,6 @@ class MemberTest extends \unittest\TestCase {
 
   #[@test, @values(['self', '\lang\mirrors\unittest\MemberTest', 'MemberTest'])]
   public function resolve_class_reference($class) {
-    $this->assertEquals(self::class, (new Member($class, 'class'))->resolve($this->type->reflect));
+    $this->assertEquals(__CLASS__, (new Member($class, 'class'))->resolve($this->type->reflect));
   }
 }

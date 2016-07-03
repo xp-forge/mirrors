@@ -83,7 +83,7 @@ class TypeMirrorTest extends TestCase {
 
   #[@test]
   public function type() {
-    $this->assertEquals(typeof($this), (new TypeMirror(self::class))->type());
+    $this->assertEquals(typeof($this), (new TypeMirror(__CLASS__))->type());
   }
 
   #[@test]

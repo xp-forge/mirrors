@@ -19,7 +19,7 @@ trait TypeDefinition {
    * @param  string[] $extends
    * @return lang.XPClass
    */
-  protected function define($declaration, $extends= [Object::class]) {
+  protected function define($declaration, $extends= ['lang.Object']) {
     if (!isset(self::$fixtures[$declaration])) {
       $definition= [
         'kind'       => 'class',
