@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\unittest\fixture\Identity;
 use lang\ElementNotFoundException;
 
 class MethodAnnotationsTest extends AbstractMethodTest {
@@ -70,5 +71,38 @@ class MethodAnnotationsTest extends AbstractMethodTest {
   #[@test, @expect(ElementNotFoundException::class)]
   public function named_raises_exception_when_given_non_existant_annotation() {
     $this->fixture('noAnnotationFixture')->annotations()->named('fixture');
+  }
+
+  #[@test, @values([
+  #  ['#[@fixture(0)]', 0],
+  #  ['#[@fixture(-1)]', -1],
+  #  ['#[@fixture(0.5)]', 0.5],
+  #  ['#[@fixture(-0.5)]', -0.5],
+  #  ['#[@fixture(true)]', true],
+  #  ['#[@fixture(false)]', false],
+  #  ['#[@fixture(null)]', null],
+  #  ['#[@fixture(DIRECTORY_SEPARATOR)]', DIRECTORY_SEPARATOR],
+  #  ['#[@fixture("test")]', 'test'],
+  #  ['#[@fixture([])]', []],
+  #  ['#[@fixture([1, 2, 3])]', [1, 2, 3]],
+  #  ['#[@fixture(["key" => "value"])]', ['key' => 'value']],
+  #  ['#[@fixture(new Identity("Test"))]', new Identity('Test')],
+  #  ['#[@fixture(Identity::$NULL)]', Identity::$NULL],
+  #  ['#[@fixture(Identity::NAME)]', Identity::NAME],
+  #  ['#[@fixture(Identity::class)]', Identity::class]
+  #])]
+  public function values($annotation, $expected) {
+    $type= $this->mirror("{ ".$annotation."\npublic function fixture() { } }");
+    $this->assertEquals(
+      $expected,
+      $type->methods()->named('fixture')->annotations()->named('fixture')->value()
+    );
+  }
+
+  #[@test]
+  public function closures() {
+    $type= $this->mirror("{ #[@fixture(function() { return 'Test'; })]\npublic function fixture() { } }");
+    $function= $type->methods()->named('fixture')->annotations()->named('fixture')->value();
+    $this->assertEquals('Test', $function());
   }
 }

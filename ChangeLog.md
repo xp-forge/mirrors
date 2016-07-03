@@ -3,6 +3,103 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 3.0.0 / 2016-02-21
+
+* Added version compatibility with XP 7 - @thekid
+
+## 2.1.3 / 2016-01-24
+
+* Fixed highlighting to work with both XP6 and XP7 - @thekid
+
+## 2.1.2 / 2016-01-23
+
+* Fix code to use `nameof()` instead of the deprecated `getClassName()`
+  method from lang.Generic. See xp-framework/core#120
+  (@thekid)
+
+## 2.1.1 / 2016-01-23
+
+* Fixed `declaredInterfaces()` and `allInterfaces()` methods to behave
+  consistently across the respective implementations.
+  (@thekid)
+* Fixed parse errors in files with newline after `<?php`/`<?hh` tag
+  (@thekid)
+* Merged pull request #34: Lazy initialization for members, caching 
+  (@thekid)
+
+## 2.1.0 / 2016-01-17
+
+* Added a new `lang.mirrors.InstanceMirror` class as a shortcut to
+  creating a TypeMirror and pass `get_class($arg)`.
+  (@thekid)
+
+## 2.0.0 / 2016-01-17
+
+* Implemented #33: Added new method `lang.mirrors.TypeMirror::type()`
+  (@thekid)
+* Implemented #30: Added "xp mirror" command. See xp-framework/rfc#303
+  (@thekid)
+
+## 1.6.0 / 2016-01-17
+
+* Merged pull request #32: Fix variadics.
+  . Via PHP 5.6 syntax *(also supported in HHVM)*
+  . Via PHP 7 syntax
+  . Declared via `var...` in api documentation
+  . Declared via `var*` in api documentation
+  . Now consistent with xp-framework/core, plus fixes #31
+  (@thekid)
+
+## 1.5.0 / 2015-12-20
+
+* Merged pull request #27: Additional shortcuts - @thekid
+
+## 1.4.5 / 2015-12-20
+
+* Added dependency on tokenize library which has since been extracted
+  from XP core.
+  (@thekid)
+
+## 1.4.4 / 2015-10-27
+
+* Fixed constructor and method invocations leaving exception cause of
+  TargetInvocationExceptions empty when native exceptions are raised.
+  (@thekid)
+
+## 1.4.3 / 2015-10-27
+
+* Fixed issue #28: Parsing multiline annotation swallows whitespace
+  (@thekid)
+
+## 1.4.2 / 2015-10-26
+
+* Fixed not handling parent types correctly when type has no parent
+  (@thekid)
+* Improved performance when OpCache extension is not loaded
+  (@thekid)
+
+## 1.4.1 / 2015-10-25
+
+* Fixed issue #25: Errors with opcache.save_comments=0
+  (@thekid)
+
+## 1.4.0 / 2015-10-25
+
+* Merged PR #23: Backport to PHP 5.5. Minimum PHP version required is
+  now **PHP 5.5.0**.
+  (@thekid)
+* Fixed member references to class constants, the `::class` literal and
+  static type members inside annotations
+  (@thekid)
+* Fixed allConstants() and constantNamed() in `lang.mirrors.FromCode`
+  (@thekid)
+
+## 1.3.1 / 2015-08-25
+
+* Fixed default constructor's modifiers() method returning an integer
+  instead of a `lang.reflect.Modifiers` instance as declared.
+  (@thekid)
+
 ## 1.3.0 / 2015-08-25
 
 * Implemented PR #22 - Annotations via compiled meta data. This is a

@@ -13,6 +13,7 @@ class Modifiers extends \lang\Object {
   const IS_PUBLIC    = 0x0100;
   const IS_PROTECTED = 0x0200;
   const IS_PRIVATE   = 0x0400;
+  const IS_NATIVE    = 0xF000;
 
   private static $names= [
     'public'    => self::IS_PUBLIC,
@@ -20,7 +21,8 @@ class Modifiers extends \lang\Object {
     'private'   => self::IS_PRIVATE,
     'static'    => self::IS_STATIC,
     'final'     => self::IS_FINAL,
-    'abstract'  => self::IS_ABSTRACT
+    'abstract'  => self::IS_ABSTRACT,
+    'native'    => self::IS_NATIVE
   ];
   private $bits;
 
@@ -87,6 +89,9 @@ class Modifiers extends \lang\Object {
   /** @return bool */
   public function isPrivate() { return 0 !== ($this->bits & self::IS_PRIVATE); }
 
+  /** @return bool */
+  public function isNative() { return 0 !== ($this->bits & self::IS_NATIVE); }
+
   /**
    * Returns whether a given value is equal to this member
    *
@@ -103,6 +108,6 @@ class Modifiers extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->names().'>';
+    return nameof($this).'<'.$this->names().'>';
   }
 }

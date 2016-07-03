@@ -136,8 +136,8 @@ class PhpSyntax extends \text\parse\Syntax {
         function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
       ),
       'annotations' => new Sequence(
-        [new Token('['), new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations), new Token(']')],
-        function($values) { isset($values[1][null]) || $values[1][null]= []; return $values[1]; }
+        [new Token('#'), new Token('['), new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations), new Token(']')],
+        function($values) { isset($values[2][null]) || $values[2][null]= []; return $values[2]; }
       ),
       'annotation' => new Sequence(
         [new Token('@'), new Apply('annotation_target'), new Optional(new Apply('value'))],
@@ -213,8 +213,8 @@ class PhpSyntax extends \text\parse\Syntax {
           'ref'         => isset($values[4]),
           'var'         => isset($values[3]),
           'this'        => $values[1],
-          'default'     => $values[6]];
-        }
+          'default'     => $values[6]
+        ]; }
       ),
       'aliases' => new Match([';' => null, '{' => new Block(true)]), 
       'method' => new Match([';' => null, '{' => new Block(true)]),

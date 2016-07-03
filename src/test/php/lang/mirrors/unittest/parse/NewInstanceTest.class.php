@@ -21,7 +21,7 @@ class NewInstanceTest extends ResolveableTest {
     }');
     $this->assertEquals(
       ['Test', 1],
-      (new NewInstance($fixture->getClassName(), [new Value('Test'), new Value(1)]))->resolve($this->source)->passed
+      (new NewInstance(nameof($fixture), [new Value('Test'), new Value(1)]))->resolve($this->source)->passed
     );
   }
 }

@@ -3,6 +3,7 @@
 use lang\Type;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
+use lang\mirrors\parse\VariadicTypeRef;
 
 /**
  * A method or constructor parameter
@@ -45,10 +46,17 @@ class Parameter extends \lang\Object {
   public function declaringRoutine() { return $this->mirror; }
 
   /** @return bool */
-  public function isVariadic() { return $this->reflect['var']; }
+  public function isVariadic() {
+    if (null === $this->reflect['var']) {
+      $params= $this->mirror->tags()['param'];
+      $n= $this->reflect['pos'];
+      $this->reflect['var']= isset($params[$n]) && $params[$n] instanceof VariadicTypeRef;
+    }
+    return $this->reflect['var'];
+  }
 
   /** @return bool */
-  public function isOptional() { return isset($this->reflect['default']); }
+  public function isOptional() { return isset($this->reflect['default']) || $this->isVariadic(); }
 
   /** @return bool */
   public function isVerified() { return isset($this->reflect['type']); }
@@ -88,12 +96,25 @@ class Parameter extends \lang\Object {
   }
 
   /**
+   * Returns whether a given value is equal to this parameter
+   *
+   * @param  var $cmp
+   * @return bool
+   */
+  public function equals($cmp) {
+    return $cmp instanceof self && (
+      $this->mirror->equals($cmp->mirror) &&
+      $this->reflect['pos'] === $cmp->reflect['pos']
+    );
+  }
+
+  /**
    * Creates a string representation
    *
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'('.$this.')';
+    return nameof($this).'('.$this.')';
   }
 
   /** @return string */

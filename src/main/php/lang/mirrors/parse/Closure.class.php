@@ -42,7 +42,8 @@ class Closure extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'<('.Objects::stringOf($this->params).')'.$this->code.'>';
+    $params= $this->params ? Objects::stringOf($this->params) : '';
+    return nameof($this).'<('.$params.') -> '.$this->code.'>';
   }
 
   /**

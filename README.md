@@ -4,7 +4,7 @@ Mirrors
 [![Build Status on TravisCI](https://secure.travis-ci.org/xp-forge/mirrors.svg)](http://travis-ci.org/xp-forge/mirrors)
 [![XP Framework Module](https://raw.githubusercontent.com/xp-framework/web/master/static/xp-framework-badge.png)](https://github.com/xp-framework/core)
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
-[![Required PHP 5.6+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_6plus.png)](http://php.net/)
+[![Required PHP 5.5+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_5plus.png)](http://php.net/)
 [![Supports PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.png)](http://php.net/)
 [![Supports HHVM 3.5+](https://raw.githubusercontent.com/xp-framework/web/master/static/hhvm-3_5plus.png)](http://hhvm.com/)
 [![Latest Stable Version](https://poser.pugx.org/xp-forge/mirrors/version.png)](https://packagist.org/packages/xp-forge/mirrors)
@@ -13,13 +13,15 @@ The *Mirrors* library provides a replacement for the XP Framework's reflection A
 
 Features
 --------
-**Concise and fluent**: This library aims at reducing the amount of `if` statements in the calling code when working with reflection. One example is constructor handling - if a type doesn't declare a constructor, a default constructor is returned. Another is the `of()` iterator which can filter on instance and static members, instead of having to loop and check whether the modifiers.
+**Concise and fluent**: This library aims at reducing the amount of `if` statements in the calling code when working with reflection. One example is constructor handling - if a type doesn't declare a constructor, a default constructor is returned. Another is the `all()` iterator which can optionally filter on instance and static members, instead of having to loop and check whether the modifiers.
 
-**Sources**: This library supports reflecting classes either by using PHP's reflection classes or directly from their source code. The latter can be useful to prevent classes from being loaded, and in situations where we want to reflect classes during the class loading process (e.g. for compile-time metaprogramming, see the [Kinds library](https://github.com/xp-forge/kinds)).
+**Sources**: This library supports reflecting classes either by using PHP's reflection classes or directly from their source code. The latter can be useful to prevent classes from being loaded, and in situations where we want to reflect classes during the class loading process (e.g. for compile-time metaprogramming, see the [partial types library](https://github.com/xp-forge/partial)).
 
 **Hack language**: This library supports HHVM's [Hack language](http://docs.hhvm.com/manual/en/hacklangref.php), mapping its type literals to the XP type system and its attributes to XP annotations. You can use Hack alongside PHP in HHVM; and this library will support a seamless migration, e.g. moving from return types declared in the apidocs to Hack's syntactic form, all the while maintaining the same reflection information.
 
 **PHP7**: This library supports PHP7's [scalar type hints](https://wiki.php.net/rfc/scalar_type_hints_v5) and [return type syntax](https://wiki.php.net/rfc/return_types) using both runtime reflection and static code sources.
+
+**Subcommand**: This library provides an [RFC #0303 integration](https://github.com/xp-framework/rfc/issues/303) and offers a "mirror" subcommand for the new XP runners. See `xp help mirror` on how to use it.
 
 API
 ---
@@ -31,6 +33,7 @@ public class lang.mirrors.TypeMirror extends lang.Object {
 
   public bool present()
   public string name()
+  public lang.Type type()
   public string comment()
   public self parent()
   public lang.mirrors.Kind kind()
@@ -41,9 +44,12 @@ public class lang.mirrors.TypeMirror extends lang.Object {
   public lang.mirrors.Interfaces interfaces()
   public lang.mirrors.Constructor constructor()
   public lang.mirrors.Methods methods()
+  public lang.mirrors.Method method(string $named) throws lang.ElementNotFoundException
   public lang.mirrors.Fields fields()
+  public lang.mirrors.Field field(string $named) throws lang.ElementNotFoundException
   public lang.mirrors.Constants constants()
   public lang.mirrors.Annotations annotations()
+  public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
   public self resolve(string $name)
 }
 ```
@@ -63,8 +69,10 @@ public class lang.mirrors.Constructor extends lang.mirrors.Routine {
   public lang.Generic newInstance([var... $args= null]) throws ...
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
+  public lang.mirrors.Parameter parameter(string|int $arg) throws lang.ElementNotFoundException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
+  public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
 }
 ```
 
@@ -98,8 +106,10 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
   public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
+  public lang.mirrors.Parameter parameter(string|int $arg) throws lang.ElementNotFoundException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
+  public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
 }
 
 public class lang.mirrors.Parameters extends lang.Object implements php.IteratorAggregate {
@@ -159,6 +169,7 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
   public void modify(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
+  public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
 }
 ```
 
@@ -173,6 +184,7 @@ public class lang.mirrors.Modifiers extends lang.Object {
   const IS_PUBLIC = 256
   const IS_PROTECTED = 512
   const IS_PRIVATE = 1024
+  const IS_NATIVE = 61440
 
   public __construct(var $arg)
 
@@ -184,6 +196,7 @@ public class lang.mirrors.Modifiers extends lang.Object {
   public bool isPublic()
   public bool isProtected()
   public bool isPrivate()
+  public bool isNative()
 }
 ```
 

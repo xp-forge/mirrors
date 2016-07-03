@@ -21,6 +21,7 @@ class TagsSource extends \text\parse\Tokens {
   const T_CALLABLE = 277;
   const T_ARRAY    = 278;
   const T_THIS     = 279;
+  const T_VARIADIC = 280;
 
   private static $keywords= [
     '@param'    => self::T_PARSED,
@@ -49,7 +50,10 @@ class TagsSource extends \text\parse\Tokens {
     'mixed'     => self::T_VAR,
     'false'     => self::T_BOOL,
     'true'      => self::T_BOOL,
-    'null'      => self::T_VOID
+    'null'      => self::T_VOID,
+
+    '...'       => self::T_VARIADIC,
+    '*'         => self::T_VARIADIC
   ];
 
   /**
@@ -58,7 +62,7 @@ class TagsSource extends \text\parse\Tokens {
    * @param  string $input
    */
   public function __construct($input) {
-    $this->tokens= new StringTokenizer($input, "@\$:()<>[]|, \t\n", true);
+    $this->tokens= new StringTokenizer($input, "@\$:()<>[]|*, \t\n", true);
   }
 
   /** @return var */
@@ -69,6 +73,9 @@ class TagsSource extends \text\parse\Tokens {
         continue;
       } else if ('@' === $token || '$' === $token) {
         $token.= $this->tokens->nextToken();
+      } else if (0 === substr_compare($token, '...', -3)) {
+        $token= substr($token, 0, -3);
+        $this->tokens->pushBack('*');
       }
 
       if (1 === strlen($token)) {

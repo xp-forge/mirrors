@@ -63,6 +63,11 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function typeInstance() {
+    $this->assertEquals(new XPClass(self::class), $this->reflect(self::class)->typeInstance());
+  }
+
+  #[@test]
   public function typeComment() {
     $this->assertEquals(
       "/**\n * Base class for source implementation testing\n */",
@@ -151,14 +156,19 @@ abstract class SourceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function typeImplements() {
-    $this->assertTrue($this->reflect('lang.mirrors.unittest.fixture.FixtureImpl')->typeImplements('lang\mirrors\unittest\fixture\FixtureInterface'));
+  public function typeImplements_declared_interface() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(\IteratorAggregate::class));
+  }
+
+  #[@test]
+  public function typeImplements_inherited_interface() {
+    $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(\Traversable::class));
   }
 
   #[@test]
   public function all_interfaces() {
     $this->assertEquals(
-      ['lang\Closeable', 'lang\mirrors\unittest\fixture\FixtureInterface'],
+      ['IteratorAggregate', 'Traversable', 'lang\Closeable', 'lang\mirrors\unittest\fixture\FixtureInterface'],
       $this->sorted($this->reflect('lang.mirrors.unittest.fixture.FixtureImpl')->allInterfaces())
     );
   }
@@ -166,7 +176,7 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function declared_interfaces() {
     $this->assertEquals(
-      ['lang\Closeable'],
+      ['IteratorAggregate', 'lang\Closeable'],
       $this->sorted($this->reflect('lang.mirrors.unittest.fixture.FixtureImpl')->declaredInterfaces())
     );
   }
@@ -236,6 +246,7 @@ abstract class SourceTest extends \unittest\TestCase {
       [
         'annotatedClassField',
         'annotatedInstanceField',
+        'annotatedTraitField',
         'inheritedField',
         'privateClassField',
         'privateInstanceField',
@@ -255,6 +266,7 @@ abstract class SourceTest extends \unittest\TestCase {
       [
         'annotatedClassField',
         'annotatedInstanceField',
+        'annotatedTraitField',
         'privateClassField',
         'privateInstanceField',
         'protectedClassField',
@@ -270,7 +282,7 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function trait_fields() {
     $this->assertEquals(
-      ['traitField'],
+      ['annotatedTraitField', 'traitField'],
       $this->sorted($this->reflect('lang.mirrors.unittest.fixture.FixtureTrait')->allFields())
     );
   }
@@ -326,6 +338,7 @@ abstract class SourceTest extends \unittest\TestCase {
       [
         'annotatedClassMethod',
         'annotatedInstanceMethod',
+        'annotatedTraitMethod',
         'inheritedMethod',
         'privateClassMethod',
         'privateInstanceMethod',
@@ -345,6 +358,7 @@ abstract class SourceTest extends \unittest\TestCase {
       [
         'annotatedClassMethod',
         'annotatedInstanceMethod',
+        'annotatedTraitMethod',
         'privateClassMethod',
         'privateInstanceMethod',
         'protectedClassMethod',
@@ -354,6 +368,14 @@ abstract class SourceTest extends \unittest\TestCase {
         'traitMethod'
       ],
       $this->sorted($this->reflect('lang.mirrors.unittest.fixture.MemberFixture')->declaredMethods())
+    );
+  }
+
+  #[@test]
+  public function trait_methods() {
+    $this->assertEquals(
+      ['annotatedTraitMethod', 'traitMethod'],
+      $this->sorted($this->reflect(FixtureTrait::class)->allMethods())
     );
   }
 
@@ -413,7 +435,7 @@ abstract class SourceTest extends \unittest\TestCase {
     $method= $this->reflect('lang.mirrors.unittest.fixture.FixtureParams')->methodNamed('oneOptionalParam');
     $param= $method['params']()[0];
     $this->assertEquals(
-      [0, 'arg', null, false, false, null],
+      [0, 'arg', null, false, null, null],
       [$param['pos'], $param['name'], $param['type'], $param['ref'], $param['var'], $param['default']()]
     );
   }
@@ -485,5 +507,29 @@ abstract class SourceTest extends \unittest\TestCase {
   #[@test]
   public function isSubtypeOf_implemented_interface() {
     $this->assertTrue($this->reflect('lang.mirrors.unittest.fixture.FixtureImpl')->isSubtypeOf('lang\mirrors\unittest\fixture\FixtureInterface'));
+  }
+
+  #[@test]
+  public function trait_field_comment() {
+    $field= $this->reflect(MemberFixture::class)->fieldNamed('traitField');
+    $this->assertEquals('/** @type int */', $field['comment']());
+  }
+
+  #[@test]
+  public function trait_field_annotations() {
+    $field= $this->reflect(MemberFixture::class)->fieldNamed('annotatedTraitField');
+    $this->assertEquals(['fixture' => null], $field['annotations']());
+  }
+
+  #[@test]
+  public function trait_method_comment() {
+    $field= $this->reflect(MemberFixture::class)->methodNamed('traitMethod');
+    $this->assertEquals('/** @return void */', $field['comment']());
+  }
+
+  #[@test]
+  public function trait_method_annotations() {
+    $field= $this->reflect(MemberFixture::class)->methodNamed('annotatedTraitMethod');
+    $this->assertEquals(['fixture' => null], $field['annotations']());
   }
 }

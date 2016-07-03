@@ -16,7 +16,7 @@ abstract class Resolveable extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this.'>';
+    return nameof($this).'<'.$this.'>';
   }
 
   /** @return string */

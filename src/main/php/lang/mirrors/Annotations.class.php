@@ -59,4 +59,13 @@ class Annotations extends \lang\Object implements \IteratorAggregate {
     }
     return new \ArrayIterator($return);
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    return nameof($this).'('.\xp::stringOf($this->backing).')';
+  }
 }

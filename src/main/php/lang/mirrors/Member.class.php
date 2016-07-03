@@ -11,6 +11,7 @@ abstract class Member extends \lang\Object {
   public $reflect;
   protected $mirror;
   private $tags= null;
+  private $annotations= null;
 
   /**
    * Creates a new member
@@ -77,9 +78,21 @@ abstract class Member extends \lang\Object {
 
   /** @return lang.mirrors.Annotations */
   public function annotations() {
-    $annotations= $this->reflect['annotations']();
-    return new Annotations($this->mirror, (array)$annotations);
+    if (null === $this->annotations) {
+      $annotations= $this->reflect['annotations']();
+      $this->annotations= new Annotations($this->mirror, (array)$annotations);
+    }
+    return $this->annotations;
   }
+
+  /**
+   * Returns a annotation by a given name
+   *
+   * @param  string $name
+   * @return lang.mirrors.Annotation
+   * @throws lang.ElementNotFoundException
+   */
+  public function annotation($named) { return $this->annotations()->named($named); }
 
   /**
    * Returns whether a given value is equal to this member
@@ -89,7 +102,7 @@ abstract class Member extends \lang\Object {
    */
   public function equals($cmp) {
     return $cmp instanceof self && (
-      $this->name === $cmp->name &&
+      $this->reflect['name'] === $cmp->reflect['name'] &&
       $this->reflect['holder'] === $cmp->reflect['holder']
     );
   }
@@ -100,7 +113,7 @@ abstract class Member extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'('.$this.')';
+    return nameof($this).'('.$this.')';
   }
 
   /** @return string */

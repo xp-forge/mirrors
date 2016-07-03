@@ -29,6 +29,9 @@ class FromIncomplete extends \lang\Object implements Source {
     return false === $ns ? $this->name : substr($this->name, $ns + 1);
   }
 
+  /** @return lang.Type */
+  public function typeInstance() { return new XPClass($this->name); }
+
   /** @return string */
   public function packageName() {
     $ns= strrpos($this->name, '\\');

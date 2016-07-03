@@ -3,12 +3,11 @@
 use lang\mirrors\TypeMirror;
 
 abstract class AbstractFieldTest extends \unittest\TestCase {
+  use TypeDefinition;
   protected $type;
 
   /** @return void */
-  public function setUp() {
-    $this->type= new TypeMirror(typeof($this));
-  }
+  public function setUp() { $this->type= new TypeMirror(typeof($this)); }
 
   /**
    * Retrieves a fixture method by a given name

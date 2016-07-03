@@ -6,6 +6,8 @@ use lang\Type;
 use lang\XPClass;
 use lang\Primitive;
 use lang\ElementNotFoundException;
+use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 
 class FromCode extends \lang\Object implements Source {
   private static $syntax;
@@ -57,6 +59,9 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return string */
   public function typeDeclaration() { return $this->decl['name']; }
+
+  /** @return lang.Type */
+  public function typeInstance() { return new XPClass($this->name); }
 
   /** @return string */
   public function packageName() { return strtr($this->unit->package(), '\\', '.'); }
@@ -119,8 +124,9 @@ class FromCode extends \lang\Object implements Source {
    * @return bool
    */
   public function typeImplements($name) {
-    foreach ($this->decl['implements'] as $interface) {
+    foreach ((array)$this->decl['implements'] as $interface) {
       if ($name === $this->resolve0($interface)) return true;
+      if ($this->source->reflect($name)->typeImplements($name)) return true;
     }
     foreach ($this->merge(true, false) as $reflect) {
       if ($reflect->typeImplements($name)) return true;
@@ -131,9 +137,13 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function allInterfaces() {
     $return= [];
-    foreach ($this->decl['implements'] as $interface) {
+    foreach ((array)$this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
-      $return[$name]= $this->source->reflect($name);
+      $reflect= $this->source->reflect($name);
+      $return[$name]= $reflect;
+      foreach ($reflect->allInterfaces() as $name => $interface) {
+        $return[$name]= $reflect;
+      }
     }
     foreach ($this->merge(true, false) as $reflect) {
       foreach ($reflect->allInterfaces($name) as $name => $reflect) {
@@ -146,7 +156,7 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function declaredInterfaces() {
     $return= [];
-    foreach ($this->decl['implements'] as $interface) {
+    foreach ((array)$this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
       $return[$name]= $this->source->reflect($name);
     }
@@ -251,6 +261,8 @@ class FromCode extends \lang\Object implements Source {
       'type'        => isset($field['type']) ? $this->type($field['type']) : null,
       'access'      => new Modifiers($field['access']),
       'holder'      => $holder,
+      'read'        => function($instance) { throw new IllegalArgumentException('Cannot read field when using code reflection'); },
+      'modify'      => function($instance) { throw new IllegalArgumentException('Cannot modify field when using code reflection'); },
       'annotations' => function() use($field) { return $field['annotations'][null]; },
       'comment'     => function() use($field) { return $field['comment']; }
     ];
@@ -334,9 +346,14 @@ class FromCode extends \lang\Object implements Source {
    * @return [:var]
    */
   protected function param($pos, $param, $annotations) {
-    if ($param['default']) {
-      $default= function() use($param) { return $param['default']->resolve($this->mirror); };
+    if ($param['var']) {
+      $var= true;
+      $default= null;
+    } else if ($param['default']) {
+      $var= null;
+      $default= function() use($param) { return $param['default']->resolve($this); };
     } else {
+      $var= false;
       $default= null;
     }
 
@@ -345,7 +362,7 @@ class FromCode extends \lang\Object implements Source {
       'name'        => $param['name'],
       'type'        => isset($param['type']) ? $this->type($param['type']) : null,
       'ref'         => $param['ref'],
-      'var'         => $param['var'],
+      'var'         => $var,
       'default'     => $default,
       'annotations' => function() use($annotations) { return $annotations; }
     ];
@@ -474,9 +491,9 @@ class FromCode extends \lang\Object implements Source {
    * @throws lang.ElementNotFoundException
    */
   public function constantNamed($name) {
-    if (isset($this->decl['const'][$name])) return $this->decl['const'][$name]['value']->resolve($this->mirror);
+    if (isset($this->decl['const'][$name])) return $this->decl['const'][$name]['value']->resolve($this);
     foreach ($this->merge(true, true) as $reflect) {
-      foreach ($reflect->allFields() as $cmp => $const) {
+      foreach ($reflect->allConstants() as $cmp => $const) {
         if ($cmp === $name) return $const;
       }
     }
@@ -487,8 +504,10 @@ class FromCode extends \lang\Object implements Source {
   /** @return php.Generator */
   public function allConstants() {
     $return= [];
-    foreach ($this->decl['const'] as $name => $const) {
-      $return[$name]= $const['value']->resolve($this->mirror);
+    if (isset($this->decl['const'])) {
+      foreach ($this->decl['const'] as $name => $const) {
+        $return[$name]= $const['value']->resolve($this);
+      }
     }
     foreach ($this->merge(true, false) as $reflect) {
       foreach ($reflect->allConstants() as $name => $const) {
@@ -509,7 +528,8 @@ class FromCode extends \lang\Object implements Source {
     if ('self' === $name || $name === $this->decl['name']) {
       return $this->name;
     } else if ('parent' === $name) {
-      return $this->resolve0($this->decl['parent']);
+      if ($this->decl['parent']) return $this->resolve0($this->decl['parent']);
+      throw new IllegalStateException('Cannot resolve parent type of class without parent');
     } else if ('\\' === $name{0}) {
       return substr($name, 1);
     } else if (strstr($name, '\\')) {

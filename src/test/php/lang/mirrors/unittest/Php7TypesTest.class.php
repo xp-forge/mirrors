@@ -3,10 +3,10 @@
 use lang\Primitive;
 use lang\Type;
 use lang\XPClass;
-use lang\ClassLoader;
 use lang\mirrors\TypeMirror;
 
 abstract class Php7TypesTest extends \unittest\TestCase {
+  use TypeDefinition;
 
   /**
    * Returns a fixture for a given class declaration
@@ -18,7 +18,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function primitive_return_type() {
-    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], '{
+    $fixture= $this->define('{
       public function fixture(): int { return 0; }
     }');
 
@@ -27,7 +27,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function array_return_type() {
-    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], '{
+    $fixture= $this->define('{
       public function fixture(): array { return []; }
     }');
 
@@ -36,7 +36,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function callable_return_type() {
-    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], '{
+    $fixture= $this->define('{
       public function fixture(): callable { return []; }
     }');
 
@@ -45,7 +45,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function self_return_type() {
-    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], '{
+    $fixture= $this->define('{
       public function fixture(): self { return new self(); }
     }');
 
@@ -54,7 +54,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function parent_return_type() {
-    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], '{
+    $fixture= $this->define('{
       public function fixture(): parent { return new parent(); }
     }');
 
@@ -63,7 +63,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function object_return_type() {
-    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], '{
+    $fixture= $this->define('{
       public function fixture(): \lang\Object { return new \lang\Object(); }
     }');
 
@@ -72,7 +72,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function primitive_parameter_type() {
-    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], '{
+    $fixture= $this->define('{
       public function fixture(int $param) { }
     }');
 
@@ -81,7 +81,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function self_parameter_type() {
-    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], '{
+    $fixture= $this->define('{
       public function fixture(self $param) { }
     }');
 

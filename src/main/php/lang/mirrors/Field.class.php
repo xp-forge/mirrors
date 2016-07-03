@@ -40,10 +40,10 @@ class Field extends Member {
     }
 
     $tags= $this->tags();
-    if (isset($tags['type'])) {
-      return $tags['type'][0]->resolve($this->declaredIn()->reflect);
-    } else if (isset($tags['var'])) {
+    if (isset($tags['var'])) {
       return $tags['var'][0]->resolve($this->declaredIn()->reflect);
+    } else if (isset($tags['type'])) {
+      return $tags['type'][0]->resolve($this->declaredIn()->reflect);
     } else {
       return Type::$VAR;
     }

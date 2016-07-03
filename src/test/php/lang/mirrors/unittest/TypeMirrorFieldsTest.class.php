@@ -52,6 +52,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
       [
         new Field($this->fixture, 'annotatedClassField'),
         new Field($this->fixture, 'annotatedInstanceField'),
+        new Field($this->fixture, 'annotatedTraitField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'privateInstanceField'),
@@ -71,6 +72,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
       [
         new Field($this->fixture, 'annotatedClassField'),
         new Field($this->fixture, 'annotatedInstanceField'),
+        new Field($this->fixture, 'annotatedTraitField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'privateInstanceField'),
@@ -90,6 +92,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
       [
         new Field($this->fixture, 'annotatedClassField'),
         new Field($this->fixture, 'annotatedInstanceField'),
+        new Field($this->fixture, 'annotatedTraitField'),
         new Field($this->fixture, 'privateClassField'),
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'protectedClassField'),
@@ -107,6 +110,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     $this->assertEquals(
       [
         new Field($this->fixture, 'annotatedInstanceField'),
+        new Field($this->fixture, 'annotatedTraitField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'protectedInstanceField'),
@@ -135,6 +139,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     $this->assertEquals(
       [
         new Field($this->fixture, 'annotatedInstanceField'),
+        new Field($this->fixture, 'annotatedTraitField'),
         new Field($this->fixture, 'inheritedField'),
         new Field($this->fixture, 'privateInstanceField'),
         new Field($this->fixture, 'protectedInstanceField'),
