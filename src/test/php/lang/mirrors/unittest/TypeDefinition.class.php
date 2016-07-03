@@ -26,7 +26,7 @@ trait TypeDefinition {
         'extends'    => $extends,
         'implements' => [],
         'use'        => [],
-        'imports'    => [Identity::class => 'Identity']
+        'imports'    => ['lang.mirrors.unittest.fixture.Identity' => 'Identity']
       ];
       self::$fixtures[$declaration]= ClassLoader::defineType(
         nameof($this).sizeof(self::$fixtures),
@@ -44,7 +44,7 @@ trait TypeDefinition {
    * @param  string[] $extends
    * @return lang.mirrors.TypeMirror
    */
-  protected function mirror($body, $extends= [Object::class]) {
+  protected function mirror($body, $extends= ['lang.Object']) {
     return new TypeMirror($this->define($body, $extends), $this->source());
   }
 }
