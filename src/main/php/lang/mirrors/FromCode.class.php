@@ -38,15 +38,17 @@ class FromCode extends \lang\Object implements Source {
    * @return php.Generator
    */
   private function merge($parent, $traits) {
+    $return= [];
     if ($parent && isset($this->decl['parent'])) {
-      yield $this->resolve($this->decl['parent']);
+      $return[]= $this->resolve($this->decl['parent']);
     }
 
     if ($traits && isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
-        yield $this->resolve($trait);
+        $return[]= $this->resolve($trait);
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return lang.mirrors.parse.CodeUnit */
@@ -134,27 +136,31 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allInterfaces() {
+    $return= [];
     foreach ((array)$this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
       $reflect= $this->source->reflect($name);
-      yield $name => $reflect;
+      $return[$name]= $reflect;
       foreach ($reflect->allInterfaces() as $name => $interface) {
-        yield $name => $reflect;
+        $return[$name]= $reflect;
       }
     }
     foreach ($this->merge(true, false) as $reflect) {
       foreach ($reflect->allInterfaces($name) as $name => $reflect) {
-        yield $name => $reflect;
+        $return[$name]= $reflect;
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function declaredInterfaces() {
+    $return= [];
     foreach ((array)$this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
-      yield $name => $this->source->reflect($name);
+      $return[$name]= $this->source->reflect($name);
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
@@ -162,24 +168,27 @@ class FromCode extends \lang\Object implements Source {
     if (isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
         $name= $this->resolve0($trait);
-        yield $name => $this->source->reflect($name);
+        $return[$name]= $this->source->reflect($name);
       }
     }
     foreach ($this->merge(true, false) as $reflect) {
       foreach ($reflect->allTraits($name) as $name => $reflect) {
-        yield $name => $reflect;
+        $return[$name]= $reflect;
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function declaredTraits() {
+    $return= [];
     if (isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
         $name= $this->resolve0($trait);
-        yield $name => $this->source->reflect($name);
+        $return[$name]= $this->source->reflect($name);
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -296,32 +305,36 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allFields() {
+    $return= [];
     if (isset($this->decl['field'])) {
       foreach ($this->decl['field'] as $name => $field) {
-        yield $name => $this->field($this->name, $field);
+        $return[$name]= $this->field($this->name, $field);
       }
     }
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allFields() as $name => $field) {
         if (isset($this->decl['field'][$name])) continue;
-        yield $name => $field;
+        $return[$name]= $field;
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function declaredFields() {
+    $return= [];
     if (isset($this->decl['field'])) {
       foreach ($this->decl['field'] as $name => $field) {
-        yield $name => $this->field($this->name, $field);
+        $return[$name]= $this->field($this->name, $field);
       }
     }
     foreach ($this->merge(false, true) as $reflect) {
       foreach ($reflect->allFields() as $name => $field) {
         if (isset($this->decl['field'][$name])) continue;
-        yield $name => $field;
+        $return[$name]= $field;
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -421,32 +434,36 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allMethods() {
+    $return= [];
     if (isset($this->decl['method'])) {
       foreach ($this->decl['method'] as $name => $method) {
-        yield $name => $this->method($this->name, $method);
+        $return[$name]= $this->method($this->name, $method);
       }
     }
     foreach ($this->merge(true, true) as $reflect) {
       foreach ($reflect->allMethods() as $name => $method) {
         if (isset($this->decl['method'][$name])) continue;
-        yield $name => $method;
+        $return[$name]= $method;
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function declaredMethods() {
+    $return= [];
     if (isset($this->decl['method'])) {
       foreach ($this->decl['method'] as $name => $method) {
-        yield $name => $this->method($this->name, $method);
+        $return[$name]= $this->method($this->name, $method);
       }
     }
     foreach ($this->merge(false, true) as $reflect) {
       foreach ($reflect->allMethods() as $name => $method) {
         if (isset($this->decl['method'][$name])) continue;
-        yield $name => $method;
+        $return[$name]= $method;
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -486,17 +503,19 @@ class FromCode extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allConstants() {
+    $return= [];
     if (isset($this->decl['const'])) {
       foreach ($this->decl['const'] as $name => $const) {
-        yield $name => $const['value']->resolve($this);
+        $return[$name]= $const['value']->resolve($this);
       }
     }
     foreach ($this->merge(true, false) as $reflect) {
       foreach ($reflect->allConstants() as $name => $const) {
         if (isset($this->decl['const'][$name])) continue;
-        yield $name => $const;
+        $return[$name]= $const;
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /**

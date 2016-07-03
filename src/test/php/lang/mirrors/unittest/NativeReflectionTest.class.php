@@ -7,7 +7,7 @@ class NativeReflectionTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->type= new TypeMirror(\Exception::class);
+    $this->type= new TypeMirror('Exception');
   }
 
   #[@test]

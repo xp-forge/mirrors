@@ -40,11 +40,13 @@ class Fields extends Members {
    * @return php.Generator
    */
   public function all($filter= null) {
+    $return= [];
     foreach ($this->mirror->reflect->allFields() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
       $field= new Field($this->mirror, $member);
-      if (null === $filter || $filter->accept($field)) yield $field;
+      if (null === $filter || $filter->accept($field)) $return[]= $field;
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -54,11 +56,13 @@ class Fields extends Members {
    * @return php.Generator
    */
   public function declared($filter= null) {
+    $return= [];
     foreach ($this->mirror->reflect->declaredFields() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
       $field= new Field($this->mirror, $member);
-      if (null === $filter || $filter->accept($field)) yield $field;
+      if (null === $filter || $filter->accept($field)) $return[]= $field;
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -74,9 +78,11 @@ class Fields extends Members {
       ? $this->mirror->reflect->declaredFields()
       : $this->mirror->reflect->allFields()
     ;
+    $return= [];
     foreach ($fields as $name => $field) {
       if (0 === strncmp('__', $name, 2) || $instance === $field['access']->isStatic()) continue;
-      yield new Field($this->mirror, $field);
+      $return[]= new Field($this->mirror, $field);
     }
+    return new \ArrayIterator($return);
   }
 }

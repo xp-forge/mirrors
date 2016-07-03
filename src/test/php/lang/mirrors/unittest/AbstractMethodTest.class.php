@@ -7,7 +7,7 @@ abstract class AbstractMethodTest extends \unittest\TestCase {
   protected $type;
 
   /** @return void */
-  public function setUp() { $this->type= new TypeMirror(static::class); }
+  public function setUp() { $this->type= new TypeMirror(typeof($this)); }
 
   /**
    * Retrieves a fixture method by a given name

@@ -18,7 +18,13 @@ class PhpSyntax extends \text\parse\Syntax {
   protected $typeName, $collectMembers, $collectElements, $collectAnnotations;
 
   static function __static() {
+
+    // PHP 5.6
     defined('T_ELLIPSIS') ||define('T_ELLIPSIS', 389);
+
+    // PHP 5.5
+    defined('T_FINALLY') ||define('T_FINALLY', 342);
+    defined('T_YIELD') ||define('T_YIELD', 267);
   }
 
   /**

@@ -12,8 +12,8 @@ class ClassSyntax extends \lang\Object {
 
   static function __static() {
     self::$syntax= [
-      'php' => new XPClass(PhpSyntax::class),
-      'hh'  => new XPClass(HackSyntax::class)
+      'php' => XPClass::forName('lang.mirrors.parse.PhpSyntax'),
+      'hh'  => XPClass::forName('lang.mirrors.parse.HackSyntax')
     ];
   }
 

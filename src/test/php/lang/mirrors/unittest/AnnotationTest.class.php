@@ -9,7 +9,7 @@ class AnnotationTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->type= new TypeMirror(self::class);
+    $this->type= new TypeMirror(__CLASS__);
   }
 
   #[@test]

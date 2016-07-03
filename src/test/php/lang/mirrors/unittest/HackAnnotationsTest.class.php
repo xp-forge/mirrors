@@ -3,7 +3,9 @@
 use lang\mirrors\TypeMirror;
 use lang\ElementNotFoundException;
 use lang\mirrors\unittest\fixture\FixtureHackAnnotations;
+use unittest\actions\RuntimeVersion;
 
+#[@action(new RuntimeVersion('>=5.5.0'))]
 abstract class HackAnnotationsTest extends \unittest\TestCase {
 
   /** @return lang.mirrors.Sources */
@@ -11,7 +13,7 @@ abstract class HackAnnotationsTest extends \unittest\TestCase {
 
   /** @return var[][] */
   private function targets() {
-    $mirror= new TypeMirror(FixtureHackAnnotations::class, $this->source());
+    $mirror= new TypeMirror('lang.mirrors.unittest.fixture.FixtureHackAnnotations', $this->source());
     return [
       [$mirror],
       [$mirror->constructor()],
@@ -53,7 +55,7 @@ abstract class HackAnnotationsTest extends \unittest\TestCase {
 
   #[@test, @values(['type', 'num'])]
   public function hack_keyword_works_as_key($keyword) {
-    $this->assertEquals($keyword, key((new TypeMirror(FixtureHackAnnotations::class, $this->source()))
+    $this->assertEquals($keyword, key((new TypeMirror('lang.mirrors.unittest.fixture.FixtureHackAnnotations', $this->source()))
       ->fields()->named($keyword)
       ->annotations()->named('field')
       ->value()

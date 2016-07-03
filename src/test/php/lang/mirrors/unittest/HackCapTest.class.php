@@ -16,7 +16,7 @@ abstract class HackCapTest extends \unittest\TestCase {
    * @return  void
    */
   public function setUp() {
-    $this->fixture= new TypeMirror(FixtureHackCapClass::class, $this->source());
+    $this->fixture= new TypeMirror('lang.mirrors.unittest.fixture.FixtureHackCapClass', $this->source());
   }
 
   #[@test]

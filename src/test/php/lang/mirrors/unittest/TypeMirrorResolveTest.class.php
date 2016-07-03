@@ -14,7 +14,7 @@ class TypeMirrorResolveTest extends TestCase {
    * @return void
    */
   public function setUp() {
-    $this->fixture= new TypeMirror(self::class);
+    $this->fixture= new TypeMirror(__CLASS__);
   }
 
   #[@test]
@@ -35,7 +35,7 @@ class TypeMirrorResolveTest extends TestCase {
   #[@test]
   public function by_unqualified() {
     $this->assertEquals(
-      new TypeMirror(TypeMirrorTest::class),
+      new TypeMirror('lang.mirrors.unittest.TypeMirrorTest'),
       $this->fixture->resolve('TypeMirrorTest')
     );
   }
@@ -43,7 +43,7 @@ class TypeMirrorResolveTest extends TestCase {
   #[@test]
   public function by_relative() {
     $this->assertEquals(
-      new TypeMirror(FixtureUsed::class),
+      new TypeMirror('lang.mirrors.unittest.fixture.FixtureUsed'),
       $this->fixture->resolve('fixture\FixtureUsed')
     );
   }
@@ -54,7 +54,7 @@ class TypeMirrorResolveTest extends TestCase {
   #])]
   public function by_fully_qualified($name) {
     $this->assertEquals(
-      new TypeMirror(TypeMirrorTest::class),
+      new TypeMirror('lang.mirrors.unittest.TypeMirrorTest'),
       $this->fixture->resolve($name)
     );
   }
@@ -62,7 +62,7 @@ class TypeMirrorResolveTest extends TestCase {
   #[@test]
   public function imported_class() {
     $this->assertEquals(
-      new TypeMirror(TestCase::class),
+      new TypeMirror('unittest.TestCase'),
       $this->fixture->resolve('TestCase')
     );
   }
@@ -70,7 +70,7 @@ class TypeMirrorResolveTest extends TestCase {
   #[@test]
   public function aliased_class() {
     $this->assertEquals(
-      new TypeMirror(Aliased::class),
+      new TypeMirror('lang.mirrors.unittest.fixture.FixtureAbstract'),
       $this->fixture->resolve('Aliased')
     );
   }

@@ -9,6 +9,7 @@ use lang\FunctionType;
 use lang\XPClass;
 use lang\mirrors\TypeMirror;
 use lang\mirrors\unittest\fixture\FixtureHackTypedClass;
+use unittest\actions\RuntimeVersion;
 
 abstract class HackTypingTest extends \unittest\TestCase {
 
@@ -17,7 +18,7 @@ abstract class HackTypingTest extends \unittest\TestCase {
 
   /** @return var[][] */
   private function targets($name) {
-    $mirror= new TypeMirror(FixtureHackTypedClass::class, $this->source());
+    $mirror= new TypeMirror('lang.mirrors.unittest.fixture.FixtureHackTypedClass', $this->source());
     return [
       [$mirror->fields()->named($name)->type(), 'field'],
       [$mirror->methods()->named($name)->returns(), 'method'],
@@ -32,12 +33,12 @@ abstract class HackTypingTest extends \unittest\TestCase {
 
   #[@test, @values(source= 'targets', args= ['parentTyped'])]
   public function parent_typed($target) {
-    $this->assertEquals(new XPClass(Object::class), $target);
+    $this->assertEquals(new XPClass('lang.Object'), $target);
   }
 
   #[@test, @values(source= 'targets', args= ['thisTyped'])]
   public function this_typed($target) {
-    $this->assertEquals(new XPClass(FixtureHackTypedClass::class), $target);
+    $this->assertEquals(new XPClass('lang.mirrors.unittest.fixture.FixtureHackTypedClass'), $target);
   }
 
   #[@test, @values(source= 'targets', args= ['arrayTyped'])]
@@ -47,7 +48,7 @@ abstract class HackTypingTest extends \unittest\TestCase {
 
   #[@test, @values(source= 'targets', args= ['mapTyped'])]
   public function map_typed($target) {
-    $this->assertEquals(new MapType(new XPClass(FixtureHackTypedClass::class)), $target);
+    $this->assertEquals(new MapType(new XPClass('lang.mirrors.unittest.fixture.FixtureHackTypedClass')), $target);
   }
 
   #[@test, @values(source= 'targets', args= ['unTypedArrayTyped'])]

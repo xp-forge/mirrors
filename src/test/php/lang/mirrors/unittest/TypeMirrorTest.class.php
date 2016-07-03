@@ -25,10 +25,10 @@ class TypeMirrorTest extends TestCase {
   /** @return var[][] */
   private function args() {
     return [
-      [self::class, 'type literal'],
+      [__CLASS__, 'type literal'],
       ['lang.mirrors.unittest.TypeMirrorTest', 'fully qualified'],
-      [new XPClass(self::class), 'type system'],
-      [new \ReflectionClass(self::class), 'php reflection']
+      [new XPClass(__CLASS__), 'type system'],
+      [new \ReflectionClass(__CLASS__), 'php reflection']
     ];
   }
 
@@ -63,7 +63,7 @@ class TypeMirrorTest extends TestCase {
 
   #[@test]
   public function this_class_is_present() {
-    $this->assertTrue((new TypeMirror(self::class))->present());
+    $this->assertTrue((new TypeMirror(__CLASS__))->present());
   }
 
   #[@test]
@@ -73,32 +73,32 @@ class TypeMirrorTest extends TestCase {
 
   #[@test]
   public function name() {
-    $this->assertEquals('lang.mirrors.unittest.TypeMirrorTest', (new TypeMirror(self::class))->name());
+    $this->assertEquals('lang.mirrors.unittest.TypeMirrorTest', (new TypeMirror(__CLASS__))->name());
   }
 
   #[@test]
   public function declaration() {
-    $this->assertEquals('TypeMirrorTest', (new TypeMirror(self::class))->declaration());
+    $this->assertEquals('TypeMirrorTest', (new TypeMirror(__CLASS__))->declaration());
   }
 
   #[@test]
   public function type() {
-    $this->assertEquals(typeof($this), (new TypeMirror(self::class))->type());
+    $this->assertEquals(typeof($this), (new TypeMirror(__CLASS__))->type());
   }
 
   #[@test]
   public function comment() {
-    $this->assertEquals('Tests TypeMirror', (new TypeMirror(self::class))->comment());
+    $this->assertEquals('Tests TypeMirror', (new TypeMirror(__CLASS__))->comment());
   }
 
   #[@test]
   public function package() {
-    $this->assertEquals(new Package('lang.mirrors.unittest'), (new TypeMirror(self::class))->package());
+    $this->assertEquals(new Package('lang.mirrors.unittest'), (new TypeMirror(__CLASS__))->package());
   }
 
   #[@test]
   public function this_class_has_parent() {
-    $this->assertEquals('unittest.TestCase', (new TypeMirror(self::class))->parent()->name());
+    $this->assertEquals('unittest.TestCase', (new TypeMirror(__CLASS__))->parent()->name());
   }
 
   #[@test]
@@ -108,56 +108,56 @@ class TypeMirrorTest extends TestCase {
 
   #[@test]
   public function isClass() {
-    $this->assertTrue((new TypeMirror(self::class))->kind()->isClass());
+    $this->assertTrue((new TypeMirror(__CLASS__))->kind()->isClass());
   }
 
   #[@test]
   public function isInterface() {
-    $this->assertTrue((new TypeMirror(FixtureInterface::class))->kind()->isInterface());
+    $this->assertTrue((new TypeMirror('lang.mirrors.unittest.fixture.FixtureInterface'))->kind()->isInterface());
   }
 
   #[@test]
   public function isTrait() {
-    $this->assertTrue((new TypeMirror(FixtureTrait::class))->kind()->isTrait());
+    $this->assertTrue((new TypeMirror('lang.mirrors.unittest.fixture.FixtureTrait'))->kind()->isTrait());
   }
 
   #[@test]
   public function isEnum() {
-    $this->assertTrue((new TypeMirror(FixtureEnum::class))->kind()->isEnum());
+    $this->assertTrue((new TypeMirror('lang.mirrors.unittest.fixture.FixtureEnum'))->kind()->isEnum());
   }
 
   #[@test]
   public function this_class_is_public() {
-    $this->assertEquals(new Modifiers('public'), (new TypeMirror(self::class))->modifiers());
+    $this->assertEquals(new Modifiers('public'), (new TypeMirror(__CLASS__))->modifiers());
   }
 
   #[@test]
   public function abstract_class_is_abstract() {
-    $this->assertEquals(new Modifiers('public abstract'), (new TypeMirror(FixtureAbstract::class))->modifiers());
+    $this->assertEquals(new Modifiers('public abstract'), (new TypeMirror('lang.mirrors.unittest.fixture.FixtureAbstract'))->modifiers());
   }
 
   #[@test]
   public function final_class_is_final() {
-    $this->assertEquals(new Modifiers('public final'), (new TypeMirror(FixtureFinal::class))->modifiers());
+    $this->assertEquals(new Modifiers('public final'), (new TypeMirror('lang.mirrors.unittest.fixture.FixtureFinal'))->modifiers());
   }
 
   #[@test]
   public function interface_class_is_public() {
-    $this->assertEquals(new Modifiers('public'), (new TypeMirror(FixtureInterface::class))->modifiers());
+    $this->assertEquals(new Modifiers('public'), (new TypeMirror('lang.mirrors.unittest.fixture.FixtureInterface'))->modifiers());
   }
 
   #[@test]
   public function trait_class_is_abstract_public() {
-    $this->assertEquals(new Modifiers('public abstract'), (new TypeMirror(FixtureTrait::class))->modifiers());
+    $this->assertEquals(new Modifiers('public abstract'), (new TypeMirror('lang.mirrors.unittest.fixture.FixtureTrait'))->modifiers());
   }
 
   #[@test, @values([
   #  'unittest.TestCase',
   #  TestCase::class,
-  #  new TypeMirror(TestCase::class)
+  #  [new TypeMirror(TestCase::class)]
   #])]
   public function this_class_is_subtype_of_TestCase($type) {
-    $this->assertTrue((new TypeMirror(self::class))->isSubtypeOf($type));
+    $this->assertTrue((new TypeMirror(__CLASS__))->isSubtypeOf($type));
   }
 
   #[@test, @values([
@@ -166,12 +166,12 @@ class TypeMirrorTest extends TestCase {
   #  FixtureEnum::class
   #])]
   public function this_class_is_not_subtype_of($type) {
-    $this->assertFalse((new TypeMirror(self::class))->isSubtypeOf($type));
+    $this->assertFalse((new TypeMirror(__CLASS__))->isSubtypeOf($type));
   }
 
   #[@test]
   public function this_class_has_constructor() {
-    $this->assertTrue((new TypeMirror(self::class))->constructor()->present());
+    $this->assertTrue((new TypeMirror(__CLASS__))->constructor()->present());
   }
 
   #[@test]

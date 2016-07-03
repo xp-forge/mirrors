@@ -8,7 +8,7 @@ class TypeMirrorConstantsTest extends \unittest\TestCase {
   const CONSTANT = 1;
 
   public function setUp() {
-    $this->fixture= new TypeMirror(self::class);
+    $this->fixture= new TypeMirror(__CLASS__);
   }
 
   #[@test]

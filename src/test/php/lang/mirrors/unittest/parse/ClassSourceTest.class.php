@@ -24,21 +24,21 @@ class ClassSourceTest extends \unittest\TestCase {
   #[@test, @values(['<?php', '<?php ', "<?php\n", '<?php namespace test;'])]
   public function parse_php($variant) {
     $class= nameof($this).$this->name.md5($variant);
-    DynamicClassLoader::instanceFor(self::class)->setClassBytes($class, 'class Test { }', $variant);
+    DynamicClassLoader::instanceFor(__CLASS__)->setClassBytes($class, 'class Test { }', $variant);
     $this->assertEquals('php', (new ClassSource($class))->usedSyntax());
   }
 
   #[@test, @values(['<?hh', '<?hh ', "<?hh\n", '<?hh namespace test;'])]
   public function parse_hh($variant) {
     $class= nameof($this).$this->name.md5($variant);
-    DynamicClassLoader::instanceFor(self::class)->setClassBytes($class, 'class Test { }', $variant);
+    DynamicClassLoader::instanceFor(__CLASS__)->setClassBytes($class, 'class Test { }', $variant);
     $this->assertEquals('hh', (new ClassSource($class))->usedSyntax());
   }
 
   #[@test, @expect(ClassFormatException::class)]
   public function cannot_parse_xml() {
     $class= nameof($this).$this->name;
-    DynamicClassLoader::instanceFor(self::class)->setClassBytes($class, '', '<?xml version="1.0">');
+    DynamicClassLoader::instanceFor(__CLASS__)->setClassBytes($class, '', '<?xml version="1.0">');
     new ClassSource($class);
   }
 }

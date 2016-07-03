@@ -8,7 +8,7 @@ class TypeMirrorAnnotationsTest extends \unittest\TestCase {
   private $fixture;
 
   public function setUp() {
-    $this->fixture= new TypeMirror(self::class);
+    $this->fixture= new TypeMirror(__CLASS__);
   }
 
   #[@test]

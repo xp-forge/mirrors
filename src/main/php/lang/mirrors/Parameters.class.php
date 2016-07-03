@@ -111,8 +111,10 @@ class Parameters extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
+    $return= [];
     foreach ($this->lookup()[self::BY_ID] as $param) {
-      yield new Parameter($this->mirror, $param);
+      $return[]= new Parameter($this->mirror, $param);
     }
+    return new \ArrayIterator($return);
   }
 }

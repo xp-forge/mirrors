@@ -73,9 +73,9 @@ class MethodInvocationTest extends AbstractMethodTest {
   public function sets_cause_for_exceptions_thrown_from_invoked_method() {
     try {
       $this->fixture('throwsExceptionFixture')->invoke($this, []);
-      $this->fail('No exception raised', null, TargetInvocationException::class);
+      $this->fail('No exception raised', null, 'lang.reflect.TargetInvocationException');
     } catch (TargetInvocationException $expected) {
-      $this->assertInstanceOf(IllegalArgumentException::class, $expected->getCause());
+      $this->assertInstanceOf('lang.IllegalArgumentException', $expected->getCause());
     }
   }
 
@@ -83,9 +83,9 @@ class MethodInvocationTest extends AbstractMethodTest {
   public function sets_cause_for_errors_raised_from_invoked_method() {
     try {
       $this->fixture('raisesErrorFixture')->invoke($this, []);
-      $this->fail('No exception raised', null, TargetInvocationException::class);
+      $this->fail('No exception raised', null, 'lang.reflect.TargetInvocationException');
     } catch (TargetInvocationException $expected) {
-      $this->assertInstanceOf(Error::class, $expected->getCause());
+      $this->assertInstanceOf('lang.Error', $expected->getCause());
     }
   }
 }

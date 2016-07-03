@@ -34,8 +34,10 @@ class Throws extends \lang\Object implements \IteratorAggregate {
    */
   public function getIterator() {
     $type= $this->mirror->declaredIn();
+    $return= [];
     foreach ($this->tags as $tag) {
-      yield $type->resolve($tag->name());
+      $return[]= $type->resolve($tag->name());
     }
+    return new \ArrayIterator($return);
   }
 }

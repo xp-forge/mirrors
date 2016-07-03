@@ -22,39 +22,39 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test]
   public function this_class_constructors_declaring_type() {
-    $type= new TypeMirror(self::class);
+    $type= new TypeMirror(__CLASS__);
     $this->assertEquals($type->parent(), (new Constructor($type))->declaredIn());
   }
 
   #[@test]
   public function this_classes_constructor_has_one_parameter() {
-    $type= new TypeMirror(self::class);
+    $type= new TypeMirror(__CLASS__);
     $this->assertEquals(1, (new Constructor($type))->parameters()->length());
   }
 
   #[@test]
   public function object_classes_constructor_has_no_params() {
-    $type= new TypeMirror(Object::class);
+    $type= new TypeMirror('lang.Object');
     $this->assertEquals(0, (new Constructor($type))->parameters()->length());
   }
 
   #[@test]
   public function object_classes_constructor_is_public() {
-    $type= new TypeMirror(Object::class);
+    $type= new TypeMirror('lang.Object');
     $this->assertEquals(new Modifiers('public'), (new Constructor($type))->modifiers());
   }
 
   #[@test]
   public function creating_new_object_instances() {
     $this->assertInstanceOf(
-      Object::class,
-      (new Constructor(new TypeMirror(Object::class)))->newInstance()
+      'lang.Object',
+      (new Constructor(new TypeMirror('lang.Object')))->newInstance()
     );
   }
 
   #[@test]
   public function creating_instances_invokes_constructor() {
-    $fixture= newinstance(Object::class, [], '{
+    $fixture= newinstance('lang.Object', [], '{
       public $passed= null;
       public function __construct() { $this->passed= func_get_args(); }
     }');
@@ -66,7 +66,7 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test, @expect(TargetInvocationException::class)]
   public function creating_instances_wraps_exceptions() {
-    $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
       '__construct' => function($arg) { throw new IllegalArgumentException('Test'); }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
@@ -74,7 +74,7 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test, @expect(TargetInvocationException::class)]
   public function creating_instances_wraps_argument_mismatch_exceptions() {
-    $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
       '__construct' => function(TypeMirror $arg) { }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
@@ -82,7 +82,7 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test, @expect(TargetInvocationException::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function creating_instances_wraps_errors() {
-    $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+    $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
       '__construct' => function($arg) { $arg->invoke(); }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
@@ -91,42 +91,42 @@ class ConstructorTest extends \unittest\TestCase {
   #[@test]
   public function sets_cause_for_exceptions_thrown() {
     try {
-      $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+      $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
         '__construct' => function($arg) { throw new IllegalArgumentException('Test'); }
       ]);
       (new Constructor(new TypeMirror($fixture)))->newInstance(null);
-      $this->fail('No exception raised', null, TargetInvocationException::class);
+      $this->fail('No exception raised', null, 'lang.reflect.TargetInvocationException');
     } catch (TargetInvocationException $expected) {
-      $this->assertInstanceOf(IllegalArgumentException::class, $expected->getCause());
+      $this->assertInstanceOf('lang.IllegalArgumentException', $expected->getCause());
     }
   }
 
   #[@test, @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function sets_cause_for_errors_raised() {
     try {
-      $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+      $fixture= ClassLoader::defineClass($this->name, 'lang.Object', [], [
         '__construct' => function($arg) { $arg->invoke(); }
       ]);
       (new Constructor(new TypeMirror($fixture)))->newInstance(null);
-      $this->fail('No exception raised', null, TargetInvocationException::class);
+      $this->fail('No exception raised', null, 'lang.reflect.TargetInvocationException');
     } catch (TargetInvocationException $expected) {
-      $this->assertInstanceOf(Error::class, $expected->getCause());
+      $this->assertInstanceOf('lang.Error', $expected->getCause());
     }
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_interfaces() {
-    (new Constructor(new TypeMirror(FixtureInterface::class)))->newInstance();
+    (new Constructor(new TypeMirror('lang.mirrors.unittest.fixture.FixtureInterface')))->newInstance();
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_traits() {
-    (new Constructor(new TypeMirror(FixtureTrait::class)))->newInstance();
+    (new Constructor(new TypeMirror('lang.mirrors.unittest.fixture.FixtureTrait')))->newInstance();
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_abstract_classes() {
-    (new Constructor(new TypeMirror(FixtureAbstract::class)))->newInstance();
+    (new Constructor(new TypeMirror('lang.mirrors.unittest.fixture.FixtureAbstract')))->newInstance();
   }
 
   #[@test]

@@ -44,9 +44,11 @@ class Constants extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
+    $return= [];
     foreach ($this->mirror->reflect->allConstants() as $name => $value) {
-      yield new Constant($this->mirror, $name, $value);
+      $return[]= new Constant($this->mirror, $name, $value);
     }
+    return new \ArrayIterator($return);
   }
 
   /**

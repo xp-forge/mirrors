@@ -7,6 +7,6 @@ abstract class ResolveableTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->source= Sources::$DEFAULT->reflect(static::class);
+    $this->source= Sources::$DEFAULT->reflect(typeof($this));
   }
 }

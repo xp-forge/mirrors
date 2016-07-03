@@ -8,12 +8,12 @@ class TypeMirrorInterfacesTest extends \unittest\TestCase implements FixtureInte
   private $fixture;
 
   public function setUp() {
-    $this->fixture= new TypeMirror(self::class);
+    $this->fixture= new TypeMirror(__CLASS__);
   }
 
   #[@test]
   public function contains_fixture_class() {
-    $this->assertTrue($this->fixture->interfaces()->contains(FixtureInterface::class));
+    $this->assertTrue($this->fixture->interfaces()->contains('lang.mirrors.unittest.fixture.FixtureInterface'));
   }
 
   #[@test]
@@ -23,7 +23,7 @@ class TypeMirrorInterfacesTest extends \unittest\TestCase implements FixtureInte
 
   #[@test]
   public function contains_fixture_mirror() {
-    $this->assertTrue($this->fixture->interfaces()->contains(new TypeMirror(FixtureInterface::class)));
+    $this->assertTrue($this->fixture->interfaces()->contains(new TypeMirror('lang.mirrors.unittest.fixture.FixtureInterface')));
   }
 
   #[@test]
@@ -31,7 +31,7 @@ class TypeMirrorInterfacesTest extends \unittest\TestCase implements FixtureInte
     $interfaces= iterator_to_array($this->fixture->interfaces());
     usort($interfaces, function($a, $b) { return strcmp($a->name(), $b->name()); });
     $this->assertEquals(
-      [new TypeMirror(Generic::class), new TypeMirror(FixtureInterface::class)],
+      [new TypeMirror('lang.Generic'), new TypeMirror('lang.mirrors.unittest.fixture.FixtureInterface')],
       $interfaces
     );
   }
@@ -39,7 +39,7 @@ class TypeMirrorInterfacesTest extends \unittest\TestCase implements FixtureInte
   #[@test]
   public function declared_interfaces() {
     $this->assertEquals(
-      [new TypeMirror(FixtureInterface::class)],
+      [new TypeMirror('lang.mirrors.unittest.fixture.FixtureInterface')],
       iterator_to_array($this->fixture->interfaces()->declared())
     );
   }

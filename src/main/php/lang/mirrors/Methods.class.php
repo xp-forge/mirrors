@@ -40,11 +40,13 @@ class Methods extends Members {
    * @return php.Generator
    */
   public function all($filter= null) {
+    $return= [];
     foreach ($this->mirror->reflect->allMethods() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
       $method= new Method($this->mirror, $member);
-      if (null === $filter || $filter->accept($method)) yield $method;
+      if (null === $filter || $filter->accept($method)) $return[]= $method;
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -54,11 +56,13 @@ class Methods extends Members {
    * @return php.Generator
    */
   public function declared($filter= null) {
+    $return= [];
     foreach ($this->mirror->reflect->declaredMethods() as $name => $member) {
       if (0 === strncmp('__', $name, 2)) continue;
       $method= new Method($this->mirror, $member);
-      if (null === $filter || $filter->accept($method)) yield $method;
+      if (null === $filter || $filter->accept($method)) $return[]= $method;
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -74,9 +78,11 @@ class Methods extends Members {
       ? $this->mirror->reflect->declaredMethods()
       : $this->mirror->reflect->allMethods()
     ;
+    $return= [];
     foreach ($methods as $name => $method) {
       if (0 === strncmp('__', $name, 2) || $instance === $method['access']->isStatic()) continue;
-      yield new Method($this->mirror, $method);
+      $return[]= new Method($this->mirror, $method);
     }
+    return new \ArrayIterator($return);
   }
 }

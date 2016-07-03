@@ -112,7 +112,7 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test]
   public function type_hint() {
-    $this->assertEquals(new XPClass(Type::class), (new Parameter($this->method(null, '(\lang\Type $arg)'), 0))->type());
+    $this->assertEquals(new XPClass('lang.Type'), (new Parameter($this->method(null, '(\lang\Type $arg)'), 0))->type());
   }
 
   #[@test]
@@ -133,7 +133,7 @@ class ParameterTest extends \unittest\TestCase {
 
   #[@test, @values(['/** @param lang.Type */', '/** @param \lang\Type */'])]
   public function documented_type_hint_using_short_form($comment) {
-    $this->assertEquals(new XPClass(Type::class), (new Parameter($this->method($comment, '($arg)'), 0))->type());
+    $this->assertEquals(XPClass::forName('lang.Type'), (new Parameter($this->method($comment, '($arg)'), 0))->type());
   }
 
   #[@test, @values([
@@ -141,7 +141,7 @@ class ParameterTest extends \unittest\TestCase {
   #  "/**\n * @param lang.Type \$one\n * @param string \$two\n */"
   #])]
   public function first_parameter_in_documented_type_hint_using_long_form($comment) {
-    $this->assertEquals(new XPClass(Type::class), (new Parameter($this->method($comment, '($one, $two)'), 0))->type());
+    $this->assertEquals(XPClass::forName('lang.Type'), (new Parameter($this->method($comment, '($one, $two)'), 0))->type());
   }
 
   #[@test, @values([

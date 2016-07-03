@@ -23,7 +23,7 @@ class FromReflection extends \lang\Object implements Source {
   static function __static() {
     $save= ini_get('opcache.save_comments');
     self::$RETAIN_COMMENTS= false === $save ? true : (bool)$save;
-    self::$VARIADIC_SUPPORTED= method_exists(\ReflectionParameter::class, 'isVariadic');
+    self::$VARIADIC_SUPPORTED= method_exists('ReflectionParameter', 'isVariadic');
   }
 
   /**
@@ -124,7 +124,7 @@ class FromReflection extends \lang\Object implements Source {
       return Kind::$TRAIT;
     } else if ($this->reflect->isInterface()) {
       return Kind::$INTERFACE;
-    } else if ($this->reflect->isSubclassOf(Enum::class)) {
+    } else if ($this->reflect->isSubclassOf('lang\Enum')) {
       return Kind::$ENUM;
     } else {
       return Kind::$CLASS;
@@ -153,40 +153,48 @@ class FromReflection extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allInterfaces() {
+    $return= [];
     foreach ($this->reflect->getInterfaces() as $interface) {
-      yield $interface->name => $this->source->reflect($interface);
+      $return[$interface->name]= $this->source->reflect($interface);
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function declaredInterfaces() {
     $parent= $this->reflect->getParentClass();
     $inherited= $parent ? array_flip($parent->getInterfaceNames()) : [];
+    $return= [];
     $local= $this->reflect->getInterfaces();
     foreach ($local as $interface) {
       if (isset($inherited[$interface->name])) continue;
       foreach ($local as $compare) {
         if ($compare->isSubclassOf($interface)) continue 2;
       }
-      yield $interface->name => $this->source->reflect($interface);
+      $return[$interface->name]= $this->source->reflect($interface);
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function allTraits() {
     $reflect= $this->reflect;
+    $return= [];
     do {
       foreach ($reflect->getTraits() as $trait) {
-        yield $trait->name => $this->source->reflect($trait);
+        $return[$trait->name]= $this->source->reflect($trait);
       }
     } while ($reflect= $reflect->getParentClass());
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function declaredTraits() {
+    $return= [];
     foreach ($this->reflect->getTraits() as $trait) {
-      yield $trait->name => $this->source->reflect($trait);
+      $return[$trait->name]= $this->source->reflect($trait);
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -380,18 +388,22 @@ class FromReflection extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allFields() {
+    $return= [];
     foreach ($this->reflect->getProperties() as $field) {
-      yield $field->name => $this->field($field);
+      $return[$field->name]= $this->field($field);
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function declaredFields() {
+    $return= [];
     foreach ($this->reflect->getProperties() as $field) {
       if ($field->getDeclaringClass()->name === $this->reflect->name) {
-        yield $field->name => $this->field($field);
+        $return[$field->name]= $this->field($field);
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -550,18 +562,22 @@ class FromReflection extends \lang\Object implements Source {
 
   /** @return php.Generator */
   public function allMethods() {
+    $return= [];
     foreach ($this->reflect->getMethods() as $method) {
-      yield $method->name => $this->method($method);
+      $return[$method->name]= $this->method($method);
     }
+    return new \ArrayIterator($return);
   }
 
   /** @return php.Generator */
   public function declaredMethods() {
+    $return= [];
     foreach ($this->reflect->getMethods() as $method) {
       if ($method->getDeclaringClass()->name === $this->reflect->name) {
-        yield $method->name => $this->method($method);
+        $return[$method->name]= $this->method($method);
       }
     }
+    return new \ArrayIterator($return);
   }
 
   /**
@@ -583,14 +599,16 @@ class FromReflection extends \lang\Object implements Source {
     if ($this->reflect->hasConstant($name)) {
       return $this->reflect->getConstant($name);
     }
-    throw new ElementNotFoundException('No constant named '.$name.'() in '.$this->name);
+    throw new ElementNotFoundException('No constant named '.$name.' in '.$this->name);
   }
 
   /** @return php.Generator */
   public function allConstants() {
+    $return= [];
     foreach ($this->reflect->getConstants() as $name => $value) {
-      yield $name => $value;
+      $return[$name]= $value;
     }
+    return new \ArrayIterator($return);
   }
 
   /**

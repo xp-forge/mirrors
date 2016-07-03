@@ -53,9 +53,11 @@ class Annotations extends \lang\Object implements \IteratorAggregate {
    * @return php.Generator
    */
   public function getIterator() {
+    $return= [];
     foreach ($this->backing as $name => $value) {
-      yield new Annotation($this->mirror, $name, $value);
+      $return[]= new Annotation($this->mirror, $name, $value);
     }
+    return new \ArrayIterator($return);
   }
 
   /**
