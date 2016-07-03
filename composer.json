@@ -6,9 +6,9 @@
   "description" : "Mirrors",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "^7.0 | ^6.4",
+    "xp-framework/core": "^7.0 | ^6.5",
     "xp-framework/tokenize": "^7.0 | ^6.6",
-    "xp-forge/parse": "^0.4",
+    "xp-forge/parse": "^1.0",
     "php" : ">=5.4.0"
   },
   "require-dev" : {
