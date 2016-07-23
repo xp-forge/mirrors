@@ -1,6 +1,5 @@
 <?php namespace lang\mirrors;
 
-use lang\Generic;
 use lang\Throwable;
 use lang\Type;
 use lang\IllegalArgumentException;
@@ -48,13 +47,13 @@ class Method extends Routine {
   /**
    * Invokes the method
    *
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @param  var[] $args
    * @return var
    * @throws lang.mirrors.TargetInvocationException
    * @throws lang.IllegalArgumentException
    */
-  public function invoke(Generic $instance= null, $args= []) {
+  public function invoke($instance= null, $args= []) {
     return $this->reflect['invoke']($instance, $args);
   }
 

@@ -103,7 +103,7 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
   public [:var] tags()
   public lang.mirrors.Modifiers modifiers()
   public lang.Type returns()
-  public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
+  public var invoke([var $instance= null], [var[] $args= [ ]]) throws ...
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
   public lang.mirrors.Parameter parameter(string|int $arg) throws lang.ElementNotFoundException
@@ -165,8 +165,8 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
   public string comment()
   public [:var] tags()
   public lang.mirrors.Modifiers modifiers()
-  public var read([lang.Generic $instance= null]) throws lang.IllegalArgumentException
-  public void modify(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
+  public var read([var $instance= null]) throws lang.IllegalArgumentException
+  public void modify(var $instance, var $value) throws lang.IllegalArgumentException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
   public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException

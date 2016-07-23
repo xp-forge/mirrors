@@ -225,7 +225,7 @@ class FromReflection extends \lang\Object implements Source {
    * Creates a new instance
    *
    * @param  var[] $args
-   * @return lang.Generic
+   * @return var
    */
   public function newInstance($args) {
     if (!$this->reflect->isInstantiable()) {
@@ -320,7 +320,7 @@ class FromReflection extends \lang\Object implements Source {
    * Reads a field
    *
    * @param  php.ReflectionProperty $reflect
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @return var
    */
   private function readField($reflect, $instance) {
@@ -341,7 +341,7 @@ class FromReflection extends \lang\Object implements Source {
    * Modifies a field
    *
    * @param  php.ReflectionProperty $reflect
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @param  var $value
    * @return voud
    */
@@ -504,7 +504,7 @@ class FromReflection extends \lang\Object implements Source {
    * Invokes the method
    *
    * @param  php.ReflectionMethod $reflect
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @param  var[] $args
    * @return var
    */

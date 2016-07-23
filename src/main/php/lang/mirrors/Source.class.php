@@ -93,7 +93,7 @@ interface Source {
    * Creates a new instance
    *
    * @param  var[] $args
-   * @return lang.Generic
+   * @return var
    * @throws lang.IllegalArgumentException
    * @throws lang.mirrors.TargetInvocationException
    */

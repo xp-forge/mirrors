@@ -104,7 +104,7 @@ class FromIncomplete extends \lang\Object implements Source {
    * Creates a new instance
    *
    * @param  var[] $args
-   * @return lang.Generic
+   * @return var
    */
   public function newInstance($args) {
     throw new IllegalArgumentException('Cannot instantiate incomplete type '.$this->name);

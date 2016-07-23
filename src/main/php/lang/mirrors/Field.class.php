@@ -1,6 +1,5 @@
 <?php namespace lang\mirrors;
 
-use lang\Generic;
 use lang\Type;
 
 /**
@@ -52,23 +51,23 @@ class Field extends Member {
   /**
    * Read this field's value
    *
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @return var
    * @throws lang.IllegalArgumentException
    */
-  public function read(Generic $instance= null) {
+  public function read($instance= null) {
     return $this->reflect['read']($instance);
   }
 
   /**
    * Modify this field's value
    *
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @param  var $value
    * @return void
    * @throws lang.IllegalArgumentException
    */
-  public function modify(Generic $instance= null, $value) {
+  public function modify($instance= null, $value) {
     return $this->reflect['modify']($instance, $value);
   }
 
