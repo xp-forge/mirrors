@@ -3,7 +3,7 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
-## 4.0.0 / ????-??-??
+## 4.0.0 / 2016-07-24
 
 * Added preliminary support for iterable types (currently inactive
   due to PHP [bug 72661](https://bugs.php.net/bug.php?id=72661); see
