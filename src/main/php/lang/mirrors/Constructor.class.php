@@ -26,7 +26,7 @@ class Constructor extends Routine {
    * @param  var... $args
    * @return lang.Generic
    */
-  public function newInstance() { $args= func_get_args(); return $this->mirror->reflect->newInstance($args); }
+  public function newInstance(... $args) { return $this->mirror->reflect->newInstance($args); }
 
   /** @return string */
   public function __toString() {

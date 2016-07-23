@@ -13,7 +13,7 @@ class MethodInvocationTest extends AbstractMethodTest {
 
   private function returnsTestFixture() { return 'Test'; }
 
-  private function returnsArgsFixture() { return func_get_args(); }
+  private function returnsArgsFixture(... $args) { return $args; }
 
   private function throwsExceptionFixture() { throw new IllegalArgumentException('Test'); }
 

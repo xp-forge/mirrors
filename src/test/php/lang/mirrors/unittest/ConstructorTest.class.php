@@ -56,7 +56,7 @@ class ConstructorTest extends \unittest\TestCase {
   public function creating_instances_invokes_constructor() {
     $fixture= newinstance(Object::class, [], '{
       public $passed= null;
-      public function __construct() { $this->passed= func_get_args(); }
+      public function __construct(... $args) { $this->passed= $args; }
     }');
     $this->assertEquals(
       [1, 2, 3],
