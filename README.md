@@ -163,6 +163,7 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
 
   public string name()
   public string comment()
+  public lang.Type type()
   public [:var] tags()
   public lang.mirrors.Modifiers modifiers()
   public var read([var $instance= null]) throws lang.IllegalArgumentException
