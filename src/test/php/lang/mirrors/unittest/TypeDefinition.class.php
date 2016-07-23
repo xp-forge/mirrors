@@ -26,7 +26,7 @@ trait TypeDefinition {
         'extends'    => $extends,
         'implements' => [],
         'use'        => [],
-        'imports'    => [Identity::class => 'Identity']
+        'imports'    => [Identity::class => null]
       ];
       self::$fixtures[$declaration]= ClassLoader::defineType(
         nameof($this).sizeof(self::$fixtures),
