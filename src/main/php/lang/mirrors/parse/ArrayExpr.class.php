@@ -5,7 +5,7 @@ use util\Objects;
 /**
  * Represents a parsed array expression - the PHP way: array or map.
  *
- * @test  xp://lang.reflection.unittest.ArrayExprTest
+ * @test  xp://lang.mirrors.unittest.ArrayExprTest
  */
 class ArrayExpr extends \lang\Object {
   private $backing;

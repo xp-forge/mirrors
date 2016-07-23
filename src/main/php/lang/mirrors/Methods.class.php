@@ -23,7 +23,7 @@ class Methods extends Members {
    * Returns a given method if provided or raises an exception
    *
    * @param  string $name
-   * @return lang.reflection.Method
+   * @return lang.mirrors.Method
    * @throws lang.ElementNotFoundException
    */
   public function named($name) {

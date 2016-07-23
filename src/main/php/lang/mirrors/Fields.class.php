@@ -23,7 +23,7 @@ class Fields extends Members {
    * Returns a given field if provided or raises an exception
    *
    * @param  string $name
-   * @return lang.reflection.Field
+   * @return lang.mirrors.Field
    * @throws lang.ElementNotFoundException
    */
   public function named($name) {

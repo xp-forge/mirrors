@@ -28,7 +28,7 @@ class Constants extends \lang\Object implements \IteratorAggregate {
    * Returns a given method if provided or raises an exception
    *
    * @param  string $name
-   * @return lang.reflection.Constant
+   * @return lang.mirrors.Constant
    * @throws lang.ElementNotFoundException
    */
   public function named($name) {

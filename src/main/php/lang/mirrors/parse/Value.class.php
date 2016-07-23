@@ -5,7 +5,7 @@ use util\Objects;
 /**
  * Represents a parsed value 
  *
- * @test  xp://lang.reflection.unittest.ValueTest
+ * @test  xp://lang.mirrors.unittest.ValueTest
  */
 class Value extends Resolveable {
   private $backing;

@@ -18,7 +18,7 @@ class TagsSyntaxTest extends \unittest\TestCase {
    * Parses a string
    *
    * @param  string $input
-   * @return lang.reflection.parse.CodeUnit
+   * @return lang.mirrors.parse.CodeUnit
    */
   private function parse($input) {
     return (new TagsSyntax())->parse(new TagsSource($input));
