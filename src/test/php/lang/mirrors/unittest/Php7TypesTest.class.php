@@ -80,10 +80,28 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Type::$VOID, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
+  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  public function nullable_return_type() {
+    $fixture= $this->define('{
+      public function fixture(): ?string { return null; }
+    }');
+
+    $this->assertEquals(Primitive::$STRING, $this->newFixture($fixture)->methods()->named('fixture')->returns());
+  }
+
   #[@test]
   public function primitive_parameter_type() {
     $fixture= $this->define('{
       public function fixture(int $param) { }
+    }');
+
+    $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  public function nullable_parameter_type() {
+    $fixture= $this->define('{
+      public function fixture(?int $param) { }
     }');
 
     $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
