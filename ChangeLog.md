@@ -5,6 +5,7 @@ Mirrors change log
 
 ## 4.0.0 / ????-??-??
 
+* Added support for `void` return type syntax from PHP 7.1 - @thekid
 * Added support for non-`lang.Generic` instances - @thekid
 * **Heads up: Dropped PHP 5.5 support!** The minimum PHP version now
   required is PHP 5.6, see PR #36

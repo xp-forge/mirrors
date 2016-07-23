@@ -4,6 +4,7 @@ use lang\Primitive;
 use lang\Type;
 use lang\XPClass;
 use lang\mirrors\TypeMirror;
+use unittest\actions\RuntimeVersion;
 
 abstract class Php7TypesTest extends \unittest\TestCase {
   use TypeDefinition;
@@ -68,6 +69,15 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     }');
 
     $this->assertEquals(XPClass::forName('lang.Object'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  public function void_return_type() {
+    $fixture= $this->define('{
+      public function fixture(): void { }
+    }');
+
+    $this->assertEquals(Type::$VOID, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test]
