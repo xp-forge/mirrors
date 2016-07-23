@@ -5,6 +5,10 @@ Mirrors change log
 
 ## 4.0.0 / ????-??-??
 
+* Added preliminary support for iterable types (currently inactive
+  due to PHP [bug 72661](https://bugs.php.net/bug.php?id=72661); see
+  the [iterable RFC](https://wiki.php.net/rfc/iterable)).
+  (@thekid)
 * Added support for nullable type syntax present in PHP 7.1; see the
   [nullable types RFC](https://wiki.php.net/rfc/nullable_types)
   (@thekid)
