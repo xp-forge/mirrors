@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #34: Refactor: Use ClassParser from core instead of PHP
+  syntax, yielding a big improvement on performance and memory use
+  (@thekid)
+
 ## 3.0.0 / 2016-02-21
 
 * Added version compatibility with XP 7 - @thekid
