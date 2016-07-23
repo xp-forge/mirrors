@@ -19,6 +19,12 @@ class Highlighting {
     }
   }
 
+  /**
+   * Write
+   *
+   * @param  var[] $args
+   * @return void
+   */
   private function write0($args) {
     $line= '';
     foreach ($args as $arg) {
@@ -30,19 +36,19 @@ class Highlighting {
   /**
    * Write
    *
-   * @param  string... $args
+   * @param  var... $args
    */
-  public function write() {
-    $this->write0(func_get_args());
+  public function write(... $args) {
+    $this->write0($args);
   }
 
   /**
    * Write line
    *
-   * @param  string... $args
+   * @param  var... $args
    */
-  public function writeLine() {
-    $this->write0(func_get_args());
+  public function writeLine(... $args) {
+    $this->write0($args);
     $this->out->write("\n");
   }
 }
