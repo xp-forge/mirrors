@@ -16,7 +16,7 @@ class Field extends Member {
    * Creates a new field
    *
    * @param  lang.mirrors.TypeMirror $mirror
-   * @param  var $arg A map returned from Source::fieldNamed(), a ReflectionProperty or a string
+   * @param  php.ReflectionProperty|string|[:var] $arg Map variant returned from Source::fieldNamed()
    * @throws lang.IllegalArgumentException If there is no such field
    */
   public function __construct($mirror, $arg) {

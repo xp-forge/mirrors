@@ -25,7 +25,7 @@ class TypeMirror extends \lang\Object {
   /**
    * Creates a new mirrors instance
    *
-   * @param  var $arg Either a php.ReflectionClass, an XPClass instance or a string with the FQCN
+   * @param  lang.XPClass|lang.mirrors.Source|php.ReflectionClass|string $arg
    * @param  lang.mirrors.Sources $source
    */
   public function __construct($arg, Sources $source= null) {
@@ -139,7 +139,7 @@ class TypeMirror extends \lang\Object {
   /**
    * Returns whether this type is a subtype of a given argument
    *
-   * @param  var $arg Either a TypeMirror or a string
+   * @param  string|self $arg
    * @return bool
    */
   public function isSubtypeOf($arg) {

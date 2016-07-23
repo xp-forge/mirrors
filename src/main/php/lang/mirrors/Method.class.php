@@ -18,7 +18,7 @@ class Method extends Routine {
    * Creates a new method
    *
    * @param  lang.mirrors.TypeMirror $mirror
-   * @param  var $arg A map returned from Source::methodNamed(), a ReflectionMethod or a string
+   * @param  php.ReflectionMethod|string|[:var] Map variant returned from Source::methodNamed()
    * @throws lang.IllegalArgumentException If there is no such method
    */
   public function __construct($mirror, $arg) {
