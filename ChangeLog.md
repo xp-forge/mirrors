@@ -3,6 +3,11 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 4.0.0 / ????-??-??
+
+* **Heads up: Dropped PHP 5.5 support!** The minimum PHP version now
+  required is PHP 5.6, see PR #36
+  (@thekid)
 * Merged PR #34: Refactor: Use ClassParser from core instead of PHP
   syntax, yielding a big improvement on performance and memory use
   (@thekid)
