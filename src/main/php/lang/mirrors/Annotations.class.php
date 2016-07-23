@@ -57,4 +57,13 @@ class Annotations extends \lang\Object implements \IteratorAggregate {
       yield new Annotation($this->mirror, $name, $value);
     }
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
+  public function toString() {
+    return nameof($this).'('.\xp::stringOf($this->backing).')';
+  }
 }

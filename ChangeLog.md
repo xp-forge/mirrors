@@ -3,6 +3,25 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 3.0.0 / 2016-02-21
+
+* Added version compatibility with XP 7 - @thekid
+
+## 2.1.3 / 2016-01-24
+
+* Fixed highlighting to work with both XP6 and XP7 - @thekid
+
+## 2.1.2 / 2016-01-23
+
+* Fix code to use `nameof()` instead of the deprecated `getClassName()`
+  method from lang.Generic. See xp-framework/core#120
+  (@thekid)
+
+## 2.1.1 / 2016-01-23
+
+* Fixed `declaredInterfaces()` and `allInterfaces()` methods to behave
+  consistently across the respective implementations.
+  (@thekid)
 * Fixed parse errors in files with newline after `<?php`/`<?hh` tag
   (@thekid)
 * Merged pull request #34: Lazy initialization for members, caching 

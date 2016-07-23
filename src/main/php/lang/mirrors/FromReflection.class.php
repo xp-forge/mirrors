@@ -163,8 +163,12 @@ class FromReflection extends \lang\Object implements Source {
   public function declaredInterfaces() {
     $parent= $this->reflect->getParentClass();
     $inherited= $parent ? array_flip($parent->getInterfaceNames()) : [];
-    foreach ($this->reflect->getInterfaces() as $interface) {
-      if (isset($inherited[$interface->getName()])) continue;
+    $local= $this->reflect->getInterfaces();
+    foreach ($local as $interface) {
+      if (isset($inherited[$interface->name])) continue;
+      foreach ($local as $compare) {
+        if ($compare->isSubclassOf($interface)) continue 2;
+      }
       yield $interface->name => $this->source->reflect($interface);
     }
   }
@@ -231,7 +235,7 @@ class FromReflection extends \lang\Object implements Source {
     try {
       return $this->reflect->newInstanceArgs($args);
     } catch (Throwable $e) {
-      throw new TargetInvocationException('Creating a new instance of '.$this->name.' raised '.$e->getClassName(), $e);
+      throw new TargetInvocationException('Creating a new instance of '.$this->name.' raised '.nameof($e), $e);
     } catch (\ReflectionException $e) {
       throw new IllegalArgumentException('Instantiating '.$this->name.': '.$e->getMessage());
     } catch (\Exception $e) {
@@ -509,7 +513,7 @@ class FromReflection extends \lang\Object implements Source {
     try {
       return $reflect->invokeArgs($instance, $args);
     } catch (Throwable $e) {
-      throw new TargetInvocationException('Invoking '.$reflect->name.'() raised '.$e->getClassName(), $e);
+      throw new TargetInvocationException('Invoking '.$reflect->name.'() raised '.nameof($e), $e);
     } catch (\ReflectionException $e) {
       throw new IllegalArgumentException('Verifying '.$reflect->name.'(): '.$e->getMessage());
     } catch (\Exception $e) {
