@@ -22,6 +22,7 @@ class TagsSource extends \text\parse\Tokens {
   const T_ARRAY    = 278;
   const T_THIS     = 279;
   const T_VARIADIC = 280;
+  const T_ITERABLE = 281;
 
   private static $keywords= [
     '@param'    => self::T_PARSED,
@@ -39,6 +40,7 @@ class TagsSource extends \text\parse\Tokens {
     'void'      => self::T_VOID,
     'callable'  => self::T_CALLABLE,
     'array'     => self::T_ARRAY,
+    'iterable'  => self::T_ITERABLE,
 
     'float'     => self::T_DOUBLE,
     'integer'   => self::T_INT,

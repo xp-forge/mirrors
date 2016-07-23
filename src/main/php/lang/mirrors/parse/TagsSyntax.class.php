@@ -59,6 +59,7 @@ class TagsSyntax extends \text\parse\Syntax {
             TagsSource::T_VAR      => new Returns(new TypeRef(Type::$VAR)),
             TagsSource::T_VOID     => new Returns(new TypeRef(Type::$VOID)),
             TagsSource::T_CALLABLE => new Returns(new TypeRef(Type::$CALLABLE)),
+            TagsSource::T_ITERABLE => new Returns(new TypeRef(Type::$ITERABLE)),
             TagsSource::T_ARRAY    => new Returns(new TypeRef(Type::$ARRAY)),
             TagsSource::T_THIS     => new Returns(new ReferenceTypeRef('self')),
             TagsSource::T_FUNCTION => new Sequence(

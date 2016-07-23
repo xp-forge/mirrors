@@ -25,6 +25,9 @@ class MethodReturnTypeTest extends AbstractMethodTest {
   /** @return parent */
   private function parentFixture() { }
 
+  /** @return iterable */
+  private function iterableFixture() { }
+
   /** @return Method */
   private function resolved() { }
 
@@ -51,6 +54,11 @@ class MethodReturnTypeTest extends AbstractMethodTest {
   #[@test]
   public function parent_supported() {
     $this->assertEquals($this->getClass()->getParentclass(), $this->fixture('parentFixture')->returns());
+  }
+
+  #[@test]
+  public function iterable_supported() {
+    $this->assertEquals(Type::$ITERABLE, $this->fixture('iterableFixture')->returns());
   }
 
   #[@test]

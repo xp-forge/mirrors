@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed parsing `iterable` type from apidocs - @thekid
+
 ## 4.0.0 / 2016-07-24
 
 * Added preliminary support for iterable types (currently inactive
