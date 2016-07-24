@@ -15,6 +15,9 @@
     "xp-framework/unittest": "^7.0 | ^6.5",
     "xp-forge/measure" : "^1.0"
   },
+  "suggest" : {
+    "xp-framework/core": "^7.5"
+  },
   "bin": ["bin/xp.xp-forge.mirrors.mirror"],
   "autoload" : {
     "files" : ["src/main/php/autoload.php"]

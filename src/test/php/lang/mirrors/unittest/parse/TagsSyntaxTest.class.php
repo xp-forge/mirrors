@@ -54,6 +54,22 @@ class TagsSyntaxTest extends \unittest\TestCase {
     $this->assertEquals(['param' => [$type]], $this->parse($declaration));
   }
 
+  #[@test]
+  public function object_type() {
+    $this->assertEquals(
+      ['param' => [new TypeRef(property_exists(Type::class, 'OBJECT') ? Type::$OBJECT : Type::$VAR)]],
+      $this->parse('@param object')
+    );
+  }
+
+  #[@test]
+  public function iterable_type() {
+    $this->assertEquals(
+      ['param' => [new TypeRef(property_exists(Type::class, 'ITERABLE') ? Type::$ITERABLE : Type::$VAR)]],
+      $this->parse('@param iterable')
+    );
+  }
+
   #[@test, @values([
   #  ['@param self', new ReferenceTypeRef('self')],
   #  ['@param parent', new ReferenceTypeRef('parent')],
@@ -199,7 +215,6 @@ class TagsSyntaxTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  ['@param resource', new TypeRef(Type::$VAR)],
-  #  ['@param object', new TypeRef(Type::$VAR)],
   #  ['@param mixed', new TypeRef(Type::$VAR)],
   #  ['@param null', new TypeRef(Type::$VOID)],
   #  ['@param false', new TypeRef(Primitive::$BOOL)],

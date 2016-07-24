@@ -4,6 +4,7 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\Method;
 use lang\Type;
 use lang\Primitive;
+use unittest\actions\VerifyThat;
 
 class MethodReturnTypeTest extends AbstractMethodTest {
 
@@ -27,6 +28,9 @@ class MethodReturnTypeTest extends AbstractMethodTest {
 
   /** @return iterable */
   private function iterableFixture() { }
+
+  /** @return object */
+  private function objectFixture() { }
 
   /** @return Method */
   private function resolved() { }
@@ -58,7 +62,12 @@ class MethodReturnTypeTest extends AbstractMethodTest {
 
   #[@test]
   public function iterable_supported() {
-    $this->assertEquals(Type::$ITERABLE, $this->fixture('iterableFixture')->returns());
+    $this->assertEquals(property_exists(Type::class, 'ITERABLE') ? Type::$ITERABLE : Type::$VAR, $this->fixture('iterableFixture')->returns());
+  }
+
+  #[@test]
+  public function object_supported() {
+    $this->assertEquals(property_exists(Type::class, 'OBJECT') ? Type::$OBJECT : Type::$VAR, $this->fixture('objectFixture')->returns());
   }
 
   #[@test]
