@@ -15,13 +15,10 @@ matrix:
     - php: nightly
 
 before_script:
-  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v6.4.0/setup' -O - | php
+  - curl -sSL https://bintray.com/artifact/download/xp-runners/generic/xp-run-master.sh > xp-run
   - composer install --prefer-dist
   - echo "vendor/autoload.php" > composer.pth
-  - echo "use=vendor/xp-framework/core" > xp.ini
-  - echo "[runtime]" >> xp.ini
-  - echo "date.timezone=Europe/Berlin" >> xp.ini
 
 script:
-  - ./unittest src/test/php
-  - ./xp util.profiling.Measure lang.mirrors.performance.ClassParsingPerformance -n 100
+  - sh xp-run xp.unittest.TestRunner src/test/php
+  - sh xp-run util.profiling.Measure lang.mirrors.performance.ClassParsingPerformance -n 100
