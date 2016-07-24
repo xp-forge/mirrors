@@ -3,6 +3,9 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 4.1.0 / 2016-07-24
+
+* Merged PR #37: Implement object type union - @thekid
 * Fixed parsing `iterable` type from apidocs - @thekid
 
 ## 4.0.0 / 2016-07-24
