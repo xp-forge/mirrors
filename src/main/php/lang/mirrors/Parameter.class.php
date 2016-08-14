@@ -17,7 +17,7 @@ class Parameter extends \lang\Object {
    * Creates a new parameter
    *
    * @param  lang.mirrors.Routine $mirror
-   * @param  var $arg Either a ReflectionParameter or an offset
+   * @param  php.ReflectionParameter|int|[:var]
    * @throws lang.IllegalArgumentException If there is no such parameter
    */
   public function __construct($mirror, $arg) {

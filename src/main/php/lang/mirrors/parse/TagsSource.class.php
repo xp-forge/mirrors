@@ -22,6 +22,8 @@ class TagsSource extends \text\parse\Tokens {
   const T_ARRAY    = 278;
   const T_THIS     = 279;
   const T_VARIADIC = 280;
+  const T_ITERABLE = 281;
+  const T_OBJECT   = 282;
 
   private static $keywords= [
     '@param'    => self::T_PARSED,
@@ -39,6 +41,8 @@ class TagsSource extends \text\parse\Tokens {
     'void'      => self::T_VOID,
     'callable'  => self::T_CALLABLE,
     'array'     => self::T_ARRAY,
+    'iterable'  => self::T_ITERABLE,
+    'object'    => self::T_OBJECT,
 
     'float'     => self::T_DOUBLE,
     'integer'   => self::T_INT,
@@ -46,7 +50,6 @@ class TagsSource extends \text\parse\Tokens {
 
     '$this'     => self::T_THIS,
     'resource'  => self::T_VAR,
-    'object'    => self::T_VAR,
     'mixed'     => self::T_VAR,
     'false'     => self::T_BOOL,
     'true'      => self::T_BOOL,

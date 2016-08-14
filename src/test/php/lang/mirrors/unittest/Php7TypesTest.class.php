@@ -4,6 +4,7 @@ use lang\Primitive;
 use lang\Type;
 use lang\XPClass;
 use lang\mirrors\TypeMirror;
+use unittest\actions\RuntimeVersion;
 
 abstract class Php7TypesTest extends \unittest\TestCase {
   use TypeDefinition;
@@ -70,10 +71,46 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(XPClass::forName('lang.Object'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
+  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  public function void_return_type() {
+    $fixture= $this->define('{
+      public function fixture(): void { }
+    }');
+
+    $this->assertEquals(Type::$VOID, $this->newFixture($fixture)->methods()->named('fixture')->returns());
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  public function nullable_return_type() {
+    $fixture= $this->define('{
+      public function fixture(): ?string { return null; }
+    }');
+
+    $this->assertEquals(Primitive::$STRING, $this->newFixture($fixture)->methods()->named('fixture')->returns());
+  }
+
+  #[@test, @ignore('Causes segmentation fault'), @action(new RuntimeVersion('>=7.1.0-dev'))]
+  public function iterable_return_type() {
+    $fixture= $this->define('{
+      public function fixture(): iterable { return null; }
+    }');
+
+    $this->assertEquals(Type::$ITERABLE, $this->newFixture($fixture)->methods()->named('fixture')->returns());
+  }
+
   #[@test]
   public function primitive_parameter_type() {
     $fixture= $this->define('{
       public function fixture(int $param) { }
+    }');
+
+    $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  public function nullable_parameter_type() {
+    $fixture= $this->define('{
+      public function fixture(?int $param) { }
     }');
 
     $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
@@ -86,5 +123,14 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     }');
 
     $this->assertEquals($fixture, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
+  }
+
+  #[@test, @ignore('Causes segmentation fault'), @action(new RuntimeVersion('>=7.1.0-dev'))]
+  public function iterable_parameter_type() {
+    $fixture= $this->define('{
+      public function fixture(iterable $param) { }
+    }');
+
+    $this->assertEquals(Type::$ITERABLE, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 }

@@ -5,7 +5,7 @@ use lang\ElementNotFoundException;
 /**
  * Represents a parsed value 
  *
- * @test  xp://lang.reflection.unittest.ParsedConstantTest
+ * @test  xp://lang.mirrors.unittest.ParsedConstantTest
  */
 class Constant extends Resolveable {
   private $name;
@@ -17,7 +17,7 @@ class Constant extends Resolveable {
   /**
    * Resolve this value 
    *
-   * @param  lang.reflection.CodeUnit $unit
+   * @param  lang.mirrors.CodeUnit $unit
    * @return var
    */
   public function resolve($unit) {

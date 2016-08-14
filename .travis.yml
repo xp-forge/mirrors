@@ -5,7 +5,6 @@ language: php
 sudo: false
 
 php:
-  - 5.5
   - 5.6
   - 7.0
   - hhvm
@@ -22,3 +21,4 @@ before_script:
 
 script:
   - sh xp-run xp.unittest.TestRunner src/test/php
+  - sh xp-run util.profiling.Measure lang.mirrors.performance.ClassParsingPerformance -n 100

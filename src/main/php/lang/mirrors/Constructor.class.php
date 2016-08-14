@@ -24,9 +24,9 @@ class Constructor extends Routine {
    * Creates a new instance using this constructor
    *
    * @param  var... $args
-   * @return lang.Generic
+   * @return var
    */
-  public function newInstance() { $args= func_get_args(); return $this->mirror->reflect->newInstance($args); }
+  public function newInstance(... $args) { return $this->mirror->reflect->newInstance($args); }
 
   /** @return string */
   public function __toString() {

@@ -122,7 +122,7 @@ class ClassSource extends \text\parse\Tokens {
   /**
    * Returns the name of a given token
    *
-   * @param  var $token Either an integer ID or a character
+   * @param  int|string $token Either an integer ID or a character
    * @return string
    */
   protected function name($token) {

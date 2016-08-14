@@ -1,6 +1,5 @@
 <?php namespace lang\mirrors;
 
-use lang\Generic;
 use lang\Throwable;
 use lang\Type;
 use lang\IllegalArgumentException;
@@ -18,7 +17,7 @@ class Method extends Routine {
    * Creates a new method
    *
    * @param  lang.mirrors.TypeMirror $mirror
-   * @param  var $arg A map returned from Source::methodNamed(), a ReflectionMethod or a string
+   * @param  php.ReflectionMethod|string|[:var] Map variant returned from Source::methodNamed()
    * @throws lang.IllegalArgumentException If there is no such method
    */
   public function __construct($mirror, $arg) {
@@ -48,13 +47,13 @@ class Method extends Routine {
   /**
    * Invokes the method
    *
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @param  var[] $args
    * @return var
    * @throws lang.mirrors.TargetInvocationException
    * @throws lang.IllegalArgumentException
    */
-  public function invoke(Generic $instance= null, $args= []) {
+  public function invoke($instance= null, $args= []) {
     return $this->reflect['invoke']($instance, $args);
   }
 

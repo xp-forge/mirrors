@@ -3,6 +3,31 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 4.1.0 / 2016-07-24
+
+* Merged PR #37: Implement object type union - @thekid
+* Fixed parsing `iterable` type from apidocs - @thekid
+
+## 4.0.0 / 2016-07-24
+
+* Added preliminary support for iterable types (currently inactive
+  due to PHP [bug 72661](https://bugs.php.net/bug.php?id=72661); see
+  the [iterable RFC](https://wiki.php.net/rfc/iterable)).
+  (@thekid)
+* Added support for nullable type syntax present in PHP 7.1; see the
+  [nullable types RFC](https://wiki.php.net/rfc/nullable_types)
+  (@thekid)
+* Added support for `void` return type syntax present in PHP 7.1, see
+  the [void return type RFC](https://wiki.php.net/rfc/void_return_type)
+  (@thekid)
+* Added support for non-`lang.Generic` instances - @thekid
+* **Heads up: Dropped PHP 5.5 support!** The minimum PHP version now
+  required is PHP 5.6, see PR #36
+  (@thekid)
+* Merged PR #34: Refactor: Use ClassParser from core instead of PHP
+  syntax, yielding a big improvement on performance and memory use
+  (@thekid)
+
 ## 3.0.0 / 2016-02-21
 
 * Added version compatibility with XP 7 - @thekid

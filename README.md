@@ -4,7 +4,7 @@ Mirrors
 [![Build Status on TravisCI](https://secure.travis-ci.org/xp-forge/mirrors.svg)](http://travis-ci.org/xp-forge/mirrors)
 [![XP Framework Module](https://raw.githubusercontent.com/xp-framework/web/master/static/xp-framework-badge.png)](https://github.com/xp-framework/core)
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
-[![Required PHP 5.5+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_5plus.png)](http://php.net/)
+[![Required PHP 5.6+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_6plus.png)](http://php.net/)
 [![Supports PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.png)](http://php.net/)
 [![Supports HHVM 3.5+](https://raw.githubusercontent.com/xp-framework/web/master/static/hhvm-3_5plus.png)](http://hhvm.com/)
 [![Latest Stable Version](https://poser.pugx.org/xp-forge/mirrors/version.png)](https://packagist.org/packages/xp-forge/mirrors)
@@ -89,7 +89,7 @@ public class lang.mirrors.Methods extends lang.Object implements php.IteratorAgg
   public static lang.mirrors.Predicates with(function(lang.mirrors.Member): bool $predicate)
 
   public bool provides(string $name)
-  public lang.reflection.Method named(string $name) throws lang.ElementNotFoundException
+  public lang.mirrors.Method named(string $name) throws lang.ElementNotFoundException
   public php.Generator all([lang.mirrors.Predicates $filter= null])
   public php.Generator declared([lang.mirrors.Predicates $filter= null])
   public php.Generator getIterator()
@@ -103,7 +103,7 @@ public class lang.mirrors.Method extends lang.mirrors.Routine {
   public [:var] tags()
   public lang.mirrors.Modifiers modifiers()
   public lang.Type returns()
-  public var invoke([lang.Generic $instance= null], [var[] $args= [ ]]) throws ...
+  public var invoke([var $instance= null], [var[] $args= [ ]]) throws ...
   public lang.mirrors.Throws throws()
   public lang.mirrors.Parameters parameters()
   public lang.mirrors.Parameter parameter(string|int $arg) throws lang.ElementNotFoundException
@@ -152,7 +152,7 @@ public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggr
   public static lang.mirrors.Predicates with(function(lang.mirrors.Member): bool $predicate)
 
   public bool provides(string $name)
-  public lang.reflection.Field named(string $name) throws lang.ElementNotFoundException
+  public lang.mirrors.Field named(string $name) throws lang.ElementNotFoundException
   public php.Generator all([lang.mirrors.Predicates $filter= null])
   public php.Generator declared([lang.mirrors.Predicates $filter= null])
   public php.Generator getIterator()
@@ -163,10 +163,11 @@ public class lang.mirrors.Field extends lang.mirrors.Member {
 
   public string name()
   public string comment()
+  public lang.Type type()
   public [:var] tags()
   public lang.mirrors.Modifiers modifiers()
-  public var read([lang.Generic $instance= null]) throws lang.IllegalArgumentException
-  public void modify(lang.Generic $instance, var $value) throws lang.IllegalArgumentException
+  public var read([var $instance= null]) throws lang.IllegalArgumentException
+  public void modify(var $instance, var $value) throws lang.IllegalArgumentException
   public lang.mirrors.TypeMirror declaredIn()
   public lang.mirrors.Annotations annotations()
   public lang.mirrors.Annotation annotation(string $named) throws lang.ElementNotFoundException
@@ -208,7 +209,7 @@ public class lang.mirrors.Constants extends lang.Object implements php.IteratorA
   public __construct(lang.mirrors.TypeMirror $mirror)
 
   public bool provides(string $name)
-  public lang.reflection.Constant named(string $name) throws lang.ElementNotFoundException
+  public lang.mirrors.Constant named(string $name) throws lang.ElementNotFoundException
   public php.Generator getIterator()
 }
 
@@ -230,7 +231,7 @@ public class lang.mirrors.Annotations extends lang.Object implements php.Iterato
 
   public bool present()
   public bool provides(string $name)
-  public lang.reflection.Method named(string $name) throws lang.ElementNotFoundException
+  public lang.mirrors.Annotation named(string $name) throws lang.ElementNotFoundException
   public php.Generator getIterator()
 }
 

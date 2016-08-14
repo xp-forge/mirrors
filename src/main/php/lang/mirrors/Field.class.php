@@ -1,6 +1,5 @@
 <?php namespace lang\mirrors;
 
-use lang\Generic;
 use lang\Type;
 
 /**
@@ -16,7 +15,7 @@ class Field extends Member {
    * Creates a new field
    *
    * @param  lang.mirrors.TypeMirror $mirror
-   * @param  var $arg A map returned from Source::fieldNamed(), a ReflectionProperty or a string
+   * @param  php.ReflectionProperty|string|[:var] $arg Map variant returned from Source::fieldNamed()
    * @throws lang.IllegalArgumentException If there is no such field
    */
   public function __construct($mirror, $arg) {
@@ -52,23 +51,23 @@ class Field extends Member {
   /**
    * Read this field's value
    *
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @return var
    * @throws lang.IllegalArgumentException
    */
-  public function read(Generic $instance= null) {
+  public function read($instance= null) {
     return $this->reflect['read']($instance);
   }
 
   /**
    * Modify this field's value
    *
-   * @param  lang.Generic $instance
+   * @param  var $instance
    * @param  var $value
    * @return void
    * @throws lang.IllegalArgumentException
    */
-  public function modify(Generic $instance= null, $value) {
+  public function modify($instance= null, $value) {
     return $this->reflect['modify']($instance, $value);
   }
 
