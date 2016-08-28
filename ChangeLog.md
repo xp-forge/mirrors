@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 4.2.0 / 2016-08-28
+
+* Added forward compatibility with XP 8.0.0 - @thekid
+
 ## 4.1.0 / 2016-07-24
 
 * Merged PR #37: Implement object type union - @thekid
