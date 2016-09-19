@@ -159,6 +159,14 @@ class TagsSyntaxTest extends \unittest\TestCase {
     );
   }
 
+  #[@test]
+  public function returns_typeparameter() {
+    $this->assertEquals(
+      ['return' => [new ReferenceTypeRef('T')]],
+      $this->parse('@return T')
+    );
+  }
+
   #[@test, @values([
   #  '@throws lang.IllegalArgumentException',
   #  '@throws lang.IllegalArgumentException When the name is incorrect'

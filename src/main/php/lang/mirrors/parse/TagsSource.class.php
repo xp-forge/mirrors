@@ -8,6 +8,8 @@ use text\StringTokenizer;
  * @see  http://www.phpdoc.org/docs/latest/guides/types.html#keywords
  */
 class TagsSource extends \text\parse\Tokens {
+  const DELIMITERS = "@\$:()<>[]|*, \t\n";
+
   const T_WORD     = 260;
   const T_PARSED   = 261;
 
@@ -65,7 +67,7 @@ class TagsSource extends \text\parse\Tokens {
    * @param  string $input
    */
   public function __construct($input) {
-    $this->tokens= new StringTokenizer($input, "@\$:()<>[]|*, \t\n", true);
+    $this->tokens= new StringTokenizer($input, self::DELIMITERS, true);
   }
 
   /** @return var */
@@ -81,7 +83,7 @@ class TagsSource extends \text\parse\Tokens {
         $this->tokens->pushBack('*');
       }
 
-      if (1 === strlen($token)) {
+      if (false !== strpos(self::DELIMITERS, $token)) {
         return $token;
       } else if (isset(self::$keywords[$token])) {
         return [self::$keywords[$token], $token];

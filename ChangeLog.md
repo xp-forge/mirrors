@@ -3,6 +3,12 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 4.1.1 / 2016-09-19
+
+* Fixed issue #38: Method lang\mirrors\Method::__toString() must not throw 
+  an exception
+  (@thekid)
+
 ## 4.1.0 / 2016-07-24
 
 * Merged PR #37: Implement object type union - @thekid
