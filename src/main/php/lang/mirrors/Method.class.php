@@ -41,7 +41,7 @@ class Method extends Routine {
     }
 
     $return= $this->tags()['return'];
-    return empty($return) ? Type::$VAR : $return[0]->resolve($this->declaredIn()->reflect);
+    return isset($return[0]) ? $return[0]->resolve($this->declaredIn()->reflect) : Type::$VAR;
   }
 
   /**

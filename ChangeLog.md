@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 4.2.2 / 2017-01-31
+
+* Fixed issue #39: Exception for xml.Node mirror output - @thekid
+
 ## 4.2.1 / 2016-09-19
 
 * Fixed issue #38: Method lang\mirrors\Method::__toString() must not throw 
