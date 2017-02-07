@@ -46,6 +46,13 @@ class PhpSyntax extends \text\parse\Syntax {
         $values[$target[0]][$target[1]]= $value["value"];
       }
     }');
+    $this->collectImports= newinstance('text.parse.rules.Collection', [], '{
+      public function collect(&$values, $value) {
+        foreach ($value as $local => $qualified) {
+          $values[$local]= $qualified;
+        }
+      }
+    }');
     parent::__construct();
   }
 
@@ -62,15 +69,30 @@ class PhpSyntax extends \text\parse\Syntax {
   /** @return text.parse.Rules */
   protected function rules() {
     return new Rules($this->extend([
-      new Sequence([new Optional(new Apply('package')), new Repeated(new Apply('import'), null, Collect::$AS_MAP), new Apply('decl')], function($values) {
+      new Sequence([new Optional(new Apply('package')), new Repeated(new Apply('import'), null, $this->collectImports), new Apply('decl')], function($values) {
         return new CodeUnit($values[0], $values[1], $values[2]);
       }),
       'package' => new Sequence([new Token(T_NAMESPACE), $this->typeName, new Token(';')], function($values) {
         return implode('', $values[1]);
       }),
       'import' => new Match([
-        T_USE => new Sequence([$this->typeName, new Optional(new Apply('alias')), new Token(';')], function($values) {
-          return [$values[2] ?: end($values[1]) => implode('', $values[1])];
+        T_USE => new Sequence([$this->typeName, new Match([
+          T_AS => new Sequence([new Token(T_STRING), new Token(';')], function($values) { return $values[1]; }),
+          '{'  => new Sequence([new Repeated($this->typeName, new Token(',')), new Token('}'), new Token(';')], function($values) { return $values[1]; }),
+          ';'  => new Returns(null),
+        ])], function($values) {
+          if (null === $values[2]) {
+            return [end($values[1]) => implode('', $values[1])];
+          } else if (is_array($values[2])) {
+            $return= [];
+            foreach ($values[2] as $type) {
+              $local= implode('', $type);
+              $return[$local]= implode('', $values[1]).$local;
+            }
+            return $return;
+          } else {
+            return [$values[2] => implode('', $values[1])];
+          }
         }),
         T_NEW => new Sequence([new Token(T_STRING), new Token('('), new Token(T_CONSTANT_ENCAPSED_STRING), new Token(')'), new Token(';')], function($values) {
           $name= strtr(trim($values[3], '\'"'), '.', '\\');
@@ -78,7 +100,6 @@ class PhpSyntax extends \text\parse\Syntax {
           return [false === $p ? $name : substr($name, $p + 1) => $name];
         })
       ]),
-      'alias' => new Sequence([new Token(T_AS), new Token(T_STRING)], function($values) { return $values[1]; }),
       'type' => new Match([
         T_STRING       => new Sequence([$this->typeName], function($values) {
           $t= $values[0].implode('', $values[1]);
