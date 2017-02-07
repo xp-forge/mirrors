@@ -158,7 +158,15 @@ class PhpSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function grouped_import() {
+  public function useless_but_syntactically_valid_single_grouped_import() {
+    $this->assertEquals(
+      ['Date' => 'util\Date'],
+      $this->parse('<?php use util\{Date}; class Test { }')->imports()
+    );
+  }
+
+  #[@test]
+  public function grouped_imports() {
     $this->assertEquals(
       ['Date' => 'util\Date', 'DateUtil' => 'util\DateUtil'],
       $this->parse('<?php use util\{Date, DateUtil}; class Test { }')->imports()
