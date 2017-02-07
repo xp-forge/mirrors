@@ -150,10 +150,18 @@ class PhpSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function aliase_import() {
+  public function aliased_import() {
     $this->assertEquals(
       ['Aliased' => 'util\Objects'],
       $this->parse('<?php use util\Objects as Aliased; class Test { }')->imports()
+    );
+  }
+
+  #[@test]
+  public function grouped_import() {
+    $this->assertEquals(
+      ['Date' => 'util\Date', 'DateUtil' => 'util\DateUtil'],
+      $this->parse('<?php use util\{Date, DateUtil}; class Test { }')->imports()
     );
   }
 
