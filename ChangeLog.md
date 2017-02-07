@@ -3,6 +3,11 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 4.2.3 / 2017-02-07
+
+* Fixed issue #40: PHP7 grouped use statement by merging PR #41
+  (@thekid)
+
 ## 4.2.2 / 2017-01-31
 
 * Fixed issue #39: Exception for xml.Node mirror output - @thekid
