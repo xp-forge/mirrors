@@ -6,17 +6,14 @@
   "description" : "Mirrors",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "^8.0 | ^7.0 | ^6.10.2",
-    "xp-framework/tokenize": "^7.0 | ^6.6",
-    "xp-forge/parse": "^1.0",
+    "xp-framework/core": "^9.0 | ^8.0 | ^7.0 | ^6.10.2",
+    "xp-framework/tokenize": "^8.0 | ^7.0 | ^6.6",
+    "xp-forge/parse": "^2.0 | ^1.0",
     "php" : ">=5.6.0"
   },
   "require-dev" : {
-    "xp-framework/unittest": "^7.0 | ^6.5",
-    "xp-forge/measure" : "^1.0"
-  },
-  "suggest" : {
-    "xp-framework/core": "^7.5"
+    "xp-framework/unittest": "^9.0 | ^8.0 | ^7.0 | ^6.5",
+    "xp-forge/measure" : "^2.0 | ^1.0"
   },
   "bin": ["bin/xp.xp-forge.mirrors.mirror"],
   "autoload" : {
