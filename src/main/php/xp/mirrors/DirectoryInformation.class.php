@@ -30,7 +30,7 @@ class DirectoryInformation extends CollectionInformation {
     throw new IllegalArgumentException('Cannot find '.$uri.' in class path');
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function sources() {
     yield $this->loader;
   }

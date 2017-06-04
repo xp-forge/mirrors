@@ -69,16 +69,16 @@ class FromIncomplete implements Source {
    */
   public function typeImplements($name) { return false; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allInterfaces() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredInterfaces() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allTraits() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredTraits() { return []; }
 
   /**
@@ -129,10 +129,10 @@ class FromIncomplete implements Source {
     throw new ElementNotFoundException('No field named $'.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allFields() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredFields() { return []; }
 
   /**
@@ -154,10 +154,10 @@ class FromIncomplete implements Source {
     throw new ElementNotFoundException('No method named '.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allMethods() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredMethods() { return []; }
 
   /**
@@ -179,7 +179,7 @@ class FromIncomplete implements Source {
     throw new ElementNotFoundException('No constant named '.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allConstants() { return []; }
 
   /**

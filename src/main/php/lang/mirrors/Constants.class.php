@@ -42,7 +42,7 @@ class Constants implements \lang\Value, \IteratorAggregate {
   /**
    * Iterates over all methods
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function getIterator() {
     foreach ($this->mirror->reflect->allConstants() as $name => $value) {

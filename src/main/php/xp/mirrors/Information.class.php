@@ -21,7 +21,7 @@ abstract class Information {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public abstract function sources();
 
   /**

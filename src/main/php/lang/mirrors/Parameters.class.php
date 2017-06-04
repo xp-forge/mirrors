@@ -108,7 +108,7 @@ class Parameters implements \IteratorAggregate {
   /**
    * Iterates over all parameters
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function getIterator() {
     foreach ($this->lookup()[self::BY_ID] as $param) {

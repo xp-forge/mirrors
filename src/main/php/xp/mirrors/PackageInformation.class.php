@@ -15,7 +15,7 @@ class PackageInformation extends CollectionInformation {
     $this->package= $package instanceof Package ? $package : new Package(rtrim($package, '.'));
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function sources() {
     $name= $this->package->name();
     foreach (ClassLoader::getLoaders() as $loader) {

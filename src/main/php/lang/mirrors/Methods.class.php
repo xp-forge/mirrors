@@ -37,7 +37,7 @@ class Methods extends Members {
    * Iterates over methods.
    *
    * @param  util.Filter $filter
-   * @return php.Generator
+   * @return iterable
    */
   public function all($filter= null) {
     foreach ($this->mirror->reflect->allMethods() as $name => $member) {
@@ -51,7 +51,7 @@ class Methods extends Members {
    * Iterates over declared methods.
    *
    * @param  util.Filter $filter
-   * @return php.Generator
+   * @return iterable
    */
   public function declared($filter= null) {
     foreach ($this->mirror->reflect->declaredMethods() as $name => $member) {
@@ -66,7 +66,7 @@ class Methods extends Members {
    *
    * @deprecated Use all() or declared() instead
    * @param  int $kind Either Member::$STATIC or Member::$INSTANCE bitwise-or'ed with Member::$DECLARED
-   * @return php.Generator
+   * @return iterable
    */
   public function of($kind) {
     $instance= ($kind & Member::$STATIC) === 0;

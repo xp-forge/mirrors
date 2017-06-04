@@ -27,7 +27,7 @@ class TypeInformation extends Information {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function sources() {
     foreach ($this->delegate->sources() as $source) {
       yield $source;

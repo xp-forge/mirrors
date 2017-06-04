@@ -50,7 +50,7 @@ class Annotations extends \lang\Object implements \IteratorAggregate {
   /**
    * Iterates over all methods
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function getIterator() {
     foreach ($this->backing as $name => $value) {

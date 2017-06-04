@@ -152,14 +152,14 @@ class FromReflection implements Source {
     return $this->reflect->implementsInterface($name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allInterfaces() {
     foreach ($this->reflect->getInterfaces() as $interface) {
       yield $interface->name => $this->source->reflect($interface);
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredInterfaces() {
     $parent= $this->reflect->getParentClass();
     $inherited= $parent ? array_flip($parent->getInterfaceNames()) : [];
@@ -173,7 +173,7 @@ class FromReflection implements Source {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allTraits() {
     $reflect= $this->reflect;
     do {
@@ -183,7 +183,7 @@ class FromReflection implements Source {
     } while ($reflect= $reflect->getParentClass());
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredTraits() {
     foreach ($this->reflect->getTraits() as $trait) {
       yield $trait->name => $this->source->reflect($trait);
@@ -376,14 +376,14 @@ class FromReflection implements Source {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allFields() {
     foreach ($this->reflect->getProperties() as $field) {
       yield $field->name => $this->field($field);
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredFields() {
     foreach ($this->reflect->getProperties() as $field) {
       if ($field->getDeclaringClass()->name === $this->reflect->name) {
@@ -538,14 +538,14 @@ class FromReflection implements Source {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allMethods() {
     foreach ($this->reflect->getMethods() as $method) {
       yield $method->name => $this->method($method);
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredMethods() {
     foreach ($this->reflect->getMethods() as $method) {
       if ($method->getDeclaringClass()->name === $this->reflect->name) {
@@ -576,7 +576,7 @@ class FromReflection implements Source {
     throw new ElementNotFoundException('No constant named '.$name.'() in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allConstants() {
     foreach ($this->reflect->getConstants() as $name => $value) {
       yield $name => $value;

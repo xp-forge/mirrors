@@ -30,7 +30,7 @@ class Throws extends \lang\Object implements \IteratorAggregate {
   /**
    * Iterates over all interfaces
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function getIterator() {
     $type= $this->mirror->declaredIn();

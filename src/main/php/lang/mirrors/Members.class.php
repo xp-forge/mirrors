@@ -51,7 +51,7 @@ abstract class Members implements \lang\Value, \IteratorAggregate {
    * Iterates over members.
    *
    * @param  util.Filter $filter
-   * @return php.Generator
+   * @return iterable
    */
   public abstract function all($filter= null);
 

@@ -15,15 +15,15 @@ abstract class TypeKindInformation extends Information {
     $this->mirror= $arg instanceof TypeMirror ? $arg : new TypeMirror($arg);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function sources() { yield ClassLoader::getDefault()->findClass($this->mirror->name()); }
 
   /**
    * Display type extensions
    *
-   * @param  php.Generator $types
+   * @param  iterable $types
    * @param  io.StringWriter $out
-   * @param  string $kinde
+   * @param  string $kind
    * @return void
    */
   protected function displayExtensions($types, $out, $kind) {
@@ -39,7 +39,7 @@ abstract class TypeKindInformation extends Information {
   /**
    * Display members
    *
-   * @param  php.Generator $members
+   * @param  iterable $members
    * @param  io.StringWriter $out
    * @param  bool $separator
    * @return void
