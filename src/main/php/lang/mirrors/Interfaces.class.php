@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors;
 
-class Interfaces extends \lang\Object implements \IteratorAggregate {
+class Interfaces implements \IteratorAggregate {
   private $mirror;
 
   /**

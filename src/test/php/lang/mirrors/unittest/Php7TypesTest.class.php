@@ -5,6 +5,7 @@ use lang\Type;
 use lang\XPClass;
 use lang\mirrors\TypeMirror;
 use unittest\actions\RuntimeVersion;
+use lang\mirrors\unittest\fixture\FixtureBase;
 
 abstract class Php7TypesTest extends \unittest\TestCase {
   use TypeDefinition;
@@ -55,20 +56,21 @@ abstract class Php7TypesTest extends \unittest\TestCase {
 
   #[@test]
   public function parent_return_type() {
-    $fixture= $this->define('{
-      public function fixture(): parent { return new parent(); }
-    }');
+    $fixture= $this->define(
+      '{ public function fixture(): parent { return new parent(); } }',
+      [FixtureBase::class]
+    );
 
-    $this->assertEquals(XPClass::forName('lang.Object'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
+    $this->assertEquals(new XPClass(FixtureBase::class), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test]
-  public function object_return_type() {
+  public function value_return_type() {
     $fixture= $this->define('{
-      public function fixture(): \lang\Object { return new \lang\Object(); }
+      public function fixture(): \lang\Value { /* TBI */ }
     }');
 
-    $this->assertEquals(XPClass::forName('lang.Object'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
+    $this->assertEquals(XPClass::forName('lang.Value'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
   #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]

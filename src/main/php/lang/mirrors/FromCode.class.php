@@ -9,7 +9,7 @@ use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 
-class FromCode extends \lang\Object implements Source {
+class FromCode implements Source {
   private static $syntax;
   private $unit;
   protected $decl;
@@ -537,12 +537,18 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /**
-   * Returns whether a given value is equal to this reflection source
+   * Compares a given value to this source
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof Source && $this->name === $cmp->name;
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->name, $value->name) : 1;
   }
+
+  /** @return string */
+  public function hashCode() { return 'R'.md5($this->name); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'<'.$this->name.'>'; }
 }

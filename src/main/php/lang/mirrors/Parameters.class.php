@@ -2,7 +2,7 @@
 
 use lang\ElementNotFoundException;
 
-class Parameters extends \lang\Object implements \IteratorAggregate {
+class Parameters implements \IteratorAggregate {
   const BY_ID = 0, BY_NAME = 1;
 
   private $mirror, $reflect;

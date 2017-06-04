@@ -3,7 +3,9 @@
 /**
  * Base class for fields and methods
  */
-abstract class Members extends \lang\Object implements \IteratorAggregate {
+abstract class Members implements \lang\Value, \IteratorAggregate {
+  use ListOf;
+
   protected $mirror;
 
   /**
@@ -57,27 +59,15 @@ abstract class Members extends \lang\Object implements \IteratorAggregate {
    * Iterates over declared members.
    *
    * @param  util.Filter $filter
-   * @return php.Generator
+   * @return iterable
    */
   public abstract function declared($filter= null);
 
   /**
    * Iterates over all methods
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function getIterator() { return $this->all(); }
 
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    $s= nameof($this)."@[\n";
-    foreach ($this as $member) {
-      $s.= '  '.(string)$member."\n";
-    }
-    return $s.']';
-  }
 }

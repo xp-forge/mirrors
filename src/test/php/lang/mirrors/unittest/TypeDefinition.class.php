@@ -19,7 +19,7 @@ trait TypeDefinition {
    * @param  string[] $extends
    * @return lang.XPClass
    */
-  protected function define($declaration, $extends= [Object::class]) {
+  protected function define($declaration, $extends= null) {
     if (!isset(self::$fixtures[$declaration])) {
       $definition= [
         'kind'       => 'class',
@@ -44,7 +44,7 @@ trait TypeDefinition {
    * @param  string[] $extends
    * @return lang.mirrors.TypeMirror
    */
-  protected function mirror($body, $extends= [Object::class]) {
+  protected function mirror($body, $extends= null) {
     return new TypeMirror($this->define($body, $extends), $this->source());
   }
 }

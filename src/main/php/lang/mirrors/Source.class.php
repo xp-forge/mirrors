@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors;
 
-interface Source {
+interface Source extends \lang\Value {
 
   /** @return bool */
   public function present();

@@ -16,7 +16,7 @@ use lang\IllegalArgumentException;
  * @test   xp://lang.mirrors.unittest.TypeMirrorTest
  * @test   xp://lang.mirrors.unittest.TypeMirrorTraitsTest
  */
-class TypeMirror extends \lang\Object {
+class TypeMirror implements \lang\Value {
   private $methods= null;
   private $fields= null;
   private $annotations= null;
@@ -148,21 +148,18 @@ class TypeMirror extends \lang\Object {
   }
 
   /**
-   * Returns whether a given value is equal to this type mirror
+   * Compares a given value to this type mirror
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->reflect->equals($cmp->reflect);
+  public function compareTo($value) {
+    return $value instanceof self ? $this->reflect->compareTo($value->reflect) : 1;
   }
 
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this).'<'.$this->name().'>';
-  }
+  /** @return string */
+  public function hashCode() { return 'M'.md5($this->name()); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'<'.$this->name().'>'; }
 }

@@ -12,7 +12,7 @@ use lang\IllegalStateException;
 use lang\Throwable;
 use lang\Error;
 
-class FromReflection extends \lang\Object implements Source {
+class FromReflection implements Source {
   protected $reflect;
   private $source;
   private $unit= null;
@@ -611,12 +611,19 @@ class FromReflection extends \lang\Object implements Source {
   }
 
   /**
-   * Returns whether a given value is equal to this reflection source
+   * Compares a given value to this source
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof Source && $this->name === $cmp->name;
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->name, $value->name) : 1;
   }
+
+  /** @return string */
+  public function hashCode() { return 'R'.md5($this->name); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'<'.$this->name.'>'; }
+
 }

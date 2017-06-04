@@ -4,13 +4,14 @@ use lang\Type;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 use lang\mirrors\parse\VariadicTypeRef;
+use util\Objects;
 
 /**
  * A method or constructor parameter
  *
  * @test  xp://lang.mirrors.unittest.ParameterTest
  */
-class Parameter extends \lang\Object {
+class Parameter implements \lang\Value {
   private $mirror, $reflect;
 
   /**
@@ -96,26 +97,26 @@ class Parameter extends \lang\Object {
   }
 
   /**
-   * Returns whether a given value is equal to this parameter
+   * Compares a given value to this parameter
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && (
-      $this->mirror->equals($cmp->mirror) &&
-      $this->reflect['pos'] === $cmp->reflect['pos']
-    );
+  public function compareTo($value) {
+    return $value instanceof self
+      ? Objects::compare(
+        [$this->mirror, $this->reflect['pos']],
+        [$value->mirror, $value->reflect['pos']]
+      )
+      : 1
+    ;
   }
 
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this).'('.$this.')';
-  }
+  /** @return string */
+  public function hashCode() { return 'R'.md5($this->__toString()); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'('.$this->__toString().')'; }
 
   /** @return string */
   public function __toString() {

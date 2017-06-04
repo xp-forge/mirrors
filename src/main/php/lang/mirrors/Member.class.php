@@ -2,11 +2,12 @@
 
 use lang\mirrors\parse\TagsSyntax;
 use lang\mirrors\parse\TagsSource;
+use util\Objects;
 
 /**
  * Base class for all type members: Fields, methods, constructors.
  */
-abstract class Member extends \lang\Object {
+abstract class Member implements \lang\Value {
   public static $STATIC= 0x0001, $INSTANCE= 0x0002, $DECLARED= 0x0004;  // Deprecated
   public $reflect;
   protected $mirror;
@@ -95,26 +96,26 @@ abstract class Member extends \lang\Object {
   public function annotation($named) { return $this->annotations()->named($named); }
 
   /**
-   * Returns whether a given value is equal to this member
+   * Compares a given value to this member
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && (
-      $this->reflect['name'] === $cmp->reflect['name'] &&
-      $this->reflect['holder'] === $cmp->reflect['holder']
-    );
+  public function compareTo($value) {
+    return $value instanceof self
+      ? Objects::compare(
+        [$this->reflect['name'], $this->reflect['holder']],
+        [$value->reflect['name'], $value->reflect['holder']]
+      )
+      : 1
+    ;
   }
 
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this).'('.$this.')';
-  }
+  /** @return string */
+  public function hashCode() { return 'M'.md5($this->__toString()); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'('.$this->__toString().')'; }
 
   /** @return string */
   public abstract function __toString();

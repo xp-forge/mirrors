@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors;
 
-class Predicates extends \lang\Object implements \util\Filter {
+class Predicates implements \util\Filter {
   private $filters= [];
 
   /**
