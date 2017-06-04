@@ -52,12 +52,12 @@ class MethodReturnTypeTest extends AbstractMethodTest {
 
   #[@test]
   public function self_supported() {
-    $this->assertEquals($this->getClass(), $this->fixture('selfFixture')->returns());
+    $this->assertEquals(typeof($this), $this->fixture('selfFixture')->returns());
   }
 
   #[@test]
   public function parent_supported() {
-    $this->assertEquals($this->getClass()->getParentclass(), $this->fixture('parentFixture')->returns());
+    $this->assertEquals(typeof($this)->getParentclass(), $this->fixture('parentFixture')->returns());
   }
 
   #[@test]

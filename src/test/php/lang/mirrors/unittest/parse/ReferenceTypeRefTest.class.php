@@ -8,7 +8,7 @@ class ReferenceTypeRefTest extends ResolveableTest {
   #[@test]
   public function fully_qualified_class_name() {
     $this->assertEquals(
-      $this->getClass(),
+      typeof($this),
       (new ReferenceTypeRef('\\'.__CLASS__))->resolve($this->source)
     );
   }
@@ -32,7 +32,7 @@ class ReferenceTypeRefTest extends ResolveableTest {
   #[@test]
   public function unqualified_class_name_with_same_name_as_this_class() {
     $this->assertEquals(
-      $this->getClass(),
+      typeof($this),
       (new ReferenceTypeRef('ReferenceTypeRefTest'))->resolve($this->source)
     );
   }
@@ -40,7 +40,7 @@ class ReferenceTypeRefTest extends ResolveableTest {
   #[@test]
   public function self_keyword() {
     $this->assertEquals(
-      $this->getClass(),
+      typeof($this),
       (new ReferenceTypeRef('self'))->resolve($this->source)
     );
   }
@@ -48,7 +48,7 @@ class ReferenceTypeRefTest extends ResolveableTest {
   #[@test]
   public function parent_keyword() {
     $this->assertEquals(
-      $this->getClass()->getParentclass(),
+      typeof($this)->getParentclass(),
       (new ReferenceTypeRef('parent'))->resolve($this->source)
     );
   }
