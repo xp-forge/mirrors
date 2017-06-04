@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\mirrors\Methods;
+use lang\mirrors\Fields;
 use lang\Enum;
 
 class EnumInformation extends TypeKindInformation {
@@ -29,7 +30,7 @@ class EnumInformation extends TypeKindInformation {
       $mirror= new TypeMirror(typeof($member));
       if ($mirror->isSubtypeOf($this->mirror)) {
         $out->writeLine(' {');
-        foreach ($mirror->methods()->declared() as $method) {
+        foreach ($mirror->methods()->declared(Methods::with($this->visibility)) as $method) {
           $out->writeLine('    ', (string)$method);
         }
         $separator= true;
@@ -44,8 +45,8 @@ class EnumInformation extends TypeKindInformation {
     if ($constructor->present()) {
       $this->displayMembers([$constructor], $out, $separator);
     }
-    $this->displayMembers($this->mirror->methods()->all(Methods::ofClass()), $out, $separator);
-    $this->displayMembers($this->mirror->methods()->all(Methods::ofInstance()), $out, $separator);
+    $this->displayMembers($this->mirror->methods()->all(Methods::ofClass()->with($this->visibility)), $out, $separator);
+    $this->displayMembers($this->mirror->methods()->all(Methods::ofInstance()->with($this->visibility)), $out, $separator);
     $out->writeLine('}');
   }
 }

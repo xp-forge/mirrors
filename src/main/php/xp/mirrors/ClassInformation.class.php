@@ -1,6 +1,7 @@
 <?php namespace xp\mirrors;
 
 use lang\mirrors\TypeMirror;
+use lang\mirrors\Fields;
 use lang\mirrors\Methods;
 
 class ClassInformation extends TypeKindInformation {
@@ -19,15 +20,15 @@ class ClassInformation extends TypeKindInformation {
     $separator= false;
     $out->writeLine(' {');
     $this->displayMembers($this->mirror->constants(), $out, $separator);
-    $this->displayMembers($this->mirror->fields()->declared(), $out, $separator);
+    $this->displayMembers($this->mirror->fields()->declared(Fields::with($this->visibility)), $out, $separator);
     $constructor= $this->mirror->constructor();
     if ($constructor->present()) {
       $this->displayMembers([$constructor], $out, $separator);
     } else {
       $separator= false;
     }
-    $this->displayMembers($this->mirror->methods()->all(Methods::ofClass()), $out, $separator);
-    $this->displayMembers($this->mirror->methods()->all(Methods::ofInstance()), $out, $separator);
+    $this->displayMembers($this->mirror->methods()->all(Methods::ofClass()->with($this->visibility)), $out, $separator);
+    $this->displayMembers($this->mirror->methods()->all(Methods::ofInstance()->with($this->visibility)), $out, $separator);
     $out->writeLine('}');
   }
 }

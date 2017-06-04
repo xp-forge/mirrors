@@ -4,15 +4,20 @@ use lang\mirrors\TypeMirror;
 use lang\ClassLoader;
 
 abstract class TypeKindInformation extends Information {
-  protected $mirror;
+  protected $mirror, $visibility;
 
   /**
    * Creates a new type information instance
    *
    * @param  lang.mirrors.TypeMirror|lang.XPClass $arg
+   * @param  bool all Whether to incude all members - defaults: No
    */
-  public function __construct($arg) {
+  public function __construct($arg, $all= false) {
     $this->mirror= $arg instanceof TypeMirror ? $arg : new TypeMirror($arg);
+    $this->visibility= $all
+      ? function($member) { return true; }
+      : function($member) { return $member->modifiers()->isPublic(); }
+    ;
   }
 
   /** @return iterable */

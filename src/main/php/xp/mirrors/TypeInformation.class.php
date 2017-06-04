@@ -10,18 +10,19 @@ class TypeInformation extends Information {
    * Creates a new type information instance
    *
    * @param  lang.mirrors.TypeMirror|lang.XPClass $arg
+   * @param  bool $all Whether to display all members, defaults to false
    */
-  public function __construct($arg) {
+  public function __construct($arg, $all= false) {
     $mirror= $arg instanceof TypeMirror ? $arg : new TypeMirror($arg);
     $kind= $mirror->kind();
     if ($kind->isEnum()) {
-      $this->delegate= new EnumInformation($mirror);
+      $this->delegate= new EnumInformation($mirror, $all);
     } else if ($kind->isTrait()) {
-      $this->delegate= new TraitInformation($mirror);
+      $this->delegate= new TraitInformation($mirror, $all);
     } else if ($kind->isInterface()) {
-      $this->delegate= new InterfaceInformation($mirror);
+      $this->delegate= new InterfaceInformation($mirror, $all);
     } else if ($kind->isClass()) {
-      $this->delegate= new ClassInformation($mirror);
+      $this->delegate= new ClassInformation($mirror, $all);
     } else {
       throw new IllegalStateException('Unknown type kind '.$kind->toString());
     }
