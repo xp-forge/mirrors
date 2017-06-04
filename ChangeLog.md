@@ -5,6 +5,9 @@ Mirrors change log
 
 ## 5.0.0 / 2017-06-04
 
+* No longer show non-public members by default in `xp mirror` command
+  line tool. Supply `--all` to include them.
+  (@thekid)
 * Added forward compatibility with XP 9.0.0 - @thekid
 
 ## 4.2.3 / 2017-02-07
