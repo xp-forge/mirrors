@@ -22,10 +22,10 @@ trait ListOf {
 
   /** @return string */
   public function toString() {
-    $s= nameof($this)."@[\n";
+    $s= '';
     foreach ($this as $element) {
       $s.= '  '.str_replace("\n", "\n  ", $element->__toString())."\n";
     }
-    return $s.']';
+    return nameof($this).'@['.($s ? "\n".$s.']' : ']');
   }
 }
