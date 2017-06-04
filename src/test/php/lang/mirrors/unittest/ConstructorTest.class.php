@@ -5,6 +5,7 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\Modifiers;
 use lang\IllegalArgumentException;
 use lang\mirrors\TargetInvocationException;
+use lang\mirrors\unittest\fixture\FixtureBase;
 use lang\mirrors\unittest\fixture\FixtureInterface;
 use lang\mirrors\unittest\fixture\FixtureTrait;
 use lang\mirrors\unittest\fixture\FixtureAbstract;
@@ -33,28 +34,28 @@ class ConstructorTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function object_classes_constructor_has_no_params() {
-    $type= new TypeMirror(Object::class);
+  public function base_classes_constructor_has_no_params() {
+    $type= new TypeMirror(FixtureBase::class);
     $this->assertEquals(0, (new Constructor($type))->parameters()->length());
   }
 
   #[@test]
-  public function object_classes_constructor_is_public() {
-    $type= new TypeMirror(Object::class);
+  public function base_classes_constructor_is_public() {
+    $type= new TypeMirror(FixtureBase::class);
     $this->assertEquals(new Modifiers('public'), (new Constructor($type))->modifiers());
   }
 
   #[@test]
   public function creating_new_object_instances() {
     $this->assertInstanceOf(
-      Object::class,
-      (new Constructor(new TypeMirror(Object::class)))->newInstance()
+      FixtureBase::class,
+      (new Constructor(new TypeMirror(FixtureBase::class)))->newInstance()
     );
   }
 
   #[@test]
   public function creating_instances_invokes_constructor() {
-    $fixture= newinstance(Object::class, [], '{
+    $fixture= newinstance(FixtureBase::class, [], '{
       public $passed= null;
       public function __construct(... $args) { $this->passed= $args; }
     }');
@@ -66,7 +67,7 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test, @expect(TargetInvocationException::class)]
   public function creating_instances_wraps_exceptions() {
-    $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+    $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
       '__construct' => function($arg) { throw new IllegalArgumentException('Test'); }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
@@ -74,7 +75,7 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test, @expect(TargetInvocationException::class)]
   public function creating_instances_wraps_argument_mismatch_exceptions() {
-    $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+    $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
       '__construct' => function(TypeMirror $arg) { }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
@@ -82,7 +83,7 @@ class ConstructorTest extends \unittest\TestCase {
 
   #[@test, @expect(TargetInvocationException::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function creating_instances_wraps_errors() {
-    $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+    $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
       '__construct' => function($arg) { $arg->invoke(); }
     ]);
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
@@ -91,7 +92,7 @@ class ConstructorTest extends \unittest\TestCase {
   #[@test]
   public function sets_cause_for_exceptions_thrown() {
     try {
-      $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+      $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
         '__construct' => function($arg) { throw new IllegalArgumentException('Test'); }
       ]);
       (new Constructor(new TypeMirror($fixture)))->newInstance(null);
@@ -104,7 +105,7 @@ class ConstructorTest extends \unittest\TestCase {
   #[@test, @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function sets_cause_for_errors_raised() {
     try {
-      $fixture= ClassLoader::defineClass($this->name, Object::class, [], [
+      $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
         '__construct' => function($arg) { $arg->invoke(); }
       ]);
       (new Constructor(new TypeMirror($fixture)))->newInstance(null);
