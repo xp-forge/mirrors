@@ -1,14 +1,15 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
-use lang\Generic;
+use lang\Closeable;
 use lang\mirrors\unittest\fixture\FixtureInterface;
+use lang\mirrors\unittest\fixture\FixtureBase;
 
-class TypeMirrorInterfacesTest extends \unittest\TestCase implements FixtureInterface {
+class TypeMirrorInterfacesTest extends \unittest\TestCase {
   private $fixture;
 
   public function setUp() {
-    $this->fixture= new TypeMirror(self::class);
+    $this->fixture= new TypeMirror(FixtureBase::class);
   }
 
   #[@test]
@@ -28,11 +29,9 @@ class TypeMirrorInterfacesTest extends \unittest\TestCase implements FixtureInte
 
   #[@test]
   public function all_interfaces() {
-    $interfaces= iterator_to_array($this->fixture->interfaces());
-    usort($interfaces, function($a, $b) { return strcmp($a->name(), $b->name()); });
     $this->assertEquals(
-      [new TypeMirror(Generic::class), new TypeMirror(FixtureInterface::class)],
-      $interfaces
+      [new TypeMirror(FixtureInterface::class)],
+      iterator_to_array($this->fixture->interfaces())
     );
   }
 
