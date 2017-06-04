@@ -12,6 +12,10 @@ use lang\IllegalArgumentException;
  *   ```sh
  *   $ xp mirror lang.Value
  *   ```
+ * - Include non-public members
+ *   ```sh
+ *   $ xp mirror lang.CommandLine --all
+ *   ```
  * - Show information about a file declaring a type
  *   ```sh
  *   $ xp mirror src/main/php/Example.class.php
