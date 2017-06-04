@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors;
 
-class Traits extends \lang\Object implements \IteratorAggregate {
+class Traits implements \IteratorAggregate {
   private $mirror;
 
   /**

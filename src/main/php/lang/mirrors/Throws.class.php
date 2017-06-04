@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors;
 
-class Throws extends \lang\Object implements \IteratorAggregate {
+class Throws implements \IteratorAggregate {
   private $mirror, $tags;
 
   /**

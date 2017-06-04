@@ -2,7 +2,7 @@
 
 use lang\Type;
 
-class FixtureParams extends \lang\Object {
+class FixtureParams {
   const CONSTANT = 'Test';
 
   private function noParam() { }

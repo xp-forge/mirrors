@@ -7,7 +7,7 @@ use util\Objects;
  *
  * @test  xp://lang.mirrors.unittest.ArrayExprTest
  */
-class ArrayExpr extends \lang\Object {
+class ArrayExpr {
   private $backing;
 
   public function __construct($value) {

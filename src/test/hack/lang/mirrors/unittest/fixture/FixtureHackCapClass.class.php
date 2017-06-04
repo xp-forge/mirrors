@@ -5,7 +5,7 @@
  *
  * @see    http://docs.hhvm.com/manual/en/hack.constructorargumentpromotion.php
  */
-class FixtureHackCapClass extends \lang\Object {
+class FixtureHackCapClass {
 
   public function __construct(
     public string $name,

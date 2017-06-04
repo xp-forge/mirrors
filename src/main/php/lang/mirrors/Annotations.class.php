@@ -2,7 +2,7 @@
 
 use lang\ElementNotFoundException;
 
-class Annotations extends \lang\Object implements \IteratorAggregate {
+class Annotations implements \IteratorAggregate {
   private $mirror, $backing;
 
   /**

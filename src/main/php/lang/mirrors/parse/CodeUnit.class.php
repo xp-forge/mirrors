@@ -2,7 +2,7 @@
 
 use util\Objects;
 
-class CodeUnit extends \lang\Object {
+class CodeUnit {
   private $package, $imports;
 
   /**
