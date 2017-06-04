@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors;
 
-interface Source {
+interface Source extends \lang\Value {
 
   /** @return bool */
   public function present();
@@ -59,34 +59,34 @@ interface Source {
    */
   public function typeUses($name);
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredInterfaces();
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allTraits();
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredTraits();
 
   /** @return var */
   public function constructor();
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allFields();
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredFields();
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allMethods();
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredMethods();
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allConstants();
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allInterfaces();
 
   /**

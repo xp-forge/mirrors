@@ -4,6 +4,8 @@ language: php
 
 sudo: false
 
+dist: trusty
+
 php:
   - 5.6
   - 7.0
@@ -13,6 +15,7 @@ php:
 
 matrix:
   allow_failures:
+    - php: hhvm
     - php: nightly
 
 before_script:
@@ -22,4 +25,4 @@ before_script:
 
 script:
   - sh xp-run xp.unittest.TestRunner src/test/php
-  - sh xp-run util.profiling.Measure lang.mirrors.performance.ClassParsingPerformance -n 100
+  - sh xp-run xp.measure.Runner lang.mirrors.performance.ClassParsingPerformance -n 100

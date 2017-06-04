@@ -9,7 +9,7 @@ use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 
-class FromCode extends \lang\Object implements Source {
+class FromCode implements Source {
   private static $syntax;
   private $unit;
   protected $decl;
@@ -35,7 +35,7 @@ class FromCode extends \lang\Object implements Source {
    *
    * @param  bool $parent Whether to include parents
    * @param  bool $traits Whether to include traits
-   * @return php.Generator
+   * @return iterable
    */
   private function merge($parent, $traits) {
     if ($parent && isset($this->decl['parent'])) {
@@ -132,7 +132,7 @@ class FromCode extends \lang\Object implements Source {
     return false;
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allInterfaces() {
     foreach ((array)$this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
@@ -149,7 +149,7 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredInterfaces() {
     foreach ((array)$this->decl['implements'] as $interface) {
       $name= $this->resolve0($interface);
@@ -157,7 +157,7 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allTraits() {
     if (isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
@@ -172,7 +172,7 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredTraits() {
     if (isset($this->decl['use'])) {
       foreach ($this->decl['use'] as $trait => $definition) {
@@ -294,7 +294,7 @@ class FromCode extends \lang\Object implements Source {
     throw new ElementNotFoundException('No field named $'.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allFields() {
     if (isset($this->decl['field'])) {
       foreach ($this->decl['field'] as $name => $field) {
@@ -309,7 +309,7 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredFields() {
     if (isset($this->decl['field'])) {
       foreach ($this->decl['field'] as $name => $field) {
@@ -419,7 +419,7 @@ class FromCode extends \lang\Object implements Source {
     throw new ElementNotFoundException('No method named '.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allMethods() {
     if (isset($this->decl['method'])) {
       foreach ($this->decl['method'] as $name => $method) {
@@ -434,7 +434,7 @@ class FromCode extends \lang\Object implements Source {
     }
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredMethods() {
     if (isset($this->decl['method'])) {
       foreach ($this->decl['method'] as $name => $method) {
@@ -484,7 +484,7 @@ class FromCode extends \lang\Object implements Source {
     throw new ElementNotFoundException('No constant named '.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allConstants() {
     if (isset($this->decl['const'])) {
       foreach ($this->decl['const'] as $name => $const) {
@@ -537,12 +537,18 @@ class FromCode extends \lang\Object implements Source {
   }
 
   /**
-   * Returns whether a given value is equal to this reflection source
+   * Compares a given value to this source
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof Source && $this->name === $cmp->name;
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->name, $value->name) : 1;
   }
+
+  /** @return string */
+  public function hashCode() { return 'R'.md5($this->name); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'<'.$this->name.'>'; }
 }

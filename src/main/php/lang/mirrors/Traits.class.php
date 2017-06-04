@@ -1,6 +1,8 @@
 <?php namespace lang\mirrors;
 
-class Traits extends \lang\Object implements \IteratorAggregate {
+class Traits implements \lang\Value, \IteratorAggregate {
+  use ListOf;
+
   private $mirror;
 
   /**
@@ -28,7 +30,7 @@ class Traits extends \lang\Object implements \IteratorAggregate {
   /**
    * Iterates over all traits
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function getIterator() {
     foreach ($this->mirror->reflect->allTraits() as $trait) {
@@ -40,7 +42,7 @@ class Traits extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns only traits this type uses directly
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function declared() {
     foreach ($this->mirror->reflect->declaredTraits() as $trait) {

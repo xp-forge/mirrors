@@ -4,7 +4,7 @@ use lang\XPClass;
 use unittest\TestCase;
 use unittest\PrerequisitesNotMetError;
 
-class OnlyOnHHVM extends \lang\Object implements \unittest\TestAction, \unittest\TestClassAction {
+class OnlyOnHHVM implements \unittest\TestAction, \unittest\TestClassAction {
 
   /**
    * Verifies HHVM

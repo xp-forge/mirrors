@@ -28,13 +28,13 @@ class Constant extends Resolveable {
   }
 
   /**
-   * Returns whether a given value is equal to this code unit
+   * Compares a given value to this list
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->name === $cmp->name;
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->name, $value->name) : 1;
   }
 
   /** @return string */

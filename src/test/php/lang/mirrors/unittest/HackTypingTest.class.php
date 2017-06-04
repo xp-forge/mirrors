@@ -9,6 +9,7 @@ use lang\FunctionType;
 use lang\XPClass;
 use lang\mirrors\TypeMirror;
 use lang\mirrors\unittest\fixture\FixtureHackTypedClass;
+use lang\mirrors\unittest\fixture\FixtureHackBaseClass;
 
 abstract class HackTypingTest extends \unittest\TestCase {
 
@@ -32,7 +33,7 @@ abstract class HackTypingTest extends \unittest\TestCase {
 
   #[@test, @values(source= 'targets', args= ['parentTyped'])]
   public function parent_typed($target) {
-    $this->assertEquals(new XPClass(Object::class), $target);
+    $this->assertEquals(new XPClass(FixtureHackBaseClass::class), $target);
   }
 
   #[@test, @values(source= 'targets', args= ['thisTyped'])]

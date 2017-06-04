@@ -5,7 +5,7 @@
  *
  * @test   xp://lang.mirrors.unittest.PackageTest
  */
-class Package extends \lang\Object {
+class Package implements \lang\Value {
   private $name;
   public static $GLOBAL;
 
@@ -32,21 +32,19 @@ class Package extends \lang\Object {
   public function isGlobal() { return '' === $this->name; }
 
   /**
-   * Returns whether a given value is equal to this code unit
+   * Compares a given value to this source
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->name === $cmp->name;
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->name, $value->name) : 1;
   }
 
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this).'<'.($this->isGlobal() ? '(global)' : $this->name).'>';
-  }
+  /** @return string */
+  public function hashCode() { return 'R'.md5($this->name); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'<'.($this->isGlobal() ? '(global)' : $this->name).'>'; }
+
 }

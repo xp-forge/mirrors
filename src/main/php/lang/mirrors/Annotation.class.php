@@ -2,7 +2,7 @@
 
 use util\Objects;
 
-class Annotation extends \lang\Object {
+class Annotation {
   private $mirror, $name, $value;
 
   /**

@@ -13,7 +13,7 @@ use lang\FunctionType;
  * @see    http://docs.hhvm.com/manual/en/hack.annotations.php
  * @test   xp://lang.mirrors.unittest.HackTypesTest
  */
-class HackTypes extends \lang\Object {
+class HackTypes {
   private $reflect;
 
   /**

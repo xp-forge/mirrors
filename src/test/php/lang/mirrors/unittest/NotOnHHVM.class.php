@@ -2,7 +2,7 @@
 
 use unittest\TestCase;
 
-class NotOnHHVM extends \lang\Object implements \unittest\TestAction {
+class NotOnHHVM implements \unittest\TestAction {
 
   /**
    * Returns whether we're running on HHVM runtime

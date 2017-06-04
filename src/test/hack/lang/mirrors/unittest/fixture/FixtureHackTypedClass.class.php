@@ -9,7 +9,7 @@
  * @see    http://docs.hhvm.com/manual/en/hack.annotations.functiontypes.php
  * @see    http://docs.hhvm.com/manual/en/hack.nullable.php
  */
-class FixtureHackTypedClass extends \lang\Object {
+class FixtureHackTypedClass extends FixtureHackBaseClass {
   public int $typed;
   public parent $parentTyped;
   public this $thisTyped;

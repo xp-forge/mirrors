@@ -12,6 +12,10 @@ use lang\IllegalArgumentException;
  *   ```sh
  *   $ xp mirror lang.Value
  *   ```
+ * - Include non-public members
+ *   ```sh
+ *   $ xp mirror lang.CommandLine --all
+ *   ```
  * - Show information about a file declaring a type
  *   ```sh
  *   $ xp mirror src/main/php/Example.class.php
@@ -48,7 +52,7 @@ class MirrorRunner {
       } else if (is_dir($name)) {
         $info= new DirectoryInformation($name);
       } else if ($cl->providesClass($name)) {
-        $info= new TypeInformation($cl->loadClass($name));
+        $info= new TypeInformation($cl->loadClass($name), in_array('--all', $args));
       } else if ($cl->providesPackage($name)) {
         $info= new PackageInformation($name);
       } else {

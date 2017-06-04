@@ -1,22 +1,22 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\Object;
 use lang\mirrors\parse\NewInstance;
 use lang\mirrors\parse\Value;
+use lang\mirrors\unittest\fixture\FixtureBase;
 
 class NewInstanceTest extends ResolveableTest {
 
   #[@test]
   public function resolved() {
     $this->assertInstanceOf(
-      Object::class,
-      (new NewInstance('lang.Object', []))->resolve($this->source)
+      FixtureBase::class,
+      (new NewInstance('lang.mirrors.unittest.fixture.FixtureBase', []))->resolve($this->source)
     );
   }
 
   #[@test]
   public function passes_args_to_constructor() {
-    $fixture= newinstance(Object::class, [], '{
+    $fixture= newinstance(FixtureBase::class, [], '{
       public $passed= null;
       public function __construct(... $args) { $this->passed= $args; }
     }');

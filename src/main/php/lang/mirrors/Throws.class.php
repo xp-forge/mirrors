@@ -1,6 +1,8 @@
 <?php namespace lang\mirrors;
 
-class Throws extends \lang\Object implements \IteratorAggregate {
+class Throws implements \lang\Value, \IteratorAggregate {
+  use ListOf;
+
   private $mirror, $tags;
 
   /**
@@ -30,7 +32,7 @@ class Throws extends \lang\Object implements \IteratorAggregate {
   /**
    * Iterates over all interfaces
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function getIterator() {
     $type= $this->mirror->declaredIn();

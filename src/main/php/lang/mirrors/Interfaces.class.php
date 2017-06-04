@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors;
 
-class Interfaces extends \lang\Object implements \IteratorAggregate {
+class Interfaces implements \IteratorAggregate {
   private $mirror;
 
   /**
@@ -28,7 +28,7 @@ class Interfaces extends \lang\Object implements \IteratorAggregate {
   /**
    * Iterates over all interfaces
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function getIterator() {
     foreach ($this->mirror->reflect->allInterfaces() as $interface) {
@@ -39,7 +39,7 @@ class Interfaces extends \lang\Object implements \IteratorAggregate {
   /**
    * Returns only interfaces this type declares directly
    *
-   * @return php.Generator
+   * @return iterable
    */
   public function declared() {
     foreach ($this->mirror->reflect->declaredInterfaces() as $interface) {

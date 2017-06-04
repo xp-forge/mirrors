@@ -109,16 +109,16 @@ class ModifiersTest extends AbstractMethodTest {
   #[@test]
   public function equals_itself() {
     $modifiers= new Modifiers(Modifiers::IS_PUBLIC);
-    $this->assertTrue($modifiers->equals($modifiers));
+    $this->assertEquals($modifiers, $modifiers);
   }
 
   #[@test]
   public function equals_other_instance_with_same_bits() {
-    $this->assertTrue((new Modifiers(Modifiers::IS_PUBLIC))->equals(new Modifiers(Modifiers::IS_PUBLIC)));
+    $this->assertEquals(new Modifiers(Modifiers::IS_PUBLIC), new Modifiers(Modifiers::IS_PUBLIC));
   }
 
   #[@test]
   public function does_not_equal_instance_with_differing_bits() {
-    $this->assertFalse((new Modifiers(Modifiers::IS_PUBLIC))->equals(new Modifiers(Modifiers::IS_PROTECTED)));
+    $this->assertNotEquals(new Modifiers(Modifiers::IS_PUBLIC), new Modifiers(Modifiers::IS_PROTECTED));
   }
 }

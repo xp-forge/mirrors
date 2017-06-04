@@ -6,7 +6,7 @@
  * @test  xp://lang.mirrors.unittest.ModifiersTest
  * @see   https://github.com/xp-framework/xp-framework/wiki/codingstandards#modifiers
  */
-class Modifiers extends \lang\Object {
+class Modifiers implements \lang\Value {
   const IS_STATIC    = 0x0001;
   const IS_ABSTRACT  = 0x0002;
   const IS_FINAL     = 0x0004;
@@ -93,21 +93,23 @@ class Modifiers extends \lang\Object {
   public function isNative() { return 0 !== ($this->bits & self::IS_NATIVE); }
 
   /**
-   * Returns whether a given value is equal to this member
+   * Compares a given value to this modifiers instance
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->bits === $cmp->bits;
+  public function compareTo($value) {
+    if ($value instanceof self) {
+      $diff= $this->bits - $value->bits;
+      return $diff < 0 ? -1 : ($diff > 0 ? 1 : 0);
+    }
+    return 1;
   }
 
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this).'<'.$this->names().'>';
-  }
+  /** @return string */
+  public function hashCode() { return 'M['.$this->bits; }
+
+  /** @return string */
+  public function toString() { nameof($this).'<'.$this->names().'>'; }
+
 }

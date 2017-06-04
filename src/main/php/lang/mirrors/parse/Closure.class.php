@@ -3,7 +3,7 @@
 use util\Objects;
 use lang\IllegalStateException;
 
-class Closure extends \lang\Object {
+class Closure {
   private $params, $code;
 
   public function __construct($params, $code) {

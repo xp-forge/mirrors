@@ -90,9 +90,9 @@ public class lang.mirrors.Methods extends lang.Object implements php.IteratorAgg
 
   public bool provides(string $name)
   public lang.mirrors.Method named(string $name) throws lang.ElementNotFoundException
-  public php.Generator all([lang.mirrors.Predicates $filter= null])
-  public php.Generator declared([lang.mirrors.Predicates $filter= null])
-  public php.Generator getIterator()
+  public iterable all([lang.mirrors.Predicates $filter= null])
+  public iterable declared([lang.mirrors.Predicates $filter= null])
+  public iterable getIterator()
 }
 
 public class lang.mirrors.Method extends lang.mirrors.Routine {
@@ -122,7 +122,7 @@ public class lang.mirrors.Parameters extends lang.Object implements php.Iterator
   public lang.mirrors.Parameter named(string $name) throws lang.ElementNotFoundException
   public lang.mirrors.Parameter first() throws lang.ElementNotFoundException
   public lang.mirrors.Parameter at(int $position) throws lang.ElementNotFoundException
-  public php.Generator getIterator()
+  public iterable getIterator()
 }
 
 public class lang.mirrors.Parameter extends lang.Object {
@@ -153,9 +153,9 @@ public class lang.mirrors.Fields extends lang.Object implements php.IteratorAggr
 
   public bool provides(string $name)
   public lang.mirrors.Field named(string $name) throws lang.ElementNotFoundException
-  public php.Generator all([lang.mirrors.Predicates $filter= null])
-  public php.Generator declared([lang.mirrors.Predicates $filter= null])
-  public php.Generator getIterator()
+  public iterable all([lang.mirrors.Predicates $filter= null])
+  public iterable declared([lang.mirrors.Predicates $filter= null])
+  public iterable getIterator()
 }
 
 public class lang.mirrors.Field extends lang.mirrors.Member {
@@ -210,7 +210,7 @@ public class lang.mirrors.Constants extends lang.Object implements php.IteratorA
 
   public bool provides(string $name)
   public lang.mirrors.Constant named(string $name) throws lang.ElementNotFoundException
-  public php.Generator getIterator()
+  public iterable getIterator()
 }
 
 public class lang.mirrors.Constant extends lang.Object {
@@ -232,7 +232,7 @@ public class lang.mirrors.Annotations extends lang.Object implements php.Iterato
   public bool present()
   public bool provides(string $name)
   public lang.mirrors.Annotation named(string $name) throws lang.ElementNotFoundException
-  public php.Generator getIterator()
+  public iterable getIterator()
 }
 
 public class lang.mirrors.Annotation extends lang.Object {

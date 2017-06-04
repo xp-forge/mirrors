@@ -7,7 +7,7 @@ use util\Objects;
  *
  * @test   xp://lang.mirrors.unittest.ConstantTest
  */
-class Constant extends \lang\Object {
+class Constant {
   private $mirror, $name, $value;
 
   /**

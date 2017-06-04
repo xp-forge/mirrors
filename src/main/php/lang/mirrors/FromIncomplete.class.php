@@ -7,7 +7,7 @@ use lang\XPClass;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 
-class FromIncomplete extends \lang\Object implements Source {
+class FromIncomplete implements Source {
   public $name;
 
   public function __construct($name) {
@@ -69,16 +69,16 @@ class FromIncomplete extends \lang\Object implements Source {
    */
   public function typeImplements($name) { return false; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allInterfaces() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredInterfaces() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allTraits() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredTraits() { return []; }
 
   /**
@@ -129,10 +129,10 @@ class FromIncomplete extends \lang\Object implements Source {
     throw new ElementNotFoundException('No field named $'.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allFields() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredFields() { return []; }
 
   /**
@@ -154,10 +154,10 @@ class FromIncomplete extends \lang\Object implements Source {
     throw new ElementNotFoundException('No method named '.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allMethods() { return []; }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function declaredMethods() { return []; }
 
   /**
@@ -179,7 +179,7 @@ class FromIncomplete extends \lang\Object implements Source {
     throw new ElementNotFoundException('No constant named '.$name.' in '.$this->name);
   }
 
-  /** @return php.Generator */
+  /** @return iterable */
   public function allConstants() { return []; }
 
   /**
@@ -193,12 +193,19 @@ class FromIncomplete extends \lang\Object implements Source {
   }
 
   /**
-   * Returns whether a given value is equal to this reflection source
+   * Compares a given value to this source
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->name === $cmp->name;
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->name, $value->name) : 1;
   }
+
+  /** @return string */
+  public function hashCode() { return 'R'.md5($this->name); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'<'.$this->name.'>'; }
+
 }

@@ -1,6 +1,6 @@
 <?php namespace lang\mirrors\parse;
 
-abstract class Resolveable extends \lang\Object {
+abstract class Resolveable implements \lang\Value {
 
   /**
    * Resolve this value 
@@ -11,13 +11,20 @@ abstract class Resolveable extends \lang\Object {
   public abstract function resolve($source);
 
   /**
-   * Creates a string representation
+   * Compares a given value to this list
    *
-   * @return string
+   * @param  var $value
+   * @return int
    */
-  public function toString() {
-    return nameof($this).'<'.$this.'>';
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->__toString(), $value->__toString()) : 1;
   }
+
+  /** @return string */
+  public function hashCode() { return '*'.md5($this->__toString()); }
+
+  /** @return string */
+  public function toString() { return nameof($this).'<'.$this->__toString().'>'; }
 
   /** @return string */
   public abstract function __toString();

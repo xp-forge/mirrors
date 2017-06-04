@@ -5,7 +5,7 @@ use lang\XPClass;
 /**
  * Fetches code unit for a given class. Supports PHP and Hack syntax.
  */
-class ClassSyntax extends \lang\Object {
+class ClassSyntax {
   const CACHE_LIMIT = 20;
   private static $cache= [];
   private static $syntax;

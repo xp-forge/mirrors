@@ -9,7 +9,7 @@
  * @see    https://github.com/facebook/hhvm/issues/3605
  */
 <<test, runtime('~3.6'), expect(['class' => 'lang.IllegalArgumentException'])>>
-class FixtureHackAnnotations extends \lang\Object {
+class FixtureHackAnnotations {
 
   #[@test, @runtime('~3.6'), @expect(class = 'lang.IllegalArgumentException')]
   public $field;
