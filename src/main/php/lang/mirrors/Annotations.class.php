@@ -2,7 +2,9 @@
 
 use lang\ElementNotFoundException;
 
-class Annotations implements \IteratorAggregate {
+class Annotations implements \lang\Value, \IteratorAggregate {
+  use ListOf;
+
   private $mirror, $backing;
 
   /**
@@ -56,14 +58,5 @@ class Annotations implements \IteratorAggregate {
     foreach ($this->backing as $name => $value) {
       yield new Annotation($this->mirror, $name, $value);
     }
-  }
-
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this).'('.\xp::stringOf($this->backing).')';
   }
 }

@@ -1,6 +1,8 @@
 <?php namespace lang\mirrors;
 
-class Throws implements \IteratorAggregate {
+class Throws implements \lang\Value, \IteratorAggregate {
+  use ListOf;
+
   private $mirror, $tags;
 
   /**
