@@ -102,8 +102,13 @@ class TypeMirrorTest extends TestCase {
   }
 
   #[@test]
-  public function object_class_does_not_have_a_parent() {
-    $this->assertNull((new TypeMirror('lang.Object'))->parent());
+  public function value_interface_does_not_have_a_parent() {
+    $this->assertNull((new TypeMirror('lang.Value'))->parent());
+  }
+
+  #[@test]
+  public function base_does_not_have_a_parent() {
+    $this->assertNull((new TypeMirror('lang.mirrors.unittest.fixture.FixtureBase'))->parent());
   }
 
   #[@test]

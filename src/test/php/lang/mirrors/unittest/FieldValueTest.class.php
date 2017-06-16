@@ -2,8 +2,8 @@
 
 use lang\mirrors\Field;
 use lang\mirrors\TypeMirror;
-use lang\Object;
 use lang\IllegalArgumentException;
+use lang\mirrors\unittest\fixture\Identity;
 
 class FieldValueTest extends AbstractFieldTest {
   private $noValueFixture;
@@ -41,7 +41,7 @@ class FieldValueTest extends AbstractFieldTest {
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function read_raises_exception_with_incompatible_instance() {
-    $this->fixture('valueFixture')->read(new Object());
+    $this->fixture('valueFixture')->read(new Identity('Test'));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
@@ -51,7 +51,7 @@ class FieldValueTest extends AbstractFieldTest {
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function modify_raises_exception_with_incompatible_instance() {
-    $this->fixture('valueFixture')->modify(new Object(), 'any-value');
+    $this->fixture('valueFixture')->modify(new Identity('Test'), 'any-value');
   }
 
   #[@test, @expect(IllegalArgumentException::class)]

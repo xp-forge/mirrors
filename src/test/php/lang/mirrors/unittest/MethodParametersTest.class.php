@@ -4,7 +4,7 @@ use lang\mirrors\Parameter;
 use lang\mirrors\Annotation;
 use lang\mirrors\TypeMirror;
 use lang\Type;
-use lang\Object;
+use lang\Value;
 use lang\ElementNotFoundException;
 
 class MethodParametersTest extends AbstractMethodTest {
@@ -19,7 +19,7 @@ class MethodParametersTest extends AbstractMethodTest {
 
   private function callableParameterFixture(callable $fixture) { }
 
-  private function objectParameterFixture(Object $fixture) { }
+  private function valueParameterFixture(Value $fixture) { }
 
   private function selfParameterFixture(self $fixture) { }
 
@@ -56,7 +56,7 @@ class MethodParametersTest extends AbstractMethodTest {
   #  ['multipleParameterFixture', ['fixture' => 'var', 'other' => 'var']],
   #  ['arrayParameterFixture', ['fixture' => 'array']],
   #  ['callableParameterFixture', ['fixture' => 'callable']],
-  #  ['objectParameterFixture', ['fixture' => 'lang.Object']],
+  #  ['valueParameterFixture', ['fixture' => 'lang.Value']],
   #  ['selfParameterFixture', ['fixture' => 'lang.mirrors.unittest.MethodParametersTest']],
   #  ['shortFormParameterFixture', ['fixture' => 'string']],
   #  ['longFormParameterFixture', ['fixture' => 'int', 'other' => 'lang.mirrors.unittest.MethodParametersTest[]']]

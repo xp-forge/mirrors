@@ -1,6 +1,5 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\Object;
 use lang\Primitive;
 use lang\Type;
 use lang\ArrayType;

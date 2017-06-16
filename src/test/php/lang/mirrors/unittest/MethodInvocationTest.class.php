@@ -2,10 +2,11 @@
 
 use lang\mirrors\TypeMirror;
 use lang\mirrors\TargetInvocationException;
-use lang\Object;
+use lang\Value;
 use lang\Error;
 use lang\IllegalArgumentException;
 use unittest\actions\RuntimeVersion;
+use lang\mirrors\unittest\fixture\Identity;
 
 class MethodInvocationTest extends AbstractMethodTest {
 
@@ -19,7 +20,7 @@ class MethodInvocationTest extends AbstractMethodTest {
 
   private function raisesErrorFixture() { $value= null; $value->invoke(); }
 
-  private function typeHintedFixture(Object $arg) { }
+  private function typeHintedFixture(Value $arg) { }
 
   private static function staticMethodFixture() { return 'Test'; }
 
@@ -46,7 +47,7 @@ class MethodInvocationTest extends AbstractMethodTest {
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function raises_exception_with_incompatible_instance() {
-    $this->fixture('noReturnFixture')->invoke(new Object());
+    $this->fixture('noReturnFixture')->invoke(new Identity('Test'));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]

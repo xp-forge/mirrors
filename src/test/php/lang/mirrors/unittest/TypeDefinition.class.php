@@ -4,7 +4,6 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\Sources;
 use lang\mirrors\unittest\fixture\Identity;
 use lang\ClassLoader;
-use lang\Object;
 
 trait TypeDefinition {
   private static $fixtures= [];
