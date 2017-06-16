@@ -50,22 +50,29 @@ class FromHHVMReflection extends FromReflection {
    * @return [:var]
    */
   protected function param($pos, $reflect) {
-    $hint= $reflect->getTypeText();
-    if ('' === $hint) {
-      $type= null;
-    } else {
-      $type= function() use ($hint) { return $this->types->map($hint); };
-    }
-
     if ($reflect->isVariadic()) {
       $var= true;
       $default= null;
-    } else if ($reflect->isOptional()) {
-      $var= null;
-      $default= function() use($reflect) { return $reflect->getDefaultValue(); };
+
+      // Types for variadics are hard-wired to `array` in HHVM, this is inconsistent with
+      // PHP, which returns the type without an array component. Drop the type information 
+      // alltogether, which will default back to using the types in `@param`, or `var`.
+      $type= null;
     } else {
-      $var= false;
-      $default= null;
+      $hint= $reflect->getTypeText();
+      if ('' === $hint) {
+        $type= null;
+      } else {
+        $type= function() use ($hint) { return $this->types->map($hint); };
+      }
+
+      if ($reflect->isOptional()) {
+        $var= null;
+        $default= function() use($reflect) { return $reflect->getDefaultValue(); };
+      } else {
+        $var= false;
+        $default= null;
+      }
     }
 
     return [
