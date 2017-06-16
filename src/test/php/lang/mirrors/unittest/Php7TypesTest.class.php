@@ -91,7 +91,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Primitive::$STRING, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test, @ignore('Causes segmentation fault'), @action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[@test, @action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
   public function iterable_return_type() {
     $fixture= $this->define('{
       public function fixture(): iterable { return null; }
@@ -127,7 +127,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals($fixture, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 
-  #[@test, @ignore('Causes segmentation fault'), @action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[@test, @action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
   public function iterable_parameter_type() {
     $fixture= $this->define('{
       public function fixture(iterable $param) { }
