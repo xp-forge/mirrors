@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 5.0.1 / 2017-06-17
+
+* Fixed issue #44: HHVM PHP7 mode - @thekid
+
 ## 5.0.0 / 2017-06-04
 
 * No longer show non-public members by default in `xp mirror` command
