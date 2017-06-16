@@ -73,7 +73,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(XPClass::forName('lang.Value'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[@test, @action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
   public function void_return_type() {
     $fixture= $this->define('{
       public function fixture(): void { }
