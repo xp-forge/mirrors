@@ -1,16 +1,40 @@
 <?php namespace lang\mirrors\unittest;
 
+use lang\XPClass;
 use unittest\TestCase;
+use unittest\PrerequisitesNotMetError;
 
-class NotOnHHVM implements \unittest\TestAction {
+class NotOnHHVM implements \unittest\TestAction, \unittest\TestClassAction {
 
   /**
-   * Returns whether we're running on HHVM runtime
+   * Verifies HHVM
    *
-   * @return bool
+   * @return void
    */
-  public static function runtime() {
-    return defined('HHVM_VERSION');
+  private function verifyNotOnHHVM() {
+    if (defined('HHVM_VERSION')) {
+      throw new PrerequisitesNotMetError('This test can not be run on HHVM', null, ['php']);
+    }
+  }
+
+  /**
+   * Runs before test
+   *
+   * @param  lang.XPClass $c
+   * @return void
+   */
+  public function beforeTestClass(XPClass $c) {
+    $this->verifyNotOnHHVM();
+  }
+
+  /**
+   * Runs after test
+   *
+   * @param  lang.XPClass $c
+   * @return void
+   */
+  public function afterTestClass(XPClass $c) {
+    // Empty
   }
 
   /**
@@ -20,9 +44,7 @@ class NotOnHHVM implements \unittest\TestAction {
    * @return void
    */
   public function beforeTest(TestCase $t) {
-    if (self::runtime()) {
-      $t->skip('This test is not intended to run on HHVM');
-    }
+    $this->verifyNotOnHHVM();
   }
 
   /**
