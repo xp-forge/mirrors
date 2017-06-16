@@ -343,7 +343,7 @@ class FromReflection implements Source {
    * @param  php.ReflectionProperty $reflect
    * @param  var $instance
    * @param  var $value
-   * @return voud
+   * @return void
    */
   private function modifyField($reflect, $instance, $value) {
     $reflect->setAccessible(true);
