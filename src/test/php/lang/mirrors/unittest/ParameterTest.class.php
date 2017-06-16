@@ -75,7 +75,7 @@ class ParameterTest extends \unittest\TestCase {
     $this->assertEquals($result, (new Parameter($this->method(null, $signature), 0))->isVariadic());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[@test, @action([new RuntimeVersion('>=7.0'), new NotOnHHVM()])]
   public function variadic_via_syntax_with_type() {
     $param= new Parameter($this->method(null, '(string... $args)'), 0);
     $this->assertEquals(
