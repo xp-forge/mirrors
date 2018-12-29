@@ -206,19 +206,20 @@ class FromReflection implements Source {
 
   /** @return [:var] */
   public function constructor() {
-    $ctor= $this->reflect->getConstructor();
-    if (null === $ctor) {
-      return [
-        'name'        => '__default',
-        'access'      => new Modifiers(Modifiers::IS_PUBLIC),
-        'holder'      => $this->reflect->name,
-        'comment'     => function() { return null; },
-        'params'      => function() { return []; },
-        'annotations' => function() { return []; },
-      ];
-    } else {
-      return $this->method($ctor);
+
+    // Do not use getConstructor() as in some situations this fails in PHP 7.3 (!)
+    if ($this->reflect->hasMethod('__construct')) {
+      return $this->method($this->reflect->getMethod('__construct'));
     }
+
+    return [
+      'name'        => '__default',
+      'access'      => new Modifiers(Modifiers::IS_PUBLIC),
+      'holder'      => $this->reflect->name,
+      'comment'     => function() { return null; },
+      'params'      => function() { return []; },
+      'annotations' => function() { return []; },
+    ];
   }
 
   /**
