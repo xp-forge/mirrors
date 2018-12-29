@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 5.0.2 / 2018-12-29
+
+* Fixed issue with PHP 7.3 and constructors - @thekid
+
 ## 5.0.1 / 2017-06-17
 
 * Fixed issue #44: HHVM PHP7 mode - @thekid
