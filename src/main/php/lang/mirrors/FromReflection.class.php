@@ -1,16 +1,16 @@
 <?php namespace lang\mirrors;
 
-use lang\mirrors\parse\ClassSyntax;
-use lang\mirrors\parse\ClassSource;
-use lang\mirrors\parse\Value;
-use lang\XPClass;
-use lang\Type;
-use lang\Enum;
 use lang\ElementNotFoundException;
+use lang\Enum;
+use lang\Error;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 use lang\Throwable;
-use lang\Error;
+use lang\Type;
+use lang\XPClass;
+use lang\mirrors\parse\ClassSource;
+use lang\mirrors\parse\ClassSyntax;
+use lang\mirrors\parse\Value;
 
 class FromReflection implements Source {
   protected $reflect;

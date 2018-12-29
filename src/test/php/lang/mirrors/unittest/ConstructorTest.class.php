@@ -1,17 +1,16 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\Constructor;
-use lang\mirrors\TypeMirror;
-use lang\mirrors\Modifiers;
+use lang\ClassLoader;
+use lang\Error;
 use lang\IllegalArgumentException;
+use lang\mirrors\Constructor;
+use lang\mirrors\Modifiers;
 use lang\mirrors\TargetInvocationException;
+use lang\mirrors\TypeMirror;
+use lang\mirrors\unittest\fixture\FixtureAbstract;
 use lang\mirrors\unittest\fixture\FixtureBase;
 use lang\mirrors\unittest\fixture\FixtureInterface;
 use lang\mirrors\unittest\fixture\FixtureTrait;
-use lang\mirrors\unittest\fixture\FixtureAbstract;
-use lang\ClassLoader;
-use lang\Object;
-use lang\Error;
 use unittest\actions\RuntimeVersion;
 
 class ConstructorTest extends \unittest\TestCase {
