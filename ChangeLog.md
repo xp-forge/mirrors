@@ -3,6 +3,8 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 5.0.3 / 2019-08-26
+
 * Fixed PHP 7.4 compatibility:
   - Refrain from using curly braces used for array offsets
   - Used `MODIFIER_*` constants from lang.base.php instead of hardcoded values
