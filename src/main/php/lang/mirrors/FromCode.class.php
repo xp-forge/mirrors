@@ -511,7 +511,9 @@ class FromCode implements Source {
     } else if ('parent' === $name) {
       if ($this->decl['parent']) return $this->resolve0($this->decl['parent']);
       throw new IllegalStateException('Cannot resolve parent type of class without parent');
-    } else if ('\\' === $name{0}) {
+    } else if (null === $name) {
+      return null;
+    } else if ('\\' === $name[0]) {
       return substr($name, 1);
     } else if (strstr($name, '\\')) {
       $package= $this->unit->package();
