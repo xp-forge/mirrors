@@ -1,13 +1,13 @@
 <?php namespace lang\mirrors;
 
-use lang\mirrors\parse\ClassSyntax;
-use lang\mirrors\parse\ClassSource;
-use lang\Type;
-use lang\XPClass;
-use lang\Primitive;
 use lang\ElementNotFoundException;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
+use lang\Primitive;
+use lang\Type;
+use lang\XPClass;
+use lang\mirrors\parse\ClassSource;
+use lang\mirrors\parse\ClassSyntax;
 
 class FromCode implements Source {
   private static $syntax;
@@ -74,7 +74,7 @@ class FromCode implements Source {
   public function typeComment() { return $this->decl['comment']; }
 
   /** @return var */
-  public function typeAnnotations() { return $this->decl['annotations'][null]; }
+  public function typeAnnotations() { return isset($this->decl['annotations']) ? $this->decl['annotations'][null] : null; }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
