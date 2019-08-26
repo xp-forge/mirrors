@@ -596,7 +596,7 @@ class FromReflection implements Source {
     } else if ('parent' === $name) {
       if ($parent= $this->reflect->getParentClass()) return $this->source->reflect($parent);
       throw new IllegalStateException('Cannot resolve parent type of class without parent');
-    } else if ('\\' === $name{0}) {
+    } else if ('\\' === $name[0]) {
       return $this->source->reflect(strtr(substr($name, 1), '.', '\\'));
     } else if (strstr($name, '\\')) {
       $ns= $this->reflect->getNamespaceName();

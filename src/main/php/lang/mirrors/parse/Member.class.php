@@ -20,7 +20,7 @@ class Member extends Resolveable {
     $resolved= $type->resolve($this->type);
     if ('class' === $this->name) {
       return literal($resolved->typeName());
-    } else if ('$' === $this->name{0}) {
+    } else if ('$' === $this->name[0]) {
       $field= $resolved->fieldNamed(substr($this->name, 1));
       return $field['read'](null);
     } else {

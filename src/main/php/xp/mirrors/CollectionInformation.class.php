@@ -24,7 +24,7 @@ abstract class CollectionInformation extends Information {
     // Child packages
     foreach ($loader->packageContents($package->name()) as $entry) {
       $base= $package->isGlobal() ? '' : $package->name().'.';
-      if ('/' === $entry{strlen($entry) - 1}) {
+      if ('/' === $entry[strlen($entry) - 1]) {
         $out->writeLine('  package ', $base.substr($entry, 0, -1));
       } else if (0 === substr_compare($entry, \xp::CLASS_FILE_EXT, -$ext)) {
         $mirror= new TypeMirror($loader->loadClass($base.substr($entry, 0, -$ext)));
