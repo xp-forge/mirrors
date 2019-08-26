@@ -1,10 +1,10 @@
 <?php namespace lang\mirrors;
 
+use lang\ArrayType;
+use lang\FunctionType;
+use lang\MapType;
 use lang\Type;
 use lang\XPClass;
-use lang\ArrayType;
-use lang\MapType;
-use lang\FunctionType;
 
 /**
  * Maps a Hack type literal as returned e.g. by HHVM reflection's `getTypeText()`
@@ -34,15 +34,15 @@ class HackTypes {
   private function arrayType($literal) {
     $components= [];
     for ($brackets= 1, $o= $i= 6, $s= strlen($literal); $i < $s; $i++) {
-      if ('>' === $literal{$i} && 1 === $brackets) {
+      if ('>' === $literal[$i] && 1 === $brackets) {
         $components[]= $this->map(ltrim(substr($literal, $o, $i - $o), ' '));
         break;
-      } else if (',' === $literal{$i} && 1 === $brackets) {
+      } else if (',' === $literal[$i] && 1 === $brackets) {
         $components[]= $this->map(ltrim(substr($literal, $o, $i - $o), ' '));
         $o= $i + 1;
-      } else if ('<' === $literal{$i}) {
+      } else if ('<' === $literal[$i]) {
         $brackets++;
-      } else if ('>' === $literal{$i}) {
+      } else if ('>' === $literal[$i]) {
         $brackets--;
       }
     }
@@ -63,17 +63,17 @@ class HackTypes {
   private function functionType($literal) {
     $signature= [];
     $o= strpos($literal, '(', 1) + 1;
-    if (')' !== $literal{$o}) for ($brackets= 0, $i= --$o, $s= strlen($literal); $i < $s; $i++) {
-      if (':' === $literal{$i} && 0 === $brackets) {
+    if (')' !== $literal[$o]) for ($brackets= 0, $i= --$o, $s= strlen($literal); $i < $s; $i++) {
+      if (':' === $literal[$i] && 0 === $brackets) {
         $signature[]= $this->map(substr($literal, $o + 1, $i - $o- 2));
         $o= $i+ 1;
         break;
-      } else if (',' === $literal{$i} && 1 === $brackets) {
+      } else if (',' === $literal[$i] && 1 === $brackets) {
         $signature[]= $this->map(substr($literal, $o + 1, $i - $o - 1));
         $o= $i+ 1;
-      } else if ('(' === $literal{$i}) {
+      } else if ('(' === $literal[$i]) {
         $brackets++;
-      } else if (')' === $literal{$i}) {
+      } else if (')' === $literal[$i]) {
         $brackets--;
       }
     }
