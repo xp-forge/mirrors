@@ -1,8 +1,8 @@
 <?php namespace lang\mirrors;
 
+use lang\IllegalStateException;
 use lang\Type;
 use lang\XPClass;
-use lang\IllegalStateException;
 
 class FromPhp7Reflection extends FromReflection {
 
@@ -36,8 +36,8 @@ class FromPhp7Reflection extends FromReflection {
    * @return [:var]
    */
   protected function param($pos, $reflect) {
-    if ($type= $reflect->getType()) {
-      $type= $this->mapReflectionType($reflect, (string)$type);
+    if ($t= $reflect->getType()) {
+      $type= $this->mapReflectionType($reflect, PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else {
       $type= null;
     }
@@ -72,8 +72,8 @@ class FromPhp7Reflection extends FromReflection {
    */
   protected function method($reflect) {
     $method= parent::method($reflect);
-    if ($type= $reflect->getReturnType()) {
-      $method['returns']= $this->mapReflectionType($reflect, (string)$type);
+    if ($t= $reflect->getReturnType()) {
+      $method['returns']= $this->mapReflectionType($reflect, PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     }
     return $method;
   }
