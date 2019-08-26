@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Changed code to use `util.Objects::stringOf()` instead of the deprecated
+  `xp::stringOf()` core functionality.
+  (@thekid)
+
 ## 5.0.2 / 2018-12-29
 
 * Fixed issue with PHP 7.3 and constructors - @thekid

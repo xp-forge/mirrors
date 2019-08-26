@@ -1,5 +1,7 @@
 <?php namespace xp\mirrors;
 
+use util\Objects;
+
 class Highlighting {
   private $out;
   private $patterns= [];
@@ -28,7 +30,7 @@ class Highlighting {
   private function write0($args) {
     $line= '';
     foreach ($args as $arg) {
-      $line.= is_string($arg) ? $arg : \xp::stringOf($arg);
+      $line.= is_string($arg) ? $arg : Objects::stringOf($arg);
     }
     $this->out->write(preg_replace($this->patterns, $this->replacements, $line));
   }
