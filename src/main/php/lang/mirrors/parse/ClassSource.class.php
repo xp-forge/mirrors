@@ -1,10 +1,10 @@
 <?php namespace lang\mirrors\parse;
 
-use lang\IllegalArgumentException;
-use lang\ClassLoader;
-use lang\IClassLoader;
-use lang\ClassNotFoundException;
 use lang\ClassFormatException;
+use lang\ClassLoader;
+use lang\ClassNotFoundException;
+use lang\IClassLoader;
+use lang\IllegalArgumentException;
 
 /**
  * Parser source from a class
@@ -67,7 +67,9 @@ class ClassSource extends \text\parse\Tokens {
 
     do {
       $token= array_shift($this->tokens);
-      if ($this->raw) {
+      if (null === $token) {
+        return null;
+      } else if ($this->raw) {
         return $token;
       } else if (T_WHITESPACE === $token[0]) {
         // Skip
