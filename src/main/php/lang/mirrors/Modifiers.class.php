@@ -7,12 +7,12 @@
  * @see   https://github.com/xp-framework/xp-framework/wiki/codingstandards#modifiers
  */
 class Modifiers implements \lang\Value {
-  const IS_STATIC    = 0x0001;
-  const IS_ABSTRACT  = 0x0002;
-  const IS_FINAL     = 0x0004;
-  const IS_PUBLIC    = 0x0100;
-  const IS_PROTECTED = 0x0200;
-  const IS_PRIVATE   = 0x0400;
+  const IS_STATIC    = MODIFIER_STATIC;
+  const IS_ABSTRACT  = MODIFIER_ABSTRACT;
+  const IS_FINAL     = MODIFIER_FINAL;
+  const IS_PUBLIC    = MODIFIER_PUBLIC;
+  const IS_PROTECTED = MODIFIER_PROTECTED;
+  const IS_PRIVATE   = MODIFIER_PRIVATE;
   const IS_NATIVE    = 0xF000;
 
   private static $names= [
