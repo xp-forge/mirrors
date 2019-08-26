@@ -3,6 +3,12 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+* Fixed PHP 7.4 compatibility:
+  - Refrain from using curly braces used for array offsets
+  - Used `MODIFIER_*` constants from lang.base.php instead of hardcoded values
+  - Removed *Function `ReflectionType::__toString()` is deprecated* warnings
+  - Removed *Trying to access array offset on value of type null* warnings
+  (@thekid)
 * Changed code to use `util.Objects::stringOf()` instead of the deprecated
   `xp::stringOf()` core functionality.
   (@thekid)
