@@ -12,7 +12,7 @@
     "php" : ">=5.6.0"
   },
   "require-dev" : {
-    "xp-framework/unittest": "^9.0 | ^8.0 | ^7.0 | ^6.5",
+    "xp-framework/unittest": "^10.0",
     "xp-forge/measure" : "^2.0 | ^1.0"
   },
   "bin": ["bin/xp.xp-forge.mirrors.mirror"],

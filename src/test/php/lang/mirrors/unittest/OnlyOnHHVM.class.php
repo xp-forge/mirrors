@@ -1,8 +1,8 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\XPClass;
-use unittest\TestCase;
 use unittest\PrerequisitesNotMetError;
+use unittest\Test;
 
 class OnlyOnHHVM implements \unittest\TestAction, \unittest\TestClassAction {
 
@@ -40,20 +40,20 @@ class OnlyOnHHVM implements \unittest\TestAction, \unittest\TestClassAction {
   /**
    * Runs before test
    *
-   * @param  unittest.TestCase $t
+   * @param  unittest.Test $t
    * @return void
    */
-  public function beforeTest(TestCase $t) {
+  public function beforeTest(Test $t) {
     $this->verifyOnHHVM();
   }
 
   /**
    * Runs after test
    *
-   * @param  unittest.TestCase $t
+   * @param  unittest.Test $t
    * @return void
    */
-  public function afterTest(TestCase $t) {
+  public function afterTest(Test $t) {
     // Empty
   }
 }
