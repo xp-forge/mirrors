@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 5.0.4 / 2019-11-25
+
+* Adjusted to new unittest APIs - @thekid
+
 ## 5.0.3 / 2019-08-26
 
 * Fixed PHP 7.4 compatibility:
@@ -41,7 +45,7 @@ Mirrors change log
 
 ## 4.2.1 / 2016-09-19
 
-* Fixed issue #38: Method lang\mirrors\Method::__toString() must not throw 
+* Fixed issue #38: Method `lang\mirrors\Method::__toString()` must not throw 
   an exception
   (@thekid)
 
