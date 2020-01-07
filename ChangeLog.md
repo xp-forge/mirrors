@@ -3,6 +3,10 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 5.0.5 / 2020-01-07
+
+* Added compatibility with XP 10 - @thekid
+
 ## 5.0.4 / 2019-11-25
 
 * Adjusted to new unittest APIs - @thekid
