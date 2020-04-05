@@ -1,14 +1,14 @@
 <?php namespace lang\mirrors\unittest;
 
+use lang\ArrayType;
+use lang\FunctionType;
+use lang\MapType;
 use lang\Primitive;
 use lang\Type;
-use lang\ArrayType;
-use lang\MapType;
-use lang\FunctionType;
 use lang\XPClass;
 use lang\mirrors\TypeMirror;
-use lang\mirrors\unittest\fixture\FixtureHackTypedClass;
 use lang\mirrors\unittest\fixture\FixtureHackBaseClass;
+use lang\mirrors\unittest\fixture\FixtureHackTypedClass;
 
 abstract class HackTypingTest extends \unittest\TestCase {
 
@@ -25,52 +25,52 @@ abstract class HackTypingTest extends \unittest\TestCase {
     ];
   }
 
-  #[@test, @values(source= 'targets', args= ['typed'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['typed']])]
   public function typed($target) {
     $this->assertEquals(Primitive::$INT, $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['parentTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['parentTyped']])]
   public function parent_typed($target) {
     $this->assertEquals(new XPClass(FixtureHackBaseClass::class), $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['thisTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['thisTyped']])]
   public function this_typed($target) {
     $this->assertEquals(new XPClass(FixtureHackTypedClass::class), $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['arrayTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['arrayTyped']])]
   public function array_typed($target) {
     $this->assertEquals(new ArrayType(Primitive::$STRING), $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['mapTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['mapTyped']])]
   public function map_typed($target) {
     $this->assertEquals(new MapType(new XPClass(FixtureHackTypedClass::class)), $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['unTypedArrayTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['unTypedArrayTyped']])]
   public function untyped_array_typed($target) {
     $this->assertEquals(Type::$ARRAY, $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['funcTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['funcTyped']])]
   public function func_typed($target) {
     $this->assertEquals(new FunctionType([Primitive::$STRING, Primitive::$INT], Type::$VOID), $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['nullableTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['nullableTyped']])]
   public function nullable_typed($target) {
     $this->assertEquals(Primitive::$INT, $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['mixedTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['mixedTyped']])]
   public function mixed_typed($target) {
     $this->assertEquals(Type::$VAR, $target);
   }
 
-  #[@test, @values(source= 'targets', args= ['unTyped'])]
+  #[@test, @values(['source' => 'targets', 'args' => ['unTyped']])]
   public function untyped($target) {
     $this->assertEquals(Type::$VAR, $target);
   }

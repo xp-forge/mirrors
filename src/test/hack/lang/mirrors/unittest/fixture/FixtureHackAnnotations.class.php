@@ -11,13 +11,13 @@
 <<test, runtime('~3.6'), expect(['class' => 'lang.IllegalArgumentException'])>>
 class FixtureHackAnnotations {
 
-  #[@test, @runtime('~3.6'), @expect(class = 'lang.IllegalArgumentException')]
+  #[@test, @runtime('~3.6'), @expect(['class' => 'lang.IllegalArgumentException'])]
   public $field;
 
-  #[@field(type= 'varchar(255)')]
+  #[@field(['type' => 'varchar(255)'])]
   public $type;
 
-  #[@field(num= 'int')]
+  #[@field(['num' => 'int'])]
   public $num;
 
   <<test, runtime('~3.6'), expect(['class' => 'lang.IllegalArgumentException'])>>

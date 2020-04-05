@@ -3,6 +3,11 @@ Mirrors change log
 
 ## ?.?.? / ????-??-??
 
+## 5.0.6 / 2020-04-05
+
+* Implemented RFC #335: Remove deprecated key/value pair annotation syntax
+  (@thekid)
+
 ## 5.0.5 / 2020-01-07
 
 * Added compatibility with XP 10 - @thekid
