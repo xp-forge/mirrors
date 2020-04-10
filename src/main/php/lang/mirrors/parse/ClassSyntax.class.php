@@ -11,10 +11,7 @@ class ClassSyntax {
   private static $syntax;
 
   static function __static() {
-    self::$syntax= [
-      'php' => new XPClass(PhpSyntax::class),
-      'hh'  => new XPClass(HackSyntax::class)
-    ];
+    self::$syntax= new PhpSyntax();
   }
 
   /**
@@ -27,7 +24,7 @@ class ClassSyntax {
     if (!isset(self::$cache[$class])) {
       $source= new ClassSource($class);
       if ($source->present()) {
-        self::$cache[$class]= self::$syntax[$source->usedSyntax()]->newInstance()->parse($source);
+        self::$cache[$class]= self::$syntax->parse($source);
         while (sizeof(self::$cache) > self::CACHE_LIMIT) {
           unset(self::$cache[key(self::$cache)]);
         }
