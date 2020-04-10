@@ -1,5 +1,7 @@
 <?php namespace lang\mirrors;
 
+use lang\{ClassLoader, Enum, XPClass};
+
 /**
  * Sources from which reflection can be created:
  *
@@ -10,65 +12,57 @@
  * Has special case handling to cope with situation that class is not
  * fully defined (e.g. when performing compile-time metaprogramming).
  */
-abstract class Sources extends \lang\Enum {
+abstract class Sources extends Enum {
   public static $DEFAULT, $REFLECTION, $CODE;
   private static $HHVM;
 
   static function __static() {
-    if (defined('HHVM_VERSION')) {
-      $reflect= 'FromHHVM';
-    } else if (PHP_VERSION < '7.0.0') {
-      $reflect= 'From';
-    } else {
-      $reflect= 'FromPhp7';
-    }
-
-    self::$REFLECTION= newinstance(self::class, [1, 'REFLECTION'], sprintf('{
+    self::$REFLECTION= new class(1, 'REFLECTION') extends Sources {
       static function __static() { }
 
       public function reflect($class, $source= null) {
         if ($class instanceof \ReflectionClass) {
-          return new %1$sReflection($class, $source ?: $this);
-        } else if ($class instanceof \lang\XPClass) {
-          return new %1$sReflection($class->reflect(), $source ?: $this);
+          return new FromReflection($class, $source ?: $this);
+        } else if ($class instanceof XPClass) {
+          return new FromReflection($class->reflect(), $source ?: $this);
         }
 
-        $literal= strtr($class, ".", "\\\\");
+        $literal= strtr($class, '.', '\\');
         if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
-          return new %1$sReflection(new \ReflectionClass($literal), $source ?: $this);
+          return new FromReflection(new \ReflectionClass($literal), $source ?: $this);
         }
 
-        $dotted= strtr($class, "\\\\", ".");
-        if (\lang\ClassLoader::getDefault()->providesClass($dotted)) {
-          return new %1$sCode($dotted, $source ?: $this);
+        $dotted= strtr($class, '\\', '.');
+        if (ClassLoader::getDefault()->providesClass($dotted)) {
+          return new FromCode($dotted, $source ?: $this);
         } else {
           return new FromIncomplete($literal);
         }
       }
-    }', $reflect));
-    self::$CODE= newinstance(self::class, [2, 'CODE'], sprintf('{
+    };
+    self::$CODE= new class(2, 'CODE') extends Sources {
       static function __static() { }
 
       public function reflect($class, $source= null) {
         if ($class instanceof \ReflectionClass) {
-          return new %1$sReflection($class, $source ?: $this);
-        } else if ($class instanceof \lang\XPClass) {
-          return new %1$sReflection($class->reflect(), $source ?: $this);
+          return new FromReflection($class, $source ?: $this);
+        } else if ($class instanceof XPClass) {
+          return new FromReflection($class->reflect(), $source ?: $this);
         }
 
-        $dotted= strtr($class, "\\\\", ".");
-        if (\lang\ClassLoader::getDefault()->providesClass($dotted)) {
-          return new %1$sCode($dotted, $source ?: $this);
+        $dotted= strtr($class, '\\', '.');
+        if (ClassLoader::getDefault()->providesClass($dotted)) {
+          return new FromCode($dotted, $source ?: $this);
         }
 
-        $literal= strtr($class, ".", "\\\\");
+        $literal= strtr($class, '.', '\\');
         if (class_exists($literal) || interface_exists($literal) || trait_exists($literal)) {
-          return new %1$sReflection(new \ReflectionClass($literal), $source ?: $this);
+          return new FromReflection(new \ReflectionClass($literal), $source ?: $this);
         } else {
           return new FromIncomplete($literal);
         }
       }
-    }', $reflect));
+    };
 
     self::$DEFAULT= self::$REFLECTION;
   }

@@ -1,7 +1,7 @@
 <?php namespace lang\mirrors;
 
-use lang\{ElementNotFoundException, Enum, Error, IllegalArgumentException, IllegalStateException, Throwable, Type, XPClass};
 use lang\mirrors\parse\{ClassSource, ClassSyntax, Value};
+use lang\{ElementNotFoundException, Enum, Error, IllegalArgumentException, IllegalStateException, Throwable, Type, XPClass};
 
 class FromReflection implements Source {
   protected $reflect;
@@ -65,6 +65,26 @@ class FromReflection implements Source {
       return false === $comment ? null : $comment;
     } else {
       return $this->codeUnit()->declaration()['comment'];
+    }
+  }
+
+  /**
+   * Maps reflection type
+   *
+   * @param  php.ReflectionMethod|php.ReflectionParameter $reflect
+   * @param  string $name
+   * @return php.Closure
+   */
+  private function mapReflectionType($reflect, $name) {
+    if ('self' === $name) {
+      return function() use($reflect) { return new XPClass($reflect->getDeclaringClass()); };
+    } else if ('parent' === $name) {
+      return function() use($reflect) {
+        if ($parent= $reflect->getDeclaringClass()->getParentClass()) return new XPClass($parent);
+        throw new IllegalStateException('Cannot resolve parent type of class without parent');
+      };
+    } else {
+      return function() use($name) { return Type::forName($name); };
     }
   }
 
@@ -407,17 +427,13 @@ class FromReflection implements Source {
    * @return [:var]
    */
   protected function param($pos, $reflect) {
-    if ($reflect->isArray()) {
-      $type= function() { return Type::$ARRAY; };
-    } else if ($reflect->isCallable()) {
-      $type= function() { return Type::$CALLABLE; };
-    } else if ($class= $reflect->getClass()) {
-      $type= function() use($class) { return new XPClass($class); };
+    if ($t= $reflect->getType()) {
+      $type= $this->mapReflectionType($reflect, PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else {
       $type= null;
     }
 
-    if (self::$VARIADIC_SUPPORTED && $reflect->isVariadic()) {
+    if ($reflect->isVariadic()) {
       $var= true;
       $default= null;
     } else if ($reflect->isOptional()) {
@@ -460,6 +476,7 @@ class FromReflection implements Source {
    * @return [:var]
    */
   protected function method($reflect) {
+    $returns= $reflect->getReturnType();
     return [
       'name'        => $reflect->name,
       'access'      => new Modifiers($reflect->getModifiers() & ~0x1fb7f008),
@@ -471,6 +488,10 @@ class FromReflection implements Source {
         }
         return $params;
       },
+      'returns'     => $returns
+        ? $this->mapReflectionType($reflect, PHP_VERSION_ID >= 70100 ? $returns->getName() : $returns->__toString())
+        : null
+      ,
       'annotations' => function() use($reflect) { return $this->methodAnnotations($reflect); },
       'invoke'      => function($instance, $args) use($reflect) { return $this->invokeMethod($reflect, $instance, $args); },
       'comment'     => function() use($reflect) {
