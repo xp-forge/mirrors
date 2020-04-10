@@ -1,7 +1,7 @@
 <?php namespace lang\mirrors;
 
-use lang\mirrors\parse\{ClassSource, ClassSyntax};
 use lang\{ElementNotFoundException, IllegalArgumentException, IllegalStateException, Primitive, Type, XPClass};
+use lang\mirrors\parse\{ClassSource, ClassSyntax};
 
 class FromCode implements Source {
   private static $syntax;

@@ -1,7 +1,7 @@
 <?php namespace lang\mirrors;
 
-use lang\mirrors\parse\{ClassSource, ClassSyntax, Value};
 use lang\{ElementNotFoundException, Enum, Error, IllegalArgumentException, IllegalStateException, Throwable, Type, XPClass};
+use lang\mirrors\parse\{ClassSource, ClassSyntax, Value};
 
 class FromReflection implements Source {
   protected $reflect;
