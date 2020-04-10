@@ -1,9 +1,7 @@
 <?php namespace lang\mirrors\parse;
 
-use lang\XPClass;
-
 /**
- * Fetches code unit for a given class. Supports PHP and Hack syntax.
+ * Fetches code unit for a given class
  */
 class ClassSyntax {
   const CACHE_LIMIT = 20;

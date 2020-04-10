@@ -1,10 +1,10 @@
 <?php namespace lang\mirrors\parse;
 
 use lang\{Primitive, Type};
-use text\parse\Rules;
-use text\parse\rules\{Apply, Collect, Match, OneOf, Optional, Repeated, Returns, Sequence, Token, Tokens};
+use text\parse\rules\{Apply, Collect, Collection, Match, OneOf, Optional, Repeated, Returns, Sequence, Token, Tokens};
+use text\parse\{Rules, Syntax};
 
-class PhpSyntax extends \text\parse\Syntax {
+class PhpSyntax extends Syntax {
   protected $typeName, $collectMembers, $collectElements, $collectAnnotations;
 
   static function __static() {
@@ -16,12 +16,12 @@ class PhpSyntax extends \text\parse\Syntax {
    */
   public function __construct() {
     $this->typeName= new Tokens(T_STRING, T_NS_SEPARATOR);
-    $this->collectMembers= newinstance('text.parse.rules.Collection', [], '{
+    $this->collectMembers= new class() implements Collection {
       public function collect(&$values, $value) {
         $values[$value["kind"]][$value["name"]]= $value;
       }
-    }');
-    $this->collectElements= newinstance('text.parse.rules.Collection', [], '{
+    };
+    $this->collectElements= new class() implements Collection {
       public function collect(&$values, $value) {
         if (is_array($value)) {
           $values[key($value)]= current($value);
@@ -29,20 +29,20 @@ class PhpSyntax extends \text\parse\Syntax {
           $values[]= $value;
         }
       }
-    }');
-    $this->collectAnnotations= newinstance('text.parse.rules.Collection', [], '{
+    };
+    $this->collectAnnotations= new class() implements Collection {
       public function collect(&$values, $value) {
         $target= $value["target"];
         $values[$target[0]][$target[1]]= $value["value"];
       }
-    }');
-    $this->collectImports= newinstance('text.parse.rules.Collection', [], '{
+    };
+    $this->collectImports= new class() implements Collection {
       public function collect(&$values, $value) {
         foreach ($value as $local => $qualified) {
           $values[$local]= $qualified;
         }
       }
-    }');
+    };
     parent::__construct();
   }
 
