@@ -322,7 +322,7 @@ class FromReflection implements Source {
           return $reflect->getDocComment();
         } else {
           $field= $this->memberDeclaration($this->resolve('\\'.$reflect->getDeclaringClass()->name), 'field', $reflect->name);
-          return isset($field['comment']) ? $field['comment'] : null;
+          return $field['comment'] ?? null;
         }
       }
     ];
@@ -499,7 +499,7 @@ class FromReflection implements Source {
           return $reflect->getDocComment();
         } else {
           $method= $this->memberDeclaration($this->resolve('\\'.$reflect->getDeclaringClass()->name), 'method', $reflect->name);
-          return isset($method['comment']) ? $method['comment'] : null;
+          return $method['comment'] ?? null;
         }
       }
     ];

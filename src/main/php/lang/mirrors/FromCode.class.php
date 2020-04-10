@@ -1,7 +1,7 @@
 <?php namespace lang\mirrors;
 
-use lang\{ElementNotFoundException, IllegalArgumentException, IllegalStateException, Primitive, Type, XPClass};
 use lang\mirrors\parse\{ClassSource, ClassSyntax};
+use lang\{ElementNotFoundException, IllegalArgumentException, IllegalStateException, Primitive, Type, XPClass};
 
 class FromCode implements Source {
   private static $syntax;
@@ -68,7 +68,7 @@ class FromCode implements Source {
   public function typeComment() { return $this->decl['comment']; }
 
   /** @return var */
-  public function typeAnnotations() { return isset($this->decl['annotations']) ? $this->decl['annotations'][null] : null; }
+  public function typeAnnotations() { return $this->decl['annotations'][null] ?? null; }
 
   /** @return lang.mirrors.Modifiers */
   public function typeModifiers() {
