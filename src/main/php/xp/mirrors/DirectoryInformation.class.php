@@ -1,10 +1,8 @@
 <?php namespace xp\mirrors;
 
 use io\Folder;
-use lang\ClassLoader;
-use lang\mirrors\Package;
-use lang\mirrors\TypeMirror;
-use lang\IllegalArgumentException;
+use lang\{ClassLoader, IllegalArgumentException};
+use lang\mirrors\{Package, TypeMirror};
 
 class DirectoryInformation extends CollectionInformation {
   private $folder, $loader, $package;

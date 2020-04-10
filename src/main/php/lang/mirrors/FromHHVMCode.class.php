@@ -1,10 +1,6 @@
 <?php namespace lang\mirrors;
 
-use lang\XPClass;
-use lang\Type;
-use lang\ArrayType;
-use lang\MapType;
-use lang\FunctionType;
+use lang\{ArrayType, FunctionType, MapType, Type, XPClass};
 
 class FromHHVMCode extends FromCode {
 

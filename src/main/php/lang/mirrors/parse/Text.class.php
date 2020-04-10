@@ -1,7 +1,6 @@
 <?php namespace lang\mirrors\parse;
 
-use text\parse\Values;
-use text\parse\Unexpected;
+use text\parse\{Unexpected, Values};
 
 class Text extends \text\parse\Rule {
 

@@ -1,18 +1,8 @@
 <?php namespace lang\mirrors\parse;
 
+use lang\{Primitive, Type};
 use text\parse\Rules;
-use text\parse\rules\Sequence;
-use text\parse\rules\Token;
-use text\parse\rules\Optional;
-use text\parse\rules\Apply;
-use text\parse\rules\Tokens;
-use text\parse\rules\Repeated;
-use text\parse\rules\Match;
-use text\parse\rules\Returns;
-use text\parse\rules\Collect;
-use text\parse\rules\OneOf;
-use lang\Type;
-use lang\Primitive;
+use text\parse\rules\{Apply, Collect, Match, OneOf, Optional, Repeated, Returns, Sequence, Token, Tokens};
 
 class PhpSyntax extends \text\parse\Syntax {
   protected $typeName, $collectMembers, $collectElements, $collectAnnotations;

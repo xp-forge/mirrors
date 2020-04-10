@@ -1,7 +1,7 @@
 <?php namespace xp\mirrors;
 
-use lang\mirrors\Kind;
 use lang\IllegalStateException;
+use lang\mirrors\Kind;
 
 abstract class Information {
 

@@ -1,7 +1,7 @@
 <?php namespace xp\mirrors;
 
-use lang\mirrors\TypeMirror;
 use lang\IllegalStateException;
+use lang\mirrors\TypeMirror;
 
 class TypeInformation extends Information {
   private $delegate;

@@ -1,7 +1,7 @@
 <?php namespace xp\mirrors;
 
-use lang\mirrors\TypeMirror;
 use lang\ClassLoader;
+use lang\mirrors\TypeMirror;
 
 abstract class TypeKindInformation extends Information {
   protected $mirror, $visibility;

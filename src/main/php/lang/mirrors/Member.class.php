@@ -1,7 +1,6 @@
 <?php namespace lang\mirrors;
 
-use lang\mirrors\parse\TagsSyntax;
-use lang\mirrors\parse\TagsSource;
+use lang\mirrors\parse\{TagsSource, TagsSyntax};
 use util\Objects;
 
 /**

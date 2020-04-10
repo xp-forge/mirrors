@@ -1,7 +1,6 @@
 <?php namespace lang\mirrors\parse;
 
-use text\parse\Values;
-use text\parse\Unexpected;
+use text\parse\{Unexpected, Values};
 
 class Block extends \text\parse\Rule {
   private $started, $open, $close;

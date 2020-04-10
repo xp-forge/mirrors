@@ -1,8 +1,6 @@
 <?php namespace xp\mirrors;
 
-use lang\mirrors\TypeMirror;
-use lang\mirrors\Fields;
-use lang\mirrors\Methods;
+use lang\mirrors\{Fields, Methods, TypeMirror};
 
 class ClassInformation extends TypeKindInformation {
 

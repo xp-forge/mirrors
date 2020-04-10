@@ -1,8 +1,6 @@
 <?php namespace lang\mirrors;
 
-use lang\Type;
-use lang\IllegalArgumentException;
-use lang\IllegalStateException;
+use lang\{IllegalArgumentException, IllegalStateException, Type};
 use lang\mirrors\parse\VariadicTypeRef;
 use util\Objects;
 

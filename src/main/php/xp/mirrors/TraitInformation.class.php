@@ -1,7 +1,6 @@
 <?php namespace xp\mirrors;
 
-use lang\mirrors\Fields;
-use lang\mirrors\Methods;
+use lang\mirrors\{Fields, Methods};
 
 class TraitInformation extends TypeKindInformation {
 

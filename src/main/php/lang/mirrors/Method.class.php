@@ -1,10 +1,7 @@
 <?php namespace lang\mirrors;
 
-use lang\Throwable;
-use lang\Type;
-use lang\IllegalArgumentException;
-use lang\mirrors\parse\TagsSyntax;
-use lang\mirrors\parse\TagsSource;
+use lang\{IllegalArgumentException, Throwable, Type};
+use lang\mirrors\parse\{TagsSource, TagsSyntax};
 
 /**
  * A class method

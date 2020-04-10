@@ -1,8 +1,7 @@
 <?php namespace xp\mirrors;
 
+use lang\{ClassLoader, IllegalArgumentException};
 use util\cmd\Console;
-use lang\ClassLoader;
-use lang\IllegalArgumentException;
 
 /**
  * Displays information about types or packages

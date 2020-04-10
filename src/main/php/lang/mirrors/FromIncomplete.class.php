@@ -1,11 +1,7 @@
 <?php namespace lang\mirrors;
 
-use lang\mirrors\parse\ClassSyntax;
-use lang\mirrors\parse\ClassSource;
-use lang\Type;
-use lang\XPClass;
-use lang\ElementNotFoundException;
-use lang\IllegalArgumentException;
+use lang\{ElementNotFoundException, IllegalArgumentException, Type, XPClass};
+use lang\mirrors\parse\{ClassSource, ClassSyntax};
 
 class FromIncomplete implements Source {
   public $name;

@@ -1,7 +1,7 @@
 <?php namespace lang\mirrors\parse;
 
-use util\Objects;
 use lang\IllegalStateException;
+use util\Objects;
 
 class Closure {
   private $params, $code;

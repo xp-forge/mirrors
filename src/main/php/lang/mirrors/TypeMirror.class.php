@@ -1,8 +1,7 @@
 <?php namespace lang\mirrors;
 
-use lang\mirrors\parse\ClassSyntax;
-use lang\mirrors\parse\ClassSource;
 use lang\IllegalArgumentException;
+use lang\mirrors\parse\{ClassSource, ClassSyntax};
 
 /**
  * Reference type mirrors

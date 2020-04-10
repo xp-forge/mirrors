@@ -1,10 +1,6 @@
 <?php namespace lang\mirrors\parse;
 
-use lang\ClassFormatException;
-use lang\ClassLoader;
-use lang\ClassNotFoundException;
-use lang\IClassLoader;
-use lang\IllegalArgumentException;
+use lang\{ClassFormatException, ClassLoader, ClassNotFoundException, IClassLoader, IllegalArgumentException};
 
 /**
  * Parser source from a class

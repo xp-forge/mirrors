@@ -1,8 +1,6 @@
 <?php namespace lang\mirrors;
 
-use lang\IllegalStateException;
-use lang\Type;
-use lang\XPClass;
+use lang\{IllegalStateException, Type, XPClass};
 
 class FromPhp7Reflection extends FromReflection {
 

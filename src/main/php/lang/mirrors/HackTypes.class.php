@@ -1,10 +1,6 @@
 <?php namespace lang\mirrors;
 
-use lang\ArrayType;
-use lang\FunctionType;
-use lang\MapType;
-use lang\Type;
-use lang\XPClass;
+use lang\{ArrayType, FunctionType, MapType, Type, XPClass};
 
 /**
  * Maps a Hack type literal as returned e.g. by HHVM reflection's `getTypeText()`

@@ -1,17 +1,8 @@
 <?php namespace lang\mirrors\parse;
 
+use lang\{Primitive, Type};
 use text\parse\Rules;
-use text\parse\rules\Repeated;
-use text\parse\rules\Sequence;
-use text\parse\rules\Token;
-use text\parse\rules\Apply;
-use text\parse\rules\Match;
-use text\parse\rules\OneOf;
-use text\parse\rules\Optional;
-use text\parse\rules\Collect;
-use text\parse\rules\Returns;
-use lang\Primitive;
-use lang\Type;
+use text\parse\rules\{Apply, Collect, Match, OneOf, Optional, Repeated, Returns, Sequence, Token};
 
 class TagsSyntax extends \text\parse\Syntax {
 

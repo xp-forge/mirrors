@@ -1,9 +1,7 @@
 <?php namespace xp\mirrors;
 
-use lang\mirrors\TypeMirror;
-use lang\mirrors\Methods;
-use lang\mirrors\Fields;
 use lang\Enum;
+use lang\mirrors\{Fields, Methods, TypeMirror};
 
 class EnumInformation extends TypeKindInformation {
 
