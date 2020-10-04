@@ -4,9 +4,9 @@ use lang\mirrors\TypeMirror;
 use lang\mirrors\unittest\fixture\FixtureBase;
 use lang\{Primitive, Type, XPClass};
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Test};
+use unittest\{Action, Test, TestCase};
 
-abstract class Php7TypesTest extends \unittest\TestCase {
+abstract class Php7TypesTest extends TestCase {
   use TypeDefinition;
 
   /**
@@ -72,7 +72,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(XPClass::forName('lang.Value'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[Test, Action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
+  #[Test, Action(eval: '[new RuntimeVersion(">=7.1.0-dev")]')]
   public function void_return_type() {
     $fixture= $this->define('{
       public function fixture(): void { }
@@ -81,7 +81,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Type::$VOID, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1.0-dev")')]
   public function nullable_return_type() {
     $fixture= $this->define('{
       public function fixture(): ?string { return null; }
@@ -90,7 +90,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Primitive::$STRING, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[Test, Action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
+  #[Test, Action(eval: '[new RuntimeVersion(">=7.1.0-dev")]')]
   public function iterable_return_type() {
     $fixture= $this->define('{
       public function fixture(): iterable { return null; }
@@ -108,7 +108,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1.0-dev")')]
   public function nullable_parameter_type() {
     $fixture= $this->define('{
       public function fixture(?int $param) { }
@@ -126,7 +126,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals($fixture, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 
-  #[Test, Action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
+  #[Test, Action(eval: '[new RuntimeVersion(">=7.1.0-dev")]')]
   public function iterable_parameter_type() {
     $fixture= $this->define('{
       public function fixture(iterable $param) { }

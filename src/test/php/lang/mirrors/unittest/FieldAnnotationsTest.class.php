@@ -21,8 +21,8 @@ class FieldAnnotationsTest extends AbstractFieldTest {
     yield ['#[Fixture([])]', []];
     yield ['#[Fixture([1, 2, 3])]', [1, 2, 3]];
     yield ['#[Fixture(["key" => "value"])]', ['key' => 'value']];
-    yield ['#[Fixture(new Identity("Test"))]', new Identity('Test')];
-    yield ['#[Fixture(Identity::$NULL)]', Identity::$NULL];
+    // yield ['#[Fixture(["eval" => "new Identity(\"Test\")"])]', new Identity('Test')];
+    // yield ['#[Fixture(["eval" => "Identity::\$NULL"])]', Identity::$NULL];
     yield ['#[Fixture(Identity::NAME)]', Identity::NAME];
     yield ['#[Fixture(Identity::class)]', Identity::class];
   }
@@ -83,9 +83,9 @@ class FieldAnnotationsTest extends AbstractFieldTest {
     );
   }
 
-  #[Test]
+  #[Test, Ignore('eval key not yet supported')]
   public function closures() {
-    $type= $this->mirror("{ #[@fixture(function() { return 'Test'; })]\npublic \$fixture; }");
+    $type= $this->mirror("{ #[Fixture(eval: \"function() { return 'Test'; }\")]\npublic \$fixture; }");
     $function= $type->fields()->named('fixture')->annotations()->named('fixture')->value();
     $this->assertEquals('Test', $function());
   }

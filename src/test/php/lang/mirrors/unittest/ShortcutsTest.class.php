@@ -1,10 +1,10 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
-use unittest\Test;
+use unittest\{Test, TestCase};
 
-#[@fixture]
-class ShortcutsTest extends \unittest\TestCase {
+#[Fixture]
+class ShortcutsTest extends TestCase {
   use TypeDefinition;
 
   #[Test]
@@ -45,7 +45,7 @@ class ShortcutsTest extends \unittest\TestCase {
 
   #[Test]
   public function method_annotation_by_name() {
-    $mirror= $this->mirror("{ #[@test]\npublic function fixture() { } }");
+    $mirror= $this->mirror("{ #[Test]\npublic function fixture() { } }");
     $this->assertEquals(
       $mirror->methods()->named('fixture')->annotations()->named('test'),
       $mirror->method('fixture')->annotation('test')
@@ -54,7 +54,7 @@ class ShortcutsTest extends \unittest\TestCase {
 
   #[Test]
   public function field_annotation_by_name() {
-    $mirror= $this->mirror("{ #[@test]\npublic \$fixture; }");
+    $mirror= $this->mirror("{ #[Test]\npublic \$fixture; }");
     $this->assertEquals(
       $mirror->fields()->named('fixture')->annotations()->named('test'),
       $mirror->field('fixture')->annotation('test')

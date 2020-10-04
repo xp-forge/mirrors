@@ -159,7 +159,7 @@ class ParameterTest extends TestCase {
 
   #[Test]
   public function annotated_parameter() {
-    $method= $this->method('#[@$arg: test]', '($arg)');
+    $method= $this->method('', "(\n#[Test]\n\$arg\n)");
     $this->assertEquals(
       [new Annotation($method->declaredIn(), 'test', null)],
       iterator_to_array((new Parameter($method, 0))->annotations())

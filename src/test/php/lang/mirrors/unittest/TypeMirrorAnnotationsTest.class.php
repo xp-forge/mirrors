@@ -4,7 +4,7 @@ use lang\ElementNotFoundException;
 use lang\mirrors\TypeMirror;
 use unittest\{Expect, Test};
 
-#[@fixture]
+#[Fixture]
 class TypeMirrorAnnotationsTest extends \unittest\TestCase {
   private $fixture;
 

@@ -10,6 +10,13 @@ use unittest\{Test, TestCase, Values};
  */
 class TypeMirrorTest extends TestCase {
 
+  /** @return iterable */
+  private function sources() {
+    yield [new FromReflection(new \ReflectionClass(self::class))];
+    yield [new FromCode('lang.mirrors.unittest.TypeMirrorTest')];
+    yield [new FromIncomplete('does\not\exist')];
+  }
+
   /** @return var[][] */
   private function args() {
     return [
@@ -40,7 +47,7 @@ class TypeMirrorTest extends TestCase {
     new TypeMirror($arg, Sources::$CODE);
   }
 
-  #[Test, Values([[new FromReflection(new \ReflectionClass(self::class))], [new FromCode('lang.mirrors.unittest.TypeMirrorTest')], [new FromIncomplete('does\not\exist')]])]
+  #[Test, Values('sources')]
   public function can_create_from_source($source) {
     new TypeMirror($source);
   }
@@ -140,9 +147,14 @@ class TypeMirrorTest extends TestCase {
     $this->assertEquals(new Modifiers('public abstract'), (new TypeMirror(FixtureTrait::class))->modifiers());
   }
 
-  #[Test, Values(['unittest.TestCase', TestCase::class, new TypeMirror(TestCase::class)])]
+  #[Test, Values(["unittest.TestCase", TestCase::class])]
   public function this_class_is_subtype_of_TestCase($type) {
     $this->assertTrue((new TypeMirror(self::class))->isSubtypeOf($type));
+  }
+
+  #[Test]
+  public function this_class_is_subtype_of_TestCase_typemirror() {
+    $this->assertTrue((new TypeMirror(self::class))->isSubtypeOf(new TypeMirror(TestCase::class)));
   }
 
   #[Test, Values([FixtureInterface::class, FixtureTrait::class, FixtureEnum::class])]

@@ -16,6 +16,79 @@ class TagsSyntaxTest extends \unittest\TestCase {
     return (new TagsSyntax())->parse(new TagsSource($input));
   }
 
+  /** @return iterable */
+  private function types() {
+    yield ['@param callable', new TypeRef(Type::$CALLABLE)];
+    yield ['@param array', new TypeRef(Type::$ARRAY)];
+    yield ['@param void', new TypeRef(Type::$VOID)];
+    yield ['@param var', new TypeRef(Type::$VAR)];
+    yield ['@param self', new ReferenceTypeRef('self')];
+    yield ['@param parent', new ReferenceTypeRef('parent')];
+    yield ['@param static', new ReferenceTypeRef('static')];
+    yield ['@param var[]', new ArrayTypeRef(new TypeRef(Type::$VAR))];
+    yield ['@param string[][]', new ArrayTypeRef(new ArrayTypeRef(new TypeRef(Primitive::$STRING)))];
+    yield ['@param [:var]', new MapTypeRef(new TypeRef(Type::$VAR))];
+    yield ['@param [:[:string]]', new MapTypeRef(new MapTypeRef(new TypeRef(Primitive::$STRING)))];
+    yield ['@param [:int[]]', new MapTypeRef(new ArrayTypeRef(new TypeRef(Primitive::$INT)))];
+    yield ['@param [:[:string]]', new MapTypeRef(new MapTypeRef(new TypeRef(Primitive::$STRING)))];
+    yield ['@param resource', new TypeRef(Type::$VAR)];
+    yield ['@param mixed', new TypeRef(Type::$VAR)];
+    yield ['@param null', new TypeRef(Type::$VOID)];
+    yield ['@param false', new TypeRef(Primitive::$BOOL)];
+    yield ['@param true', new TypeRef(Primitive::$BOOL)];
+    yield ['@param $this', new ReferenceTypeRef('self')];
+    yield ['@param boolean', new TypeRef(Primitive::$BOOL)];
+    yield ['@param integer', new TypeRef(Primitive::$INT)];
+    yield ['@param float', new TypeRef(Primitive::$DOUBLE)];
+    yield ['@param \Iterator', new ReferenceTypeRef('\Iterator')];
+    yield ['@param \stubbles\lang\Sequence', new ReferenceTypeRef('\stubbles\lang\Sequence')];
+    yield ['@param \DateTime[]', new ArrayTypeRef(new ReferenceTypeRef('\DateTime'))];
+    yield ['@param \ArrayObject|\DateTime[]', new TypeUnionRef([
+      new ReferenceTypeRef('\ArrayObject'),
+      new ArrayTypeRef(new ReferenceTypeRef('\DateTime'))
+    ])];
+    yield ['@param function(): var', new FunctionTypeRef(
+      [],
+      new TypeRef(Type::$VAR)
+    )];
+    yield ['@param function(string): var', new FunctionTypeRef(
+      [new TypeRef(Primitive::$STRING)],
+      new TypeRef(Type::$VAR)
+    )];
+    yield ['@param function(string, int): void', new FunctionTypeRef(
+      [new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)],
+      new TypeRef(Type::$VOID)
+    )];
+    yield ['@param function(string[]): var', new FunctionTypeRef(
+      [new ArrayTypeRef(new TypeRef(Primitive::$STRING))],
+      new TypeRef(Type::$VAR)
+    )];
+    yield ['@param function(string[]): var[]', new FunctionTypeRef(
+      [new ArrayTypeRef(new TypeRef(Primitive::$STRING))],
+      new ArrayTypeRef(new TypeRef(Type::$VAR))
+    )];
+    yield ['@param function([:string]): void', new FunctionTypeRef(
+      [new MapTypeRef(new TypeRef(Primitive::$STRING))],
+      new TypeRef(Type::$VOID)
+    )];
+    yield ['@param util.collections.List<int>', new GenericTypeRef(
+      new ReferenceTypeRef('util.collections.List'),
+      [new TypeRef(Primitive::$INT)]
+    )];
+    yield ['@param util.collections.Map<string, int>', new GenericTypeRef(
+      new ReferenceTypeRef('util.collections.Map'),
+      [new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)]
+    )];
+    yield ['@param util.collections.Map<string, int>[]', new ArrayTypeRef(new GenericTypeRef(
+      new ReferenceTypeRef('util.collections.Map'),
+      [new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)]
+    ))];
+    yield ['@param [:util.collections.Map<string, int>]', new MapTypeRef(new GenericTypeRef(
+      new ReferenceTypeRef('util.collections.Map'),
+      [new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)]
+    ))];
+  }
+
   #[Test, Values(['@param string', '@param string $input', '@param string $input The input parameter'])]
   public function single_parameter($declaration) {
     $this->assertEquals(
@@ -32,7 +105,7 @@ class TagsSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Values([['@param callable', new TypeRef(Type::$CALLABLE)], ['@param array', new TypeRef(Type::$ARRAY)], ['@param void', new TypeRef(Type::$VOID)], ['@param var', new TypeRef(Type::$VAR)]])]
+  #[Test, Values('types')]
   public function special_types_param($declaration, $type) {
     $this->assertEquals(['param' => [$type]], $this->parse($declaration));
   }
@@ -53,42 +126,12 @@ class TagsSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Values([['@param self', new ReferenceTypeRef('self')], ['@param parent', new ReferenceTypeRef('parent')], ['@param static', new ReferenceTypeRef('static')]])]
-  public function special_class_parameter($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
-  #[Test, Values([['@param var[]', new ArrayTypeRef(new TypeRef(Type::$VAR))], ['@param string[][]', new ArrayTypeRef(new ArrayTypeRef(new TypeRef(Primitive::$STRING)))]])]
-  public function array_parameter($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
-  #[Test, Values([['@param [:var]', new MapTypeRef(new TypeRef(Type::$VAR))], ['@param [:[:string]]', new MapTypeRef(new MapTypeRef(new TypeRef(Primitive::$STRING)))]])]
-  public function map_parameter($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
-  #[Test, Values([['@param function(): var', new FunctionTypeRef([], new TypeRef(Type::$VAR))], ['@param function(string): var', new FunctionTypeRef([new TypeRef(Primitive::$STRING)], new TypeRef(Type::$VAR))], ['@param function(string, int): void', new FunctionTypeRef([new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)], new TypeRef(Type::$VOID))],])]
-  public function function_type($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
   #[Test]
   public function function_in_braces() {
     $this->assertEquals(
       ['param' => [new ArrayTypeRef(new FunctionTypeRef([], new TypeRef(Primitive::$INT)))]],
       $this->parse('@param (function(): int)[]')
     );
-  }
-
-  #[Test, Values([['@param util.collections.List<int>', new GenericTypeRef(new ReferenceTypeRef('util.collections.List'), [new TypeRef(Primitive::$INT)])], ['@param util.collections.Map<string, int>', new GenericTypeRef(new ReferenceTypeRef('util.collections.Map'), [new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)])]])]
-  public function generic_type($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
-  #[Test, Values([['@param [:int[]]', new MapTypeRef(new ArrayTypeRef(new TypeRef(Primitive::$INT)))], ['@param [:[:string]]', new MapTypeRef(new MapTypeRef(new TypeRef(Primitive::$STRING)))], ['@param util.collections.Map<string, int>[]', new ArrayTypeRef(new GenericTypeRef(new ReferenceTypeRef('util.collections.Map'), [new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)]))], ['@param [:util.collections.Map<string, int>]', new MapTypeRef(new GenericTypeRef(new ReferenceTypeRef('util.collections.Map'), [new TypeRef(Primitive::$STRING), new TypeRef(Primitive::$INT)]))], ['@param function(string[]): var', new FunctionTypeRef([new ArrayTypeRef(new TypeRef(Primitive::$STRING))], new TypeRef(Type::$VAR))], ['@param function(string[]): var[]', new FunctionTypeRef([new ArrayTypeRef(new TypeRef(Primitive::$STRING))], new ArrayTypeRef(new TypeRef(Type::$VAR)))], ['@param function([:string]): void', new FunctionTypeRef([new MapTypeRef(new TypeRef(Primitive::$STRING))], new TypeRef(Type::$VOID))]])]
-  public function nested_type_parameters($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
   }
 
   #[Test, Values(['@param string|int', '@param string|int The union', '@param (string|int)', '@param (string|int) The union', '@param string | int', '@param string | int The union'])]
@@ -152,20 +195,5 @@ class TagsSyntaxTest extends \unittest\TestCase {
   #[Test, Values(['@var int$fixture', '@type int$fixture', '@param int$fixture'])]
   public function missing_whitespace_between_variable_and_type_ok($declaration) {
     $this->assertEquals([new TypeRef(Primitive::$INT)], current($this->parse($declaration)));
-  }
-
-  #[Test, Values([['@param resource', new TypeRef(Type::$VAR)], ['@param mixed', new TypeRef(Type::$VAR)], ['@param null', new TypeRef(Type::$VOID)], ['@param false', new TypeRef(Primitive::$BOOL)], ['@param true', new TypeRef(Primitive::$BOOL)], ['@param $this', new ReferenceTypeRef('self')]])]
-  public function foreign_types_param($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
-  #[Test, Values([['@param boolean', new TypeRef(Primitive::$BOOL)], ['@param integer', new TypeRef(Primitive::$INT)], ['@param float', new TypeRef(Primitive::$DOUBLE)]])]
-  public function foreign_type_aliases($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
-  }
-
-  #[Test, Values([['@param \Iterator', new ReferenceTypeRef('\Iterator')], ['@param \stubbles\lang\Sequence', new ReferenceTypeRef('\stubbles\lang\Sequence')], ['@param \DateTime[]', new ArrayTypeRef(new ReferenceTypeRef('\DateTime'))], ['@param \ArrayObject|\DateTime[]', new TypeUnionRef([ new ReferenceTypeRef('\ArrayObject'), new ArrayTypeRef(new ReferenceTypeRef('\DateTime')) ])]])]
-  public function foreign_fully_qualified($declaration, $type) {
-    $this->assertEquals(['param' => [$type]], $this->parse($declaration));
   }
 }
