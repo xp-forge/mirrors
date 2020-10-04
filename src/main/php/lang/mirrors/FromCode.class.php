@@ -1,7 +1,7 @@
 <?php namespace lang\mirrors;
 
-use lang\{ElementNotFoundException, IllegalArgumentException, IllegalStateException, Primitive, Type, XPClass};
 use lang\mirrors\parse\{ClassSource, ClassSyntax};
+use lang\{ElementNotFoundException, IllegalArgumentException, IllegalStateException, Primitive, Type, XPClass};
 
 class FromCode implements Source {
   private static $syntax;
@@ -368,7 +368,7 @@ class FromCode implements Source {
           $target= '$'.$param['name'];
           $params[]= $this->param($pos, $param, isset($param['annotations'])
             ? $param['annotations'][null]
-            : (isset($method['annotations'][$target]) ? $method['annotations'][$target] : [])
+            : $method['annotations'][$target] ?? null
           );
         }
         return $params;

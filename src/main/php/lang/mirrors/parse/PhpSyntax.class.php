@@ -158,7 +158,7 @@ class PhpSyntax extends Syntax {
         '@'      => new Sequence([new Apply('annotation_target'), new Optional(new Apply('value'))], function($values) {
           return ['target' => $values[1], 'value' => $values[2]];
         }),
-        T_STRING => new Sequence([new Optional(new Apply('value'))], function($values) {
+        T_STRING => new Sequence([new Optional(new Apply('attribute'))], function($values) {
           return ['target' => [null, lcfirst($values[0])], 'value' => $values[1]];
         })
       ]),
@@ -170,6 +170,37 @@ class PhpSyntax extends Syntax {
         [new Token('('), new Apply('expr'), new Token(')')],
         function($values) { return $values[1]; }
       ),
+      'attribute' => new Sequence(
+        [new Token('('), new Repeated(new Apply('argument'), new Token(',')), new Token(')')],
+        function($values) {
+          $arguments= [];
+          foreach ($values[1] as $argument) {
+            if (null === $argument[0]) {
+              $arguments[]= $argument[1];
+            } else {
+              $arguments[$argument[0]]= $argument[1];
+            }
+          }
+
+          // Map arguments to value. Handle special key "eval"
+          if (0 === key($arguments)) {
+            return $arguments[0];
+          } else if ('eval' === key($arguments)) {
+            $rules= $this->rules();
+            return $rules->named('expr')->evaluate($rules, new StringSource($arguments['eval']->resolve(null)));
+          } else {
+            return new Pairs($arguments);
+          }
+        }
+      ),
+      'argument' => new OneOf([
+        new Sequence([new Apply('key'), new Token(':'), new Apply('expr')], function($values) {
+          return [$values[0], $values[2]];
+        }),
+        new Sequence([new Apply('expr')], function($values) {
+          return [null, $values[0]];
+        })
+      ]),
       'body' => new Sequence(
         [new Token('{'), new Repeated(new Apply('member'), null, $this->collectMembers), new Token('}')],
         function($values) { return $values[1]; }
@@ -299,6 +330,7 @@ class PhpSyntax extends Syntax {
         T_DEFAULT     => new Returns('default'),
         T_DO          => new Returns('do'),
         T_ELSE        => new Returns('else'),
+        T_EVAL        => new Returns('eval'),
         T_EXTENDS     => new Returns('extends'),
         T_FINALLY     => new Returns('finally'),
         T_FOR         => new Returns('for'),
