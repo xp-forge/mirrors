@@ -27,7 +27,7 @@ abstract class NoParentTest extends \unittest\TestCase {
     ;
   }
 
-  #[Test, Expect(ClassFormatException::class), Ignore('eval key not yet supported')]
+  #[Test, Expect(ClassFormatException::class)]
   public function annotation_value() {
     $this->mirror("{ #[Fixture(eval: 'new parent()')]\npublic function fixture() { } }", [])
       ->methods()

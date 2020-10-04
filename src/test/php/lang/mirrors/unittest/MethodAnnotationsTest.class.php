@@ -88,7 +88,7 @@ class MethodAnnotationsTest extends AbstractMethodTest {
     );
   }
 
-  #[Test, Ignore('eval key not yet supported')]
+  #[Test]
   public function closures() {
     $type= $this->mirror("{ #[Fixture(eval: \"function() { return 'Test'; }\")]\npublic function fixture() { } }");
     $function= $type->methods()->named('fixture')->annotations()->named('fixture')->value();

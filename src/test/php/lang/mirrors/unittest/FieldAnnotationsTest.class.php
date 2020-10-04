@@ -83,7 +83,7 @@ class FieldAnnotationsTest extends AbstractFieldTest {
     );
   }
 
-  #[Test, Ignore('eval key not yet supported')]
+  #[Test]
   public function closures() {
     $type= $this->mirror("{ #[Fixture(eval: \"function() { return 'Test'; }\")]\npublic \$fixture; }");
     $function= $type->fields()->named('fixture')->annotations()->named('fixture')->value();
