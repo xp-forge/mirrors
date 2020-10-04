@@ -2,7 +2,7 @@
 
 use lang\{Primitive, Type};
 use text\parse\Rules;
-use text\parse\rules\{Apply, Collect, Match, OneOf, Optional, Repeated, Returns, Sequence, Token};
+use text\parse\rules\{Apply, Collect, Matches, OneOf, Optional, Repeated, Returns, Sequence, Token};
 
 class TagsSyntax extends \text\parse\Syntax {
 
@@ -18,7 +18,7 @@ class TagsSyntax extends \text\parse\Syntax {
           }
         }')
       ),
-      'tag' => new Match([
+      'tag' => new Matches([
         TagsSource::T_PARSED => new Sequence(
           [new Apply('types'), new Text()],
           function($values) { return [substr($values[0], 1) => $values[1]]; }
@@ -42,7 +42,7 @@ class TagsSyntax extends \text\parse\Syntax {
       ),
       'type' => new Sequence(
         [
-          new Match([
+          new Matches([
             TagsSource::T_STRING   => new Returns(new TypeRef(Primitive::$STRING)),
             TagsSource::T_DOUBLE   => new Returns(new TypeRef(Primitive::$DOUBLE)),
             TagsSource::T_INT      => new Returns(new TypeRef(Primitive::$INT)),

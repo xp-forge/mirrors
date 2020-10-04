@@ -1,24 +1,28 @@
 <?php namespace lang\mirrors\parse;
 
 use lang\{Primitive, Type};
+use text\parse\rules\{Apply, Collect, Collection, Matches, OneOf, Optional, Repeated, Returns, Sequence, Token, Tokens};
 use text\parse\{Rules, Syntax};
-use text\parse\rules\{Apply, Collect, Collection, Match, OneOf, Optional, Repeated, Returns, Sequence, Token, Tokens};
 
 class PhpSyntax extends Syntax {
   protected $typeName, $collectMembers, $collectElements, $collectAnnotations;
 
   static function __static() {
-    defined('T_ELLIPSIS') ||define('T_ELLIPSIS', 389);
+    defined('T_ELLIPSIS') ||define('T_ELLIPSIS', -389);
+    defined('T_FN') || define('T_FN', -346);
+    defined('T_ATTRIBUTE') || define('T_ATTRIBUTE', -383);
+    defined('T_NAME_FULLY_QUALIFIED') || define('T_NAME_FULLY_QUALIFIED', -312);
+    defined('T_NAME_QUALIFIED') || define('T_NAME_QUALIFIED', -314);
   }
 
   /**
    * Initialize members.
    */
   public function __construct() {
-    $this->typeName= new Tokens(T_STRING, T_NS_SEPARATOR);
+    $this->typeName= new Tokens(T_STRING, T_NS_SEPARATOR, T_NAME_QUALIFIED, T_NAME_FULLY_QUALIFIED);
     $this->collectMembers= new class() implements Collection {
       public function collect(&$values, $value) {
-        $values[$value["kind"]][$value["name"]]= $value;
+        $values[$value['kind']][$value['name']]= $value;
       }
     };
     $this->collectElements= new class() implements Collection {
@@ -32,8 +36,8 @@ class PhpSyntax extends Syntax {
     };
     $this->collectAnnotations= new class() implements Collection {
       public function collect(&$values, $value) {
-        $target= $value["target"];
-        $values[$target[0]][$target[1]]= $value["value"];
+        $target= $value['target'];
+        $values[$target[0]][$target[1]]= $value['value'];
       }
     };
     $this->collectImports= new class() implements Collection {
@@ -65,14 +69,16 @@ class PhpSyntax extends Syntax {
       'package' => new Sequence([new Token(T_NAMESPACE), $this->typeName, new Token(';')], function($values) {
         return implode('', $values[1]);
       }),
-      'import' => new Match([
-        T_USE => new Sequence([$this->typeName, new Match([
+      'import' => new Matches([
+        T_USE => new Sequence([$this->typeName, new Matches([
           T_AS => new Sequence([new Token(T_STRING), new Token(';')], function($values) { return $values[1]; }),
           '{'  => new Sequence([new Repeated($this->typeName, new Token(',')), new Token('}'), new Token(';')], function($values) { return $values[1]; }),
           ';'  => new Returns(null),
         ])], function($values) {
           if (null === $values[2]) {
-            return [end($values[1]) => implode('', $values[1])];
+            $name= implode('', $values[1]);
+            $p= strrpos($name, '\\');
+            return [false === $p ? $name : substr($name, $p + 1) => $name];
           } else if (is_array($values[2])) {
             $return= [];
             foreach ($values[2] as $type) {
@@ -90,7 +96,7 @@ class PhpSyntax extends Syntax {
           return [false === $p ? $name : substr($name, $p + 1) => $name];
         })
       ]),
-      'type' => new Match([
+      'type' => new Matches([
         T_STRING       => new Sequence([$this->typeName], function($values) {
           $t= $values[0].implode('', $values[1]);
           if ('string' === $t) {
@@ -114,7 +120,7 @@ class PhpSyntax extends Syntax {
           new Returns(function($values, $source) { return $source->lastComment(); }),
           new Optional(new Apply('annotations')),
           new Apply('modifiers'),
-          new Match([
+          new Matches([
             T_CLASS     => new Sequence([new Token(T_STRING), new Optional(new Apply('parent')), new Optional(new Apply('implements')), new Apply('body')], function($values) {
               return array_merge(['kind' => $values[0], 'name' => $values[1], 'parent' => $values[2], 'implements' => $values[3]], $values[4]);
             }),
@@ -141,14 +147,22 @@ class PhpSyntax extends Syntax {
         function($values) { return array_map(function($e) { return implode('', $e); }, $values[1]); }
       ),
       'annotations' => new Sequence(
-        [new Token('#'), new Token('['), new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations), new Token(']')],
-        function($values) { isset($values[2][null]) || $values[2][null]= []; return $values[2]; }
+        [
+          new Matches(['#' => new Token('['), T_ATTRIBUTE => new Returns(null)]),
+          new Repeated(new Apply('annotation'), new Token(','), $this->collectAnnotations),
+          new Token(']')
+        ],
+        function($values) { isset($values[1][null]) || $values[1][null]= []; return $values[1]; }
       ),
-      'annotation' => new Sequence(
-        [new Token('@'), new Apply('annotation_target'), new Optional(new Apply('value'))],
-        function($values) { return ['target' => $values[1], 'value' => $values[2]]; }
-      ),
-      'annotation_target' => new Match([
+      'annotation' => new Matches([
+        '@'      => new Sequence([new Apply('annotation_target'), new Optional(new Apply('value'))], function($values) {
+          return ['target' => $values[1], 'value' => $values[2]];
+        }),
+        T_STRING => new Sequence([new Optional(new Apply('value'))], function($values) {
+          return ['target' => [null, lcfirst($values[0])], 'value' => $values[1]];
+        })
+      ]),
+      'annotation_target' => new Matches([
         T_STRING   => new Returns(function($values) { return [null, $values[0]]; }),
         T_VARIABLE => new Sequence([new Token(':'), new Token(T_STRING)], function($values) { return [$values[0], $values[2]]; })
       ]),
@@ -161,7 +175,7 @@ class PhpSyntax extends Syntax {
         function($values) { return $values[1]; }
       ),
       'member' => new OneOf([
-        new Match([
+        new Matches([
           T_USE   => new Sequence([$this->typeName, new Apply('aliases')], function($values) {
             return ['kind' => 'use', 'name' => implode('', $values[1])];
           }),
@@ -175,7 +189,7 @@ class PhpSyntax extends Syntax {
             new Optional(new Apply('annotations')),
             new Apply('modifiers'),
             new OneOf([
-              new Match([
+              new Matches([
                 T_FUNCTION => new Sequence(
                   [
                     new Token(T_STRING),
@@ -186,12 +200,12 @@ class PhpSyntax extends Syntax {
                   function($values) { return ['kind' => 'method', 'name' => $values[1], 'params' => $values[3], 'returns' => $values[5]]; }
                 ),
                 T_VARIABLE => new Sequence(
-                  [new Optional(new Apply('init')), new Match([',' => null, ';' => null])],
+                  [new Optional(new Apply('init')), new Matches([',' => null, ';' => null])],
                   function($values) { return ['kind' => 'field', 'name' => substr($values[0], 1), 'init' => $values[2]]; }
                 ),
               ]),
               new Sequence(
-                [new Apply('type'), new Token(T_VARIABLE), new Optional(new Apply('init')), new Match([',' => null, ';' => null])],
+                [new Apply('type'), new Token(T_VARIABLE), new Optional(new Apply('init')), new Matches([',' => null, ';' => null])],
                 function($values) { return ['kind' => 'field', 'name' => substr($values[1], 1), 'init' => $values[2], 'type' => $values[0]]; }
               )
             ])
@@ -221,17 +235,17 @@ class PhpSyntax extends Syntax {
           'default'     => $values[6]
         ]; }
       ),
-      'aliases' => new Match([';' => null, '{' => new Block(true)]), 
-      'method' => new Match([';' => null, '{' => new Block(true)]),
+      'aliases' => new Matches([';' => null, '{' => new Block(true)]), 
+      'method' => new Matches([';' => null, '{' => new Block(true)]),
       'expr' => new OneOf([
-        new Match([
+        new Matches([
           T_DNUMBER => function($values) { return new Value((double)$values[0]); },
           T_LNUMBER => function($values) { return new Value((int)$values[0]); },
-          '-' => new Match([
+          '-' => new Matches([
             T_DNUMBER => function($values) { return new Value(-(double)$values[0]); },
             T_LNUMBER => function($values) { return new Value(-(int)$values[0]); },
           ]),
-          '+' => new Match([
+          '+' => new Matches([
             T_DNUMBER => function($values) { return new Value((double)$values[0]); },
             T_LNUMBER => function($values) { return new Value((int)$values[0]); },
           ]),
@@ -270,7 +284,7 @@ class PhpSyntax extends Syntax {
       'pair'  => new Sequence([new Apply('key'), new Token('='), new Apply('expr')], function($values) {
         return [$values[0] => $values[2]];
       }),
-      'key' => new Match([
+      'key' => new Matches([
         T_STRING      => new Returns(function($values) { return $values[0]; }),
         T_AS          => new Returns('as'),
         T_BREAK       => new Returns('break'),
@@ -312,7 +326,7 @@ class PhpSyntax extends Syntax {
         T_WHILE       => new Returns('while'),
         T_YIELD       => new Returns('yield')
       ]),
-      'member_ref' => new Match([
+      'member_ref' => new Matches([
         T_STRING   => function($values) { return $values[0]; },
         T_CLASS    => function($values) { return $values[0]; },
         T_VARIABLE => function($values) { return $values[0]; },
