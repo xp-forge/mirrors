@@ -67,7 +67,7 @@ class Field extends Member {
    * @return void
    * @throws lang.IllegalArgumentException
    */
-  public function modify($instance= null, $value) {
+  public function modify($instance, $value) {
     return $this->reflect['modify']($instance, $value);
   }
 
