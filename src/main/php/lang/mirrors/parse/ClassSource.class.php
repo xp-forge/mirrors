@@ -70,7 +70,7 @@ class ClassSource extends \text\parse\Tokens {
       } else if (T_WHITESPACE === $token[0]) {
         // Skip
       } else if (T_COMMENT === $token[0]) {
-        if ('#' === $token[1]{0}) {
+        if ('#' === $token[1][0]) {
           $annotation= '<?=';
           do {
             $annotation.= trim(substr($token[1], 1));
