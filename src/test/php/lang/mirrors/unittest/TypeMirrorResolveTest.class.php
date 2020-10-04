@@ -1,9 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
-use lang\mirrors\unittest\fixture\FixtureUsed;
 use lang\mirrors\unittest\fixture\FixtureAbstract as Aliased;
-use unittest\TestCase;
+use lang\mirrors\unittest\fixture\FixtureUsed;
+use unittest\{Test, TestCase, Values};
 
 class TypeMirrorResolveTest extends TestCase {
   private $fixture;
@@ -17,22 +17,22 @@ class TypeMirrorResolveTest extends TestCase {
     $this->fixture= new TypeMirror(self::class);
   }
 
-  #[@test]
+  #[Test]
   public function self() {
     $this->assertEquals($this->fixture, $this->fixture->resolve('self'));
   }
 
-  #[@test]
+  #[Test]
   public function parent() {
     $this->assertEquals($this->fixture->parent(), $this->fixture->resolve('parent'));
   }
 
-  #[@test]
+  #[Test]
   public function by_class_name() {
     $this->assertEquals($this->fixture, $this->fixture->resolve('TypeMirrorResolveTest'));
   }
 
-  #[@test]
+  #[Test]
   public function by_unqualified() {
     $this->assertEquals(
       new TypeMirror(TypeMirrorTest::class),
@@ -40,7 +40,7 @@ class TypeMirrorResolveTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function by_relative() {
     $this->assertEquals(
       new TypeMirror(FixtureUsed::class),
@@ -48,10 +48,7 @@ class TypeMirrorResolveTest extends TestCase {
     );
   }
 
-  #[@test, @values([
-  #  'lang.mirrors.unittest.TypeMirrorTest',
-  #  '\lang\mirrors\unittest\TypeMirrorTest'
-  #])]
+  #[Test, Values(['lang.mirrors.unittest.TypeMirrorTest', '\lang\mirrors\unittest\TypeMirrorTest'])]
   public function by_fully_qualified($name) {
     $this->assertEquals(
       new TypeMirror(TypeMirrorTest::class),
@@ -59,7 +56,7 @@ class TypeMirrorResolveTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function imported_class() {
     $this->assertEquals(
       new TypeMirror(TestCase::class),
@@ -67,7 +64,7 @@ class TypeMirrorResolveTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function aliased_class() {
     $this->assertEquals(
       new TypeMirror(Aliased::class),
@@ -75,7 +72,7 @@ class TypeMirrorResolveTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function unknown_class() {
     $this->assertEquals(
       new TypeMirror('lang\mirrors\unittest\IllegalArgumentException'),

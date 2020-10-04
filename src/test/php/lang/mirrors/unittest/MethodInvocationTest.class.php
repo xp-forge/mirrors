@@ -1,12 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
-use lang\mirrors\TargetInvocationException;
-use lang\Value;
-use lang\Error;
-use lang\IllegalArgumentException;
-use unittest\actions\RuntimeVersion;
 use lang\mirrors\unittest\fixture\Identity;
+use lang\mirrors\{TargetInvocationException, TypeMirror};
+use lang\{Error, IllegalArgumentException, Value};
+use unittest\{Expect, Test};
 
 class MethodInvocationTest extends AbstractMethodTest {
 
@@ -24,53 +21,53 @@ class MethodInvocationTest extends AbstractMethodTest {
 
   private static function staticMethodFixture() { return 'Test'; }
 
-  #[@test]
+  #[Test]
   public function no_return() {
     $this->assertNull($this->fixture('noReturnFixture')->invoke($this));
   }
 
-  #[@test]
+  #[Test]
   public function returns_test() {
     $this->assertEquals('Test', $this->fixture('returnsTestFixture')->invoke($this));
   }
 
-  #[@test]
+  #[Test]
   public function returns_args() {
     $args= ['Test', 1, $this];
     $this->assertEquals($args, $this->fixture('returnsArgsFixture')->invoke($this, $args));
   }
 
-  #[@test]
+  #[Test]
   public function invoke_static_method() {
     $this->assertEquals('Test', $this->fixture('staticMethodFixture')->invoke(null));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function raises_exception_with_incompatible_instance() {
     $this->fixture('noReturnFixture')->invoke(new Identity('Test'));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function raises_exception_with_null_instance() {
     $this->fixture('noReturnFixture')->invoke(null);
   }
 
-  #[@test, @expect(TargetInvocationException::class)]
+  #[Test, Expect(TargetInvocationException::class)]
   public function wraps_exceptions_raised_from_invoked_method() {
     $this->fixture('throwsExceptionFixture')->invoke($this);
   }
 
-  #[@test, @expect(TargetInvocationException::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[Test, Expect(TargetInvocationException::class)]
   public function wraps_errors_raised_from_invoked_method() {
     $this->fixture('raisesErrorFixture')->invoke($this);
   }
 
-  #[@test, @expect(TargetInvocationException::class)]
+  #[Test, Expect(TargetInvocationException::class)]
   public function wraps_exceptions_raised_from_argument_mismatch() {
     $this->fixture('typeHintedFixture')->invoke($this, ['not.an.obhject']);
   }
 
-  #[@test]
+  #[Test]
   public function sets_cause_for_exceptions_thrown_from_invoked_method() {
     try {
       $this->fixture('throwsExceptionFixture')->invoke($this, []);
@@ -80,7 +77,7 @@ class MethodInvocationTest extends AbstractMethodTest {
     }
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[Test]
   public function sets_cause_for_errors_raised_from_invoked_method() {
     try {
       $this->fixture('raisesErrorFixture')->invoke($this, []);

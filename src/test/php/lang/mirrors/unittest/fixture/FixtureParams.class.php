@@ -42,6 +42,8 @@ class FixtureParams {
    */
   private function twoDocumentedTypeParamsWithoutNames($a, $b) { }
 
-  #[@$arg: test]
-  private function oneAnnotatedParam($arg) { }
+  private function oneAnnotatedParam(
+    #[Test]
+    $arg
+  ) { }
 }

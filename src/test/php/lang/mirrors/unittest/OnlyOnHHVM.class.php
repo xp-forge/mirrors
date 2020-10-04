@@ -1,8 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\XPClass;
-use unittest\PrerequisitesNotMetError;
-use unittest\Test;
+use unittest\{PrerequisitesNotMetError, Test};
 
 class OnlyOnHHVM implements \unittest\TestAction, \unittest\TestClassAction {
 

@@ -1,40 +1,41 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\Package;
+use unittest\Test;
 
 class PackageTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function accepts_namespace_constant() {
     $this->assertEquals('lang.mirrors.unittest', (new Package(__NAMESPACE__))->name());
   }
 
-  #[@test]
+  #[Test]
   public function accepts_dotted_name() {
     $this->assertEquals('lang.mirrors.unittest', (new Package('lang.mirrors.unittest'))->name());
   }
 
-  #[@test]
+  #[Test]
   public function declaration() {
     $this->assertEquals('unittest', (new Package('lang.mirrors.unittest'))->declaration());
   }
 
-  #[@test]
+  #[Test]
   public function global_namespace_has_empty_name() {
     $this->assertEquals('', Package::$GLOBAL->name());
   }
 
-  #[@test]
+  #[Test]
   public function global_namespace_has_empty_declaration() {
     $this->assertEquals('', Package::$GLOBAL->name());
   }
 
-  #[@test]
+  #[Test]
   public function global_namespace_is_global() {
     $this->assertTrue(Package::$GLOBAL->isGlobal(), '(global)');
   }
 
-  #[@test]
+  #[Test]
   public function this_namespace_is_not_global() {
     $this->assertFalse((new Package(__NAMESPACE__))->isGlobal(), __NAMESPACE__);
   }

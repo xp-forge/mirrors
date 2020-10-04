@@ -1,11 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
-use lang\mirrors\Field;
-use lang\mirrors\Fields;
-use lang\mirrors\Member;
 use lang\ElementNotFoundException;
 use lang\mirrors\unittest\fixture\MemberFixture;
+use lang\mirrors\{Field, Fields, Member, TypeMirror};
+use unittest\{Expect, Test};
 
 class TypeMirrorFieldsTest extends \unittest\TestCase {
   private $fixture;
@@ -26,27 +24,27 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     $this->fixture= new TypeMirror(MemberFixture::class);
   }
 
-  #[@test]
+  #[Test]
   public function provides_field() {
     $this->assertTrue($this->fixture->fields()->provides('publicInstanceField'));
   }
 
-  #[@test]
+  #[Test]
   public function does_not_provide_non_existant() {
     $this->assertFalse($this->fixture->fields()->provides('does-not-exist'));
   }
 
-  #[@test]
+  #[Test]
   public function field_named() {
     $this->assertInstanceOf('lang.mirrors.Field', $this->fixture->fields()->named('publicInstanceField'));
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function no_field_named() {
     $this->fixture->fields()->named('does-not-exist');
   }
 
-  #[@test]
+  #[Test]
   public function all_fields_by_iterating_field_directly() {
     $this->assertEquals(
       [
@@ -66,7 +64,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function all_fields() {
     $this->assertEquals(
       [
@@ -86,7 +84,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function declared_fields() {
     $this->assertEquals(
       [
@@ -105,7 +103,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function instance_fields_via_deprecated_of() {
     $this->assertEquals(
       [
@@ -121,7 +119,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function static_fields_via_deprecated_of() {
     $this->assertEquals(
       [
@@ -134,7 +132,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function instance_fields() {
     $this->assertEquals(
       [
@@ -150,7 +148,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function static_fields() {
     $this->assertEquals(
       [
@@ -163,7 +161,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function annotated_fields() {
     $this->assertEquals(
       [
@@ -174,7 +172,7 @@ class TypeMirrorFieldsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function fields_by_predicate() {
     $namedTrait= function($member) { return (bool)strstr($member->name(), 'trait'); };
     $this->assertEquals(

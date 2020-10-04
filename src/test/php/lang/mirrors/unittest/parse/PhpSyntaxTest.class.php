@@ -1,12 +1,8 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\mirrors\parse\PhpSyntax;
-use lang\mirrors\parse\CodeUnit;
-use lang\mirrors\parse\Value;
-use lang\mirrors\parse\TypeRef;
-use lang\mirrors\parse\NewInstance;
-use lang\mirrors\parse\Closure;
 use lang\Primitive;
+use lang\mirrors\parse\{Closure, CodeUnit, NewInstance, PhpSyntax, TypeRef, Value};
+use unittest\{Action, Test};
 
 class PhpSyntaxTest extends \unittest\TestCase {
 
@@ -20,7 +16,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     return (new PhpSyntax())->parse(new StringInput($input));
   }
 
-  #[@test]
+  #[Test]
   public function object_class() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Object', 'modifiers' => [], 'annotations' => null]),
@@ -28,7 +24,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function interface_without_parent() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'A', 'modifiers' => [], 'annotations' => null]),
@@ -36,7 +32,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function interface_with_parent() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'parent' => null, 'implements' => ['B'], 'name' => 'A', 'modifiers' => [], 'annotations' => null]),
@@ -44,7 +40,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function interface_with_multiple_parents() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'interface', 'comment' => null, 'parent' => null, 'implements' => ['B', 'C'], 'name' => 'A', 'modifiers' => [], 'annotations' => null]),
@@ -52,7 +48,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function runnable_impl() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => ['Runnable'], 'name' => 'Test', 'modifiers' => [], 'annotations' => null]),
@@ -60,7 +56,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function creation_trait() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'trait', 'comment' => null, 'parent' => null, 'name' => 'Creation', 'modifiers' => [], 'annotations' => null]),
@@ -68,7 +64,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function creation_user() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null, 'use' => [
@@ -78,7 +74,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function class_using_trait_with_alias() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null, 'use' => [
@@ -88,7 +84,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function class_using_trait_with_aliases() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null, 'use' => [
@@ -101,7 +97,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function abstract_class() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => ['abstract'], 'annotations' => null]),
@@ -109,7 +105,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function final_class() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => null, 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => ['final'], 'annotations' => null]),
@@ -117,7 +113,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function documented_class() {
     $this->assertEquals(
       new CodeUnit(null, [], ['kind' => 'class', 'comment' => '/** Doc */', 'parent' => null, 'implements' => null, 'name' => 'Test', 'modifiers' => [], 'annotations' => null]),
@@ -125,7 +121,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function no_imports() {
     $this->assertEquals(
       [],
@@ -133,7 +129,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function one_import() {
     $this->assertEquals(
       ['Objects' => 'util\Objects'],
@@ -141,7 +137,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function imports() {
     $this->assertEquals(
       ['Objects' => 'util\Objects', 'Date' => 'util\Date'],
@@ -149,7 +145,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function aliased_import() {
     $this->assertEquals(
       ['Aliased' => 'util\Objects'],
@@ -157,7 +153,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function useless_but_syntactically_valid_single_grouped_import() {
     $this->assertEquals(
       ['Date' => 'util\Date'],
@@ -165,7 +161,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function grouped_imports() {
     $this->assertEquals(
       ['Date' => 'util\Date', 'DateUtil' => 'util\DateUtil'],
@@ -173,7 +169,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function new_import() {
     $this->assertEquals(
       ['ArrayListExtensions' => 'util\ArrayListExtensions'],
@@ -181,7 +177,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function test_class() {
     $this->assertEquals(
       new CodeUnit(
@@ -252,7 +248,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function compact_field_syntax() {
     $this->assertEquals(
       [
@@ -277,7 +273,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function method_return_type() {
     $this->assertEquals(
       [
@@ -295,12 +291,10 @@ class PhpSyntaxTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function multi_line_annotation() {
     $parsed= $this->parse('<?php 
-      #[@action(new \unittest\actions\VerifyThat(function() {
-      #  throw new \lang\IllegalStateException("Test");
-      #}))]
+      #[Action(new \unittest\actions\VerifyThat(function() { throw new \lang\IllegalStateException("Test");}))]
       class Test { }
     ');
     $this->assertEquals(

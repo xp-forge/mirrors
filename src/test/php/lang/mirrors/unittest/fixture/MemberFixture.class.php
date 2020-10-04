@@ -2,29 +2,42 @@
 
 class MemberFixture extends AbstractMemberFixture {
   use FixtureTrait;
+
   const CONSTANT= 1;
 
   public $publicInstanceField;
+
   protected $protectedInstanceField;
+
   private $privateInstanceField;
+
   public static $publicClassField;
+
   protected static $protectedClassField;
+
   private static $privateClassField;
 
-  #[@annotation]
+  #[Annotation]
   public $annotatedInstanceField;
-  #[@annotation]
+
+  #[Annotation]
   public static $annotatedClassField;
 
   public function publicInstanceMethod() { }
+
   protected function protectedInstanceMethod() { }
+
   private function privateInstanceMethod() { }
+
   public static function publicClassMethod() { }
+
   protected static function protectedClassMethod() { }
+
   private static function privateClassMethod() { }
 
-  #[@annotation]
+  #[Annotation]
   public function annotatedInstanceMethod() { }
-  #[@annotation]
+
+  #[Annotation]
   public static function annotatedClassMethod() { }
 }

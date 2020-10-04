@@ -1,42 +1,51 @@
 <?php namespace lang\mirrors\unittest;
 
+use lang\ElementNotFoundException;
 use lang\mirrors\TypeMirror;
 use lang\mirrors\unittest\fixture\Identity;
-use lang\ElementNotFoundException;
+use unittest\{Expect, Fixture, Other, Test, Values};
 
 class FieldAnnotationsTest extends AbstractFieldTest {
 
+  /** @return iterable */
+  private function attributes() {
+    yield ['#[Fixture(0)]', 0];
+    yield ['#[Fixture(-1)]', -1];
+    yield ['#[Fixture(0.5)]', 0.5];
+    yield ['#[Fixture(-0.5)]', -0.5];
+    yield ['#[Fixture(true)]', true];
+    yield ['#[Fixture(false)]', false];
+    yield ['#[Fixture(null)]', null];
+    yield ['#[Fixture(DIRECTORY_SEPARATOR)]', DIRECTORY_SEPARATOR];
+    yield ['#[Fixture("test")]', 'test'];
+    yield ['#[Fixture([])]', []];
+    yield ['#[Fixture([1, 2, 3])]', [1, 2, 3]];
+    yield ['#[Fixture(["key" => "value"])]', ['key' => 'value']];
+    yield ['#[Fixture(new Identity("Test"))]', new Identity('Test')];
+    yield ['#[Fixture(Identity::$NULL)]', Identity::$NULL];
+    yield ['#[Fixture(Identity::NAME)]', Identity::NAME];
+    yield ['#[Fixture(Identity::class)]', Identity::class];
+  }
+
   private $noAnnotationFixture;
 
-  #[@fixture]
+  #[Fixture]
   private $singleAnnotationFixture;
 
-  #[@fixture, @other('value')]
+  #[Fixture, Other('value')]
   private $multipleAnnotationFixture;
 
-  #[@test, @values([
-  #  ['noAnnotationFixture'],
-  #  ['singleAnnotationFixture'],
-  #  ['multipleAnnotationFixture']
-  #])]
+  #[Test, Values([['noAnnotationFixture'], ['singleAnnotationFixture'], ['multipleAnnotationFixture']])]
   public function annotations($fixture) {
     $this->assertInstanceOf('lang.mirrors.Annotations', $this->fixture($fixture)->annotations());
   }
 
-  #[@test, @values([
-  #  ['noAnnotationFixture', false],
-  #  ['singleAnnotationFixture', true],
-  #  ['multipleAnnotationFixture', true]
-  #])]
+  #[Test, Values([['noAnnotationFixture', false], ['singleAnnotationFixture', true], ['multipleAnnotationFixture', true]])]
   public function present($fixture, $outcome) {
     $this->assertEquals($outcome, $this->fixture($fixture)->annotations()->present());
   }
 
-  #[@test, @values([
-  #  ['noAnnotationFixture', []],
-  #  ['singleAnnotationFixture', ['fixture' => null]],
-  #  ['multipleAnnotationFixture', ['fixture' => null, 'other' => 'value']]
-  #])]
+  #[Test, Values([['noAnnotationFixture', []], ['singleAnnotationFixture', ['fixture' => null]], ['multipleAnnotationFixture', ['fixture' => null, 'other' => 'value']]])]
   public function all_annotations($fixture, $outcome) {
     $result= [];
     foreach ($this->fixture($fixture)->annotations() as $annotation) {
@@ -45,48 +54,27 @@ class FieldAnnotationsTest extends AbstractFieldTest {
     $this->assertEquals($outcome, $result);
   }
 
-  #[@test, @values([
-  #  ['noAnnotationFixture', false],
-  #  ['singleAnnotationFixture', true],
-  #  ['multipleAnnotationFixture', true]
-  #])]
+  #[Test, Values([['noAnnotationFixture', false], ['singleAnnotationFixture', true], ['multipleAnnotationFixture', true]])]
   public function provides_fixture_annotation($fixture, $outcome) {
     $this->assertEquals($outcome, $this->fixture($fixture)->annotations()->provides('fixture'));
   }
 
-  #[@test, @values(['singleAnnotationFixture', 'multipleAnnotationFixture'])]
+  #[Test, Values(['singleAnnotationFixture', 'multipleAnnotationFixture'])]
   public function fixture_annotation_name($fixture) {
     $this->assertEquals('fixture', $this->fixture($fixture)->annotations()->named('fixture')->name());
   }
 
-  #[@test, @values(['singleAnnotationFixture', 'multipleAnnotationFixture'])]
+  #[Test, Values(['singleAnnotationFixture', 'multipleAnnotationFixture'])]
   public function fixture_annotation_value($fixture) {
     $this->assertNull($this->fixture($fixture)->annotations()->named('fixture')->value());
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function named_raises_exception_when_given_non_existant_annotation() {
     $this->fixture('noAnnotationFixture')->annotations()->named('fixture');
   }
 
-  #[@test, @values([
-  #  ['#[@fixture(0)]', 0],
-  #  ['#[@fixture(-1)]', -1],
-  #  ['#[@fixture(0.5)]', 0.5],
-  #  ['#[@fixture(-0.5)]', -0.5],
-  #  ['#[@fixture(true)]', true],
-  #  ['#[@fixture(false)]', false],
-  #  ['#[@fixture(null)]', null],
-  #  ['#[@fixture(DIRECTORY_SEPARATOR)]', DIRECTORY_SEPARATOR],
-  #  ['#[@fixture("test")]', 'test'],
-  #  ['#[@fixture([])]', []],
-  #  ['#[@fixture([1, 2, 3])]', [1, 2, 3]],
-  #  ['#[@fixture(["key" => "value"])]', ['key' => 'value']],
-  #  ['#[@fixture(new Identity("Test"))]', new Identity('Test')],
-  #  ['#[@fixture(Identity::$NULL)]', Identity::$NULL],
-  #  ['#[@fixture(Identity::NAME)]', Identity::NAME],
-  #  ['#[@fixture(Identity::class)]', Identity::class]
-  #])]
+  #[Test, Values('attributes')]
   public function values($annotation, $expected) {
     $type= $this->mirror("{ ".$annotation."\npublic \$fixture; }");
     $this->assertEquals(
@@ -95,7 +83,7 @@ class FieldAnnotationsTest extends AbstractFieldTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function closures() {
     $type= $this->mirror("{ #[@fixture(function() { return 'Test'; })]\npublic \$fixture; }");
     $function= $type->fields()->named('fixture')->annotations()->named('fixture')->value();

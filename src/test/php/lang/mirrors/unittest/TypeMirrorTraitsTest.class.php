@@ -2,6 +2,7 @@
 
 use lang\mirrors\TypeMirror;
 use lang\mirrors\unittest\fixture\FixtureTrait;
+use unittest\Test;
 
 class TypeMirrorTraitsTest extends \unittest\TestCase {
   use FixtureTrait;
@@ -11,18 +12,18 @@ class TypeMirrorTraitsTest extends \unittest\TestCase {
     $this->fixture= new TypeMirror(self::class);
   }
 
-  #[@test]
+  #[Test]
   public function contains_trait_class() {
     $this->assertTrue($this->fixture->traits()->contains(FixtureTrait::class));
   }
 
-  #[@test]
+  #[Test]
   public function contains_trait_mirror() {
     $this->assertTrue($this->fixture->traits()->contains(new TypeMirror(FixtureTrait::class)));
   }
 
 
-  #[@test]
+  #[Test]
   public function all_traits() {
     $this->assertEquals([new TypeMirror(FixtureTrait::class)], iterator_to_array($this->fixture->traits()));
   }

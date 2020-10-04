@@ -1,7 +1,8 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\ElementNotFoundException;
+use lang\mirrors\TypeMirror;
+use unittest\{Expect, Test};
 
 #[@fixture]
 class TypeMirrorAnnotationsTest extends \unittest\TestCase {
@@ -11,27 +12,27 @@ class TypeMirrorAnnotationsTest extends \unittest\TestCase {
     $this->fixture= new TypeMirror(self::class);
   }
 
-  #[@test]
+  #[Test]
   public function provides_annotation() {
     $this->assertTrue($this->fixture->annotations()->provides('fixture'));
   }
 
-  #[@test]
+  #[Test]
   public function does_not_provide_non_existant() {
     $this->assertFalse($this->fixture->annotations()->provides('does-not-exist'));
   }
 
-  #[@test]
+  #[Test]
   public function annotation_named() {
     $this->assertInstanceOf('lang.mirrors.Annotation', $this->fixture->annotations()->named('fixture'));
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function no_annotation_named() {
     $this->fixture->annotations()->named('does-not-exist');
   }
 
-  #[@test]
+  #[Test]
   public function all_annotations() {
     $result= [];
     foreach ($this->fixture->annotations() as $annotation) {

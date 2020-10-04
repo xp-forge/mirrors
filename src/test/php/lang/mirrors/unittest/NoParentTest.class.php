@@ -1,13 +1,13 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
-use lang\IllegalStateException;
-use lang\ClassFormatException;
+use lang\{ClassFormatException, IllegalStateException};
+use unittest\{Expect, Test};
 
 abstract class NoParentTest extends \unittest\TestCase {
   use TypeDefinition;
 
-  #[@test, @expect(IllegalStateException::class)]
+  #[Test, Expect(IllegalStateException::class)]
   public function return_type() {
     $this->mirror('{ /** @return parent */ public function fixture() { } }', [])
       ->methods()
@@ -16,7 +16,7 @@ abstract class NoParentTest extends \unittest\TestCase {
     ;
   }
 
-  #[@test, @expect(IllegalStateException::class)]
+  #[Test, Expect(IllegalStateException::class)]
   public function parameter_type() {
     $this->mirror('{ /** @param parent */ public function fixture($param) { } }', [])
       ->methods()
@@ -27,7 +27,7 @@ abstract class NoParentTest extends \unittest\TestCase {
     ;
   }
 
-  #[@test, @expect(ClassFormatException::class)]
+  #[Test, Expect(ClassFormatException::class)]
   public function annotation_value() {
     $this->mirror("{ #[@fixture(new parent())]\npublic function fixture() { } }", [])
       ->methods()

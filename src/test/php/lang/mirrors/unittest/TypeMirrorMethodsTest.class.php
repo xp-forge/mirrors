@@ -1,11 +1,9 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
-use lang\mirrors\Method;
-use lang\mirrors\Methods;
-use lang\mirrors\Member;
 use lang\ElementNotFoundException;
 use lang\mirrors\unittest\fixture\MemberFixture;
+use lang\mirrors\{Member, Method, Methods, TypeMirror};
+use unittest\{Expect, Test};
 
 class TypeMirrorMethodsTest extends \unittest\TestCase {
   private $fixture;
@@ -26,32 +24,32 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     $this->fixture= new TypeMirror(MemberFixture::class);
   }
 
-  #[@test]
+  #[Test]
   public function provides_method() {
     $this->assertTrue($this->fixture->methods()->provides('publicInstanceMethod'));
   }
 
-  #[@test]
+  #[Test]
   public function does_not_provide_non_existant() {
     $this->assertFalse($this->fixture->methods()->provides('does-not-exist'));
   }
 
-  #[@test]
+  #[Test]
   public function does_not_provide_constructor() {
     $this->assertFalse($this->fixture->methods()->provides('__construct'));
   }
 
-  #[@test]
+  #[Test]
   public function method_named() {
     $this->assertInstanceOf('lang.mirrors.Method', $this->fixture->methods()->named('publicInstanceMethod'));
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function no_method_named() {
     $this->fixture->methods()->named('does-not-exist');
   }
 
-  #[@test]
+  #[Test]
   public function all_methods_by_iterating_methods_directly() {
     $this->assertEquals(
       [
@@ -71,7 +69,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function all_methods() {
     $this->assertEquals(
       [
@@ -91,7 +89,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function declared_methods() {
     $this->assertEquals(
       [
@@ -110,7 +108,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function instance_methods_via_deprecated_of() {
     $this->assertEquals(
       [
@@ -126,7 +124,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function static_methods_via_deprecated_of() {
     $this->assertEquals(
       [
@@ -139,7 +137,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function instance_methods() {
     $this->assertEquals(
       [
@@ -155,7 +153,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function static_methods() {
     $this->assertEquals(
       [
@@ -168,7 +166,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function annotated_methods() {
     $this->assertEquals(
       [
@@ -179,7 +177,7 @@ class TypeMirrorMethodsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function methods_by_predicate() {
     $namedTrait= function($member) { return (bool)strstr($member->name(), 'trait'); };
     $this->assertEquals(

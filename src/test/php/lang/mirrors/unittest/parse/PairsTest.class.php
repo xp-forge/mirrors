@@ -1,16 +1,16 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\mirrors\parse\Pairs;
-use lang\mirrors\parse\Value;
+use lang\mirrors\parse\{Pairs, Value};
+use unittest\Test;
 
 class PairsTest extends ResolveableTest {
 
-  #[@test]
+  #[Test]
   public function empty_pairs() {
     $this->assertEquals([], (new Pairs([]))->resolve($this->source));
   }
 
-  #[@test]
+  #[Test]
   public function one_pair() {
     $this->assertEquals(
       ['key' => 'value'],
@@ -18,7 +18,7 @@ class PairsTest extends ResolveableTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function two_pairs() {
     $this->assertEquals(
       ['a' => 1, 'b' => 2],

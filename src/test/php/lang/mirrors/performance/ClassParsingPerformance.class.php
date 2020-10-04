@@ -1,8 +1,8 @@
 <?php namespace lang\mirrors\performance;
 
-use lang\mirrors\parse\ClassSyntax;
-use lang\mirrors\parse\ClassSource;
 use lang\XPClass;
+use lang\mirrors\parse\{ClassSource, ClassSyntax};
+use unittest\{Measure, Values};
 
 class ClassParsingPerformance extends \util\profiling\Measurable {
 
@@ -15,13 +15,13 @@ class ClassParsingPerformance extends \util\profiling\Measurable {
     ];
   }
 
-  #[@measure, @values('classes')]
+  #[Measure, Values('classes')]
   public function codeUnitOf($class) {
     $unit= (new ClassSyntax())->codeUnitOf($class->getName())->declaration();
     return isset($unit['name']);
   }
 
-  #[@measure, @values('classes')]
+  #[Measure, Values('classes')]
   public function parseDetails($class) {
     $details= XPClass::detailsForClass($class->getName());
     return isset($details['class']);

@@ -1,13 +1,12 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\mirrors\parse\ArrayTypeRef;
-use lang\mirrors\parse\TypeRef;
-use lang\ArrayType;
-use lang\Type;
+use lang\mirrors\parse\{ArrayTypeRef, TypeRef};
+use lang\{ArrayType, Type};
+use unittest\Test;
 
 class ArrayTypeRefTest extends ResolveableTest {
 
-  #[@test]
+  #[Test]
   public function component_type_resolved() {
     $this->assertEquals(
       new ArrayType(Type::$VAR),

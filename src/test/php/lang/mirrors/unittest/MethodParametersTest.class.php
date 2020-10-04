@@ -1,11 +1,8 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\Parameter;
-use lang\mirrors\Annotation;
-use lang\mirrors\TypeMirror;
-use lang\Type;
-use lang\Value;
-use lang\ElementNotFoundException;
+use lang\mirrors\{Annotation, Parameter, TypeMirror};
+use lang\{ElementNotFoundException, Type, Value};
+use unittest\{Expect, Test, Values};
 
 class MethodParametersTest extends AbstractMethodTest {
 
@@ -38,29 +35,17 @@ class MethodParametersTest extends AbstractMethodTest {
    */
   private function longFormParameterFixture($fixture, $other) { }
 
-  #[@$fixture: annotation]
-  private function annotatedParameterFixture($fixture) { }
+  private function annotatedParameterFixture(
+    #[Annotation]
+    $fixture
+  ) { }
 
-  #[@test, @values([
-  #  ['noParameterFixture', false],
-  #  ['singleParameterFixture', true],
-  #  ['multipleParameterFixture', true]
-  #])]
+  #[Test, Values([['noParameterFixture', false], ['singleParameterFixture', true], ['multipleParameterFixture', true]])]
   public function present($fixture, $outcome) {
     $this->assertEquals($outcome, $this->fixture($fixture)->parameters()->present());
   }
 
-  #[@test, @values([
-  #  ['noParameterFixture', []],
-  #  ['singleParameterFixture', ['fixture' => 'var']],
-  #  ['multipleParameterFixture', ['fixture' => 'var', 'other' => 'var']],
-  #  ['arrayParameterFixture', ['fixture' => 'array']],
-  #  ['callableParameterFixture', ['fixture' => 'callable']],
-  #  ['valueParameterFixture', ['fixture' => 'lang.Value']],
-  #  ['selfParameterFixture', ['fixture' => 'lang.mirrors.unittest.MethodParametersTest']],
-  #  ['shortFormParameterFixture', ['fixture' => 'string']],
-  #  ['longFormParameterFixture', ['fixture' => 'int', 'other' => 'lang.mirrors.unittest.MethodParametersTest[]']]
-  #])]
+  #[Test, Values([['noParameterFixture', []], ['singleParameterFixture', ['fixture' => 'var']], ['multipleParameterFixture', ['fixture' => 'var', 'other' => 'var']], ['arrayParameterFixture', ['fixture' => 'array']], ['callableParameterFixture', ['fixture' => 'callable']], ['valueParameterFixture', ['fixture' => 'lang.Value']], ['selfParameterFixture', ['fixture' => 'lang.mirrors.unittest.MethodParametersTest']], ['shortFormParameterFixture', ['fixture' => 'string']], ['longFormParameterFixture', ['fixture' => 'int', 'other' => 'lang.mirrors.unittest.MethodParametersTest[]']]])]
   public function all_parameters($fixture, $outcome) {
     $result= [];
     foreach ($this->fixture($fixture)->parameters() as $parameter) {
@@ -69,55 +54,47 @@ class MethodParametersTest extends AbstractMethodTest {
     $this->assertEquals($outcome, $result);
   }
 
-  #[@test, @values([
-  #  ['noParameterFixture', false],
-  #  ['singleParameterFixture', true],
-  #  ['multipleParameterFixture', true]
-  #])]
+  #[Test, Values([['noParameterFixture', false], ['singleParameterFixture', true], ['multipleParameterFixture', true]])]
   public function provides_fixture_parameter($fixture, $outcome) {
     $this->assertEquals($outcome, $this->fixture($fixture)->parameters()->provides('fixture'));
   }
 
-  #[@test, @values(['singleParameterFixture', 'multipleParameterFixture'])]
+  #[Test, Values(['singleParameterFixture', 'multipleParameterFixture'])]
   public function fixture_parameter_name($fixture) {
     $this->assertEquals('fixture', $this->fixture($fixture)->parameters()->named('fixture')->name());
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function named_raises_exception_when_given_non_existant_parameter() {
     $this->fixture('noParameterFixture')->parameters()->named('fixture');
   }
 
-  #[@test, @values(['singleParameterFixture', 'multipleParameterFixture'])]
+  #[Test, Values(['singleParameterFixture', 'multipleParameterFixture'])]
   public function first_parameter_name($fixture) {
     $this->assertEquals('fixture', $this->fixture($fixture)->parameters()->first()->name());
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function first_raises_exception_when_no_parameters_exist() {
     $this->assertEquals('fixture', $this->fixture('noParameterFixture')->parameters()->first());
   }
 
-  #[@test, @values(['singleParameterFixture', 'multipleParameterFixture'])]
+  #[Test, Values(['singleParameterFixture', 'multipleParameterFixture'])]
   public function at_0($fixture) {
     $this->assertEquals('fixture', $this->fixture($fixture)->parameters()->at(0)->name());
   }
 
-  #[@test]
+  #[Test]
   public function at_1() {
     $this->assertEquals('other', $this->fixture('multipleParameterFixture')->parameters()->at(1)->name());
   }
 
-  #[@test, @values([
-  #  ['noParameterFixture', 0],
-  #  ['singleParameterFixture', 1],
-  #  ['multipleParameterFixture', 2]
-  #])]
+  #[Test, Values([['noParameterFixture', 0], ['singleParameterFixture', 1], ['multipleParameterFixture', 2]])]
  public function length($fixture, $expect) {
     $this->assertEquals($expect, $this->fixture($fixture)->parameters()->length());
   }
 
-  #[@test]
+  #[Test]
   public function resolved() {
     $this->assertEquals(
       Type::forName('lang.mirrors.Parameter'),
@@ -125,7 +102,7 @@ class MethodParametersTest extends AbstractMethodTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function annotations() {
     $this->assertEquals(
       [new Annotation($this->type, 'annotation', null)],

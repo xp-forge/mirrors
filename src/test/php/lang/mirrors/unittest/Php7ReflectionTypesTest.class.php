@@ -1,7 +1,6 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\Sources;
-use lang\mirrors\TypeMirror;
+use lang\mirrors\{Sources, TypeMirror};
 use unittest\actions\RuntimeVersion;
 
 #[@action(new RuntimeVersion('>=7.0.0-dev'))]

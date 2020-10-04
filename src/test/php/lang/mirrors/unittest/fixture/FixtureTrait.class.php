@@ -5,12 +5,12 @@ trait FixtureTrait {
   /** @type int */
   private $traitField;
 
-  #[@fixture]
+  #[Fixture]
   private $annotatedTraitField;
 
   /** @return void */
   private function traitMethod() { }
 
-  #[@fixture]
+  #[Fixture]
   private function annotatedTraitMethod() { }
 }

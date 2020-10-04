@@ -1,7 +1,8 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\ElementNotFoundException;
+use lang\mirrors\TypeMirror;
+use unittest\{Expect, Test};
 
 class TypeMirrorConstantsTest extends \unittest\TestCase {
   private $fixture;
@@ -11,27 +12,27 @@ class TypeMirrorConstantsTest extends \unittest\TestCase {
     $this->fixture= new TypeMirror(self::class);
   }
 
-  #[@test]
+  #[Test]
   public function provides_constant() {
     $this->assertTrue($this->fixture->constants()->provides('CONSTANT'));
   }
 
-  #[@test]
+  #[Test]
   public function does_not_provide_non_existant() {
     $this->assertFalse($this->fixture->constants()->provides('does-not-exist'));
   }
 
-  #[@test]
+  #[Test]
   public function constant_named() {
     $this->assertInstanceOf('lang.mirrors.Constant', $this->fixture->constants()->named('CONSTANT'));
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function no_constant_named() {
     $this->fixture->constants()->named('does-not-exist');
   }
 
-  #[@test]
+  #[Test]
   public function all_constants() {
     $result= [];
     foreach ($this->fixture->constants() as $constant) {

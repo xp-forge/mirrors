@@ -1,14 +1,12 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\mirrors\parse\FunctionTypeRef;
-use lang\mirrors\parse\TypeRef;
-use lang\FunctionType;
-use lang\Type;
-use lang\Primitive;
+use lang\mirrors\parse\{FunctionTypeRef, TypeRef};
+use lang\{FunctionType, Primitive, Type};
+use unittest\Test;
 
 class FunctionTypeRefTest extends ResolveableTest {
 
-  #[@test]
+  #[Test]
   public function empty_parameter_list() {
     $this->assertEquals(
       new FunctionType([], Type::$VOID),
@@ -16,7 +14,7 @@ class FunctionTypeRefTest extends ResolveableTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function one_parameter() {
     $this->assertEquals(
       new FunctionType([Type::$VAR], Primitive::$BOOL),
@@ -24,7 +22,7 @@ class FunctionTypeRefTest extends ResolveableTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function two_parameters() {
     $this->assertEquals(
       new FunctionType([Type::$VAR, Primitive::$STRING], Primitive::$INT),

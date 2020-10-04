@@ -1,9 +1,8 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
-use lang\mirrors\Sources;
-use lang\mirrors\unittest\fixture\Identity;
 use lang\ClassLoader;
+use lang\mirrors\unittest\fixture\Identity;
+use lang\mirrors\{Sources, TypeMirror};
 
 trait TypeDefinition {
   private static $fixtures= [];

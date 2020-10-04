@@ -1,30 +1,31 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use unittest\Test;
 
 #[@fixture]
 class ShortcutsTest extends \unittest\TestCase {
   use TypeDefinition;
 
-  #[@test]
+  #[Test]
   public function method_by_name() {
     $mirror= $this->mirror('{ public function fixture() { } }');
     $this->assertEquals($mirror->methods()->named('fixture'), $mirror->method('fixture'));
   }
 
-  #[@test]
+  #[Test]
   public function field_by_name() {
     $mirror= $this->mirror('{ public $fixture; }');
     $this->assertEquals($mirror->fields()->named('fixture'), $mirror->field('fixture'));
   }
 
-  #[@test]
+  #[Test]
   public function type_annotation_by_name() {
     $mirror= new TypeMirror(typeof($this));
     $this->assertEquals($mirror->annotations()->named('fixture'), $mirror->annotation('fixture'));
   }
 
-  #[@test]
+  #[Test]
   public function method_parameter_by_name() {
     $mirror= $this->mirror('{ public function fixture($test) { } }');
     $this->assertEquals(
@@ -33,7 +34,7 @@ class ShortcutsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function method_parameter_by_position() {
     $mirror= $this->mirror('{ public function fixture($test) { } }');
     $this->assertEquals(
@@ -42,7 +43,7 @@ class ShortcutsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function method_annotation_by_name() {
     $mirror= $this->mirror("{ #[@test]\npublic function fixture() { } }");
     $this->assertEquals(
@@ -51,7 +52,7 @@ class ShortcutsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function field_annotation_by_name() {
     $mirror= $this->mirror("{ #[@test]\npublic \$fixture; }");
     $this->assertEquals(

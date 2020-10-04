@@ -1,11 +1,10 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\Primitive;
-use lang\Type;
-use lang\XPClass;
 use lang\mirrors\TypeMirror;
-use unittest\actions\RuntimeVersion;
 use lang\mirrors\unittest\fixture\FixtureBase;
+use lang\{Primitive, Type, XPClass};
+use unittest\actions\RuntimeVersion;
+use unittest\{Action, Test};
 
 abstract class Php7TypesTest extends \unittest\TestCase {
   use TypeDefinition;
@@ -18,7 +17,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
    */
   protected abstract function newFixture($class);
 
-  #[@test]
+  #[Test]
   public function primitive_return_type() {
     $fixture= $this->define('{
       public function fixture(): int { return 0; }
@@ -27,7 +26,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function array_return_type() {
     $fixture= $this->define('{
       public function fixture(): array { return []; }
@@ -36,7 +35,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Type::$ARRAY, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function callable_return_type() {
     $fixture= $this->define('{
       public function fixture(): callable { return []; }
@@ -45,7 +44,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Type::$CALLABLE, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function self_return_type() {
     $fixture= $this->define('{
       public function fixture(): self { return new self(); }
@@ -54,7 +53,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals($fixture, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function parent_return_type() {
     $fixture= $this->define(
       '{ public function fixture(): parent { return new parent(); } }',
@@ -64,7 +63,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(new XPClass(FixtureBase::class), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function value_return_type() {
     $fixture= $this->define('{
       public function fixture(): \lang\Value { /* TBI */ }
@@ -73,7 +72,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(XPClass::forName('lang.Value'), $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test, @action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
+  #[Test, Action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
   public function void_return_type() {
     $fixture= $this->define('{
       public function fixture(): void { }
@@ -82,7 +81,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Type::$VOID, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[Test, Action(new RuntimeVersion('>=7.1.0-dev'))]
   public function nullable_return_type() {
     $fixture= $this->define('{
       public function fixture(): ?string { return null; }
@@ -91,7 +90,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Primitive::$STRING, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test, @action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
+  #[Test, Action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
   public function iterable_return_type() {
     $fixture= $this->define('{
       public function fixture(): iterable { return null; }
@@ -100,7 +99,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Type::$ITERABLE, $this->newFixture($fixture)->methods()->named('fixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function primitive_parameter_type() {
     $fixture= $this->define('{
       public function fixture(int $param) { }
@@ -109,7 +108,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[Test, Action(new RuntimeVersion('>=7.1.0-dev'))]
   public function nullable_parameter_type() {
     $fixture= $this->define('{
       public function fixture(?int $param) { }
@@ -118,7 +117,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals(Primitive::$INT, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 
-  #[@test]
+  #[Test]
   public function self_parameter_type() {
     $fixture= $this->define('{
       public function fixture(self $param) { }
@@ -127,7 +126,7 @@ abstract class Php7TypesTest extends \unittest\TestCase {
     $this->assertEquals($fixture, $this->newFixture($fixture)->methods()->named('fixture')->parameters()->first()->type());
   }
 
-  #[@test, @action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
+  #[Test, Action([new RuntimeVersion('>=7.1.0-dev'), new NotOnHHVM()])]
   public function iterable_parameter_type() {
     $fixture= $this->define('{
       public function fixture(iterable $param) { }

@@ -1,6 +1,7 @@
 <?php namespace lang\mirrors\unittest;
 
 use lang\mirrors\TypeMirror;
+use unittest\Test;
 
 class MethodCommentsTest extends AbstractMethodTest {
 
@@ -16,17 +17,17 @@ class MethodCommentsTest extends AbstractMethodTest {
    */
   private function longCommentFixture() { }
 
-  #[@test]
+  #[Test]
   public function no_comment() {
     $this->assertNull($this->fixture('noCommentFixture')->comment());
   }
 
-  #[@test]
+  #[Test]
   public function short_comment() {
     $this->assertNull($this->fixture('shortCommentFixture')->comment());
   }
 
-  #[@test]
+  #[Test]
   public function long_comment() {
     $this->assertEquals('Test', $this->fixture('longCommentFixture')->comment());
   }

@@ -1,13 +1,12 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\mirrors\parse\MapTypeRef;
-use lang\mirrors\parse\TypeRef;
-use lang\MapType;
-use lang\Type;
+use lang\mirrors\parse\{MapTypeRef, TypeRef};
+use lang\{MapType, Type};
+use unittest\Test;
 
 class MapTypeRefTest extends ResolveableTest {
 
-  #[@test]
+  #[Test]
   public function component_type_resolved() {
     $this->assertEquals(
       new MapType(Type::$VAR),

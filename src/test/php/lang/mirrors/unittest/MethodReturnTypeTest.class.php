@@ -1,9 +1,8 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
-use lang\mirrors\Method;
-use lang\Type;
-use lang\Primitive;
+use lang\mirrors\{Method, TypeMirror};
+use lang\{Primitive, Type};
+use unittest\Test;
 use unittest\actions\VerifyThat;
 
 class MethodReturnTypeTest extends AbstractMethodTest {
@@ -35,47 +34,47 @@ class MethodReturnTypeTest extends AbstractMethodTest {
   /** @return Method */
   private function resolved() { }
 
-  #[@test]
+  #[Test]
   public function var_is_default_if_no_return_type_documented() {
     $this->assertEquals(Type::$VAR, $this->fixture('noReturnFixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function short_form() {
     $this->assertEquals(Type::$VOID, $this->fixture('shortFormFixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function long_form() {
     $this->assertEquals(Primitive::$STRING, $this->fixture('longFormFixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function self_supported() {
     $this->assertEquals(typeof($this), $this->fixture('selfFixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function parent_supported() {
     $this->assertEquals(typeof($this)->getParentclass(), $this->fixture('parentFixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function iterable_supported() {
     $this->assertEquals(property_exists(Type::class, 'ITERABLE') ? Type::$ITERABLE : Type::$VAR, $this->fixture('iterableFixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function object_supported() {
     $this->assertEquals(property_exists(Type::class, 'OBJECT') ? Type::$OBJECT : Type::$VAR, $this->fixture('objectFixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function returns() {
     $this->assertEquals(Type::forName('lang.mirrors.Method'), $this->fixture('fixture')->returns());
   }
 
-  #[@test]
+  #[Test]
   public function returns_is_resolved() {
     $this->assertEquals(Type::forName('lang.mirrors.Method'), $this->fixture('resolved')->returns());
   }

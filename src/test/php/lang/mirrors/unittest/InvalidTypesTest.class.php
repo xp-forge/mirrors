@@ -1,7 +1,8 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\TypeMirror;
 use lang\Type;
+use lang\mirrors\TypeMirror;
+use unittest\{Test, Values};
 
 class InvalidTypesTest extends \unittest\TestCase {
   use TypeDefinition;
@@ -19,13 +20,13 @@ class InvalidTypesTest extends \unittest\TestCase {
     ];
   }
 
-  #[@test, @values('invalidDeclarations')]
+  #[Test, Values('invalidDeclarations')]
   public function invalid_return_type($declaration) {
     $mirror= $this->mirror('{ /** @return '.$declaration.' */ public function fixture() { } }');
     $this->assertEquals(Type::$VAR, $mirror->method('fixture')->returns());
   }
 
-  #[@test, @values('invalidDeclarations')]
+  #[Test, Values('invalidDeclarations')]
   public function invalid_parametern_type($declaration) {
     $mirror= $this->mirror('{ /** @param '.$declaration.' */ public function fixture($param) { } }');
     $this->assertEquals(Type::$VAR, $mirror->method('fixture')->parameter('param')->type());

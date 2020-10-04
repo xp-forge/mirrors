@@ -1,10 +1,10 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\Annotation;
-use lang\mirrors\TypeMirror;
 use lang\mirrors\parse\Value;
+use lang\mirrors\{Annotation, TypeMirror};
+use unittest\{Test, TestCase};
 
-class AnnotationTest extends \unittest\TestCase {
+class AnnotationTest extends TestCase {
   private $type;
 
   /** @return void */
@@ -12,27 +12,27 @@ class AnnotationTest extends \unittest\TestCase {
     $this->type= new TypeMirror(self::class);
   }
 
-  #[@test]
+  #[Test]
   public function name() {
     $this->assertEquals('name', (new Annotation($this->type, 'name', null))->name());
   }
 
-  #[@test]
+  #[Test]
   public function null_value() {
     $this->assertNull((new Annotation($this->type, 'name', null))->value());
   }
 
-  #[@test]
+  #[Test]
   public function value() {
     $this->assertEquals('Test', (new Annotation($this->type, 'name', new Value('Test')))->value());
   }
 
-  #[@test]
+  #[Test]
   public function declaredIn() {
     $this->assertEquals($this->type, (new Annotation($this->type, 'fixture', null))->declaredIn());
   }
 
-  #[@test]
+  #[Test]
   public function string_representation_without_value() {
     $this->assertEquals(
       'lang.mirrors.Annotation(@test)',
@@ -40,7 +40,7 @@ class AnnotationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function string_representation() {
     $this->assertEquals(
       'lang.mirrors.Annotation(@test("Test"))',

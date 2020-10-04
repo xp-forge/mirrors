@@ -1,50 +1,42 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\ClassLoader;
-use lang\Error;
-use lang\IllegalArgumentException;
-use lang\mirrors\Constructor;
-use lang\mirrors\Modifiers;
-use lang\mirrors\TargetInvocationException;
-use lang\mirrors\TypeMirror;
-use lang\mirrors\unittest\fixture\FixtureAbstract;
-use lang\mirrors\unittest\fixture\FixtureBase;
-use lang\mirrors\unittest\fixture\FixtureInterface;
-use lang\mirrors\unittest\fixture\FixtureTrait;
-use unittest\actions\RuntimeVersion;
+use lang\mirrors\unittest\fixture\{FixtureAbstract, FixtureBase, FixtureInterface, FixtureTrait};
+use lang\mirrors\{Constructor, Modifiers, TargetInvocationException, TypeMirror};
+use lang\{ClassLoader, Error, IllegalArgumentException};
+use unittest\{Expect, Test, TestCase};
 
-class ConstructorTest extends \unittest\TestCase {
+class ConstructorTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function can_create() {
     new Constructor(new TypeMirror('unittest.TestCase'));
   }
 
-  #[@test]
+  #[Test]
   public function this_class_constructors_declaring_type() {
     $type= new TypeMirror(self::class);
     $this->assertEquals($type->parent(), (new Constructor($type))->declaredIn());
   }
 
-  #[@test]
+  #[Test]
   public function this_classes_constructor_has_one_parameter() {
     $type= new TypeMirror(self::class);
     $this->assertEquals(1, (new Constructor($type))->parameters()->length());
   }
 
-  #[@test]
+  #[Test]
   public function base_classes_constructor_has_no_params() {
     $type= new TypeMirror(FixtureBase::class);
     $this->assertEquals(0, (new Constructor($type))->parameters()->length());
   }
 
-  #[@test]
+  #[Test]
   public function base_classes_constructor_is_public() {
     $type= new TypeMirror(FixtureBase::class);
     $this->assertEquals(new Modifiers('public'), (new Constructor($type))->modifiers());
   }
 
-  #[@test]
+  #[Test]
   public function creating_new_object_instances() {
     $this->assertInstanceOf(
       FixtureBase::class,
@@ -52,7 +44,7 @@ class ConstructorTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function creating_instances_invokes_constructor() {
     $fixture= newinstance(FixtureBase::class, [], '{
       public $passed= null;
@@ -64,7 +56,7 @@ class ConstructorTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(TargetInvocationException::class)]
+  #[Test, Expect(TargetInvocationException::class)]
   public function creating_instances_wraps_exceptions() {
     $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
       '__construct' => function($arg) { throw new IllegalArgumentException('Test'); }
@@ -72,7 +64,7 @@ class ConstructorTest extends \unittest\TestCase {
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
   }
 
-  #[@test, @expect(TargetInvocationException::class)]
+  #[Test, Expect(TargetInvocationException::class)]
   public function creating_instances_wraps_argument_mismatch_exceptions() {
     $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
       '__construct' => function(TypeMirror $arg) { }
@@ -80,7 +72,7 @@ class ConstructorTest extends \unittest\TestCase {
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
   }
 
-  #[@test, @expect(TargetInvocationException::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[Test, Expect(TargetInvocationException::class)]
   public function creating_instances_wraps_errors() {
     $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
       '__construct' => function($arg) { $arg->invoke(); }
@@ -88,7 +80,7 @@ class ConstructorTest extends \unittest\TestCase {
     (new Constructor(new TypeMirror($fixture)))->newInstance(null);
   }
 
-  #[@test]
+  #[Test]
   public function sets_cause_for_exceptions_thrown() {
     try {
       $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
@@ -101,7 +93,7 @@ class ConstructorTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[Test]
   public function sets_cause_for_errors_raised() {
     try {
       $fixture= ClassLoader::defineClass($this->name, FixtureBase::class, [], [
@@ -114,22 +106,22 @@ class ConstructorTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_interfaces() {
     (new Constructor(new TypeMirror(FixtureInterface::class)))->newInstance();
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_traits() {
     (new Constructor(new TypeMirror(FixtureTrait::class)))->newInstance();
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function cannot_create_instances_from_abstract_classes() {
     (new Constructor(new TypeMirror(FixtureAbstract::class)))->newInstance();
   }
 
-  #[@test]
+  #[Test]
   public function string_representation() {
     $this->assertEquals(
       'lang.mirrors.Constructor(public __construct(string $name))',

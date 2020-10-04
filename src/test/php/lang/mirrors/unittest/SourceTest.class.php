@@ -1,35 +1,20 @@
 <?php namespace lang\mirrors\unittest;
 
-use lang\mirrors\Modifiers;
-use lang\mirrors\Kind;
-use lang\Closeable;
-use lang\XPClass;
-use lang\Type;
-use lang\ElementNotFoundException;
-use lang\mirrors\unittest\fixture\AbstractMemberFixture;
-use lang\mirrors\unittest\fixture\MemberFixture;
-use lang\mirrors\unittest\fixture\FixtureAbstract;
-use lang\mirrors\unittest\fixture\FixtureBase;
-use lang\mirrors\unittest\fixture\FixtureCloseable;
-use lang\mirrors\unittest\fixture\FixtureEnum;
-use lang\mirrors\unittest\fixture\FixtureFinal;
-use lang\mirrors\unittest\fixture\FixtureImpl;
-use lang\mirrors\unittest\fixture\FixtureInterface;
-use lang\mirrors\unittest\fixture\FixtureParams;
-use lang\mirrors\unittest\fixture\FixtureTrait;
-use lang\mirrors\unittest\fixture\FixtureUsed;
-use lang\mirrors\unittest\fixture\FixtureUses;
+use lang\mirrors\unittest\fixture\{AbstractMemberFixture, FixtureAbstract, FixtureBase, FixtureCloseable, FixtureEnum, FixtureFinal, FixtureImpl, FixtureInterface, FixtureParams, FixtureTrait, FixtureUsed, FixtureUses, MemberFixture};
+use lang\mirrors\{Kind, Modifiers};
+use lang\{Closeable, ElementNotFoundException, Type, XPClass};
+use unittest\{Expect, Fixture, Test};
 
 /**
  * Base class for source implementation testing
  */
-#[@fixture]
+#[Fixture]
 abstract class SourceTest extends \unittest\TestCase {
 
-  #[@fixture]
+  #[Fixture]
   private $field;
 
-  #[@fixture]
+  #[Fixture]
   private function method() { }
 
   /**
@@ -52,22 +37,22 @@ abstract class SourceTest extends \unittest\TestCase {
    */
   protected abstract function reflect($name);
 
-  #[@test]
+  #[Test]
   public function typeName() {
     $this->assertEquals('lang.mirrors.unittest.SourceTest', $this->reflect(self::class)->typeName());
   }
 
-  #[@test]
+  #[Test]
   public function typeDeclaration() {
     $this->assertEquals('SourceTest', $this->reflect(self::class)->typeDeclaration());
   }
 
-  #[@test]
+  #[Test]
   public function typeInstance() {
     $this->assertEquals(new XPClass(self::class), $this->reflect(self::class)->typeInstance());
   }
 
-  #[@test]
+  #[Test]
   public function typeComment() {
     $this->assertEquals(
       "/**\n * Base class for source implementation testing\n */",
@@ -75,97 +60,97 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function typeComment_for_undocumented_class() {
     $this->assertNull($this->reflect(FixtureTrait::class)->typeComment());
   }
 
-  #[@test]
+  #[Test]
   public function packageName() {
     $this->assertEquals('lang.mirrors.unittest', $this->reflect(self::class)->packageName());
   }
 
-  #[@test]
+  #[Test]
   public function typeParent_of_this_class() {
     $this->assertEquals($this->reflect(parent::class), $this->reflect(self::class)->typeParent());
   }
 
-  #[@test]
+  #[Test]
   public function typeParent_of_parentless_class() {
     $this->assertNull($this->reflect(AbstractMemberFixture::class)->typeParent());
   }
 
-  #[@test]
+  #[Test]
   public function typeAnnotations_of_this_class() {
     $this->assertEquals(['fixture' => null], $this->reflect(self::class)->typeAnnotations());
   }
 
-  #[@test]
+  #[Test]
   public function typeAnnotations_of_annotationless_class() {
     $this->assertNull($this->reflect(AbstractMemberFixture::class)->typeAnnotations());
   }
 
-  #[@test]
+  #[Test]
   public function typeModifiers() {
     $this->assertEquals(new Modifiers('public abstract'), $this->reflect(self::class)->typeModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function typeModifiers_of_trait() {
     $this->assertEquals(new Modifiers('public abstract'), $this->reflect(FixtureTrait::class)->typeModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function typeModifiers_of_abstract() {
     $this->assertEquals(new Modifiers('public abstract'), $this->reflect(FixtureAbstract::class)->typeModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function typeModifiers_of_final() {
     $this->assertEquals(new Modifiers('public final'), $this->reflect(FixtureFinal::class)->typeModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function typeModifiers_of_enum() {
     $this->assertEquals(new Modifiers('public'), $this->reflect(FixtureEnum::class)->typeModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function typeModifiers_of_interface() {
     $this->assertEquals(new Modifiers('public'), $this->reflect(FixtureInterface::class)->typeModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function typeKind() {
     $this->assertEquals(Kind::$CLASS, $this->reflect(self::class)->typeKind());
   }
 
-  #[@test]
+  #[Test]
   public function typeKind_of_trait() {
     $this->assertEquals(Kind::$TRAIT, $this->reflect(FixtureTrait::class)->typeKind());
   }
 
-  #[@test]
+  #[Test]
   public function typeKind_of_enum() {
     $this->assertEquals(Kind::$ENUM, $this->reflect(FixtureEnum::class)->typeKind());
   }
 
-  #[@test]
+  #[Test]
   public function typeKind_of_interface() {
     $this->assertEquals(Kind::$INTERFACE, $this->reflect(FixtureInterface::class)->typeKind());
   }
 
-  #[@test]
+  #[Test]
   public function typeImplements_declared_interface() {
     $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(\IteratorAggregate::class));
   }
 
-  #[@test]
+  #[Test]
   public function typeImplements_inherited_interface() {
     $this->assertTrue($this->reflect(FixtureImpl::class)->typeImplements(\Traversable::class));
   }
 
-  #[@test]
+  #[Test]
   public function all_interfaces() {
     $this->assertEquals(
       [\IteratorAggregate::class, \Traversable::class, Closeable::class, FixtureInterface::class],
@@ -173,7 +158,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function declared_interfaces() {
     $this->assertEquals(
       [\IteratorAggregate::class, Closeable::class],
@@ -181,7 +166,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function parent_interfaces() {
     $this->assertEquals(
       [Closeable::class, FixtureInterface::class],
@@ -189,12 +174,12 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function typeUses() {
     $this->assertTrue($this->reflect(FixtureImpl::class)->typeUses(FixtureTrait::class));
   }
 
-  #[@test]
+  #[Test]
   public function all_traits() {
     $this->assertEquals(
       [FixtureTrait::class, FixtureUsed::class],
@@ -202,7 +187,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function declared_traits() {
     $this->assertEquals(
       [FixtureUsed::class],
@@ -210,37 +195,37 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function with_constructor() {
     $this->assertEquals('__construct', $this->reflect(self::class)->constructor()['name']);
   }
 
-  #[@test]
+  #[Test]
   public function default_constructor() {
     $this->assertEquals('__default', $this->reflect(MemberFixture::class)->constructor()['name']);
   }
 
-  #[@test]
+  #[Test]
   public function has_instance_field() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasField('publicInstanceField'));
   }
 
-  #[@test]
+  #[Test]
   public function has_inherited_field() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasField('inheritedField'));
   }
 
-  #[@test]
+  #[Test]
   public function has_trait_field() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasField('traitField'));
   }
 
-  #[@test]
+  #[Test]
   public function has_static_field() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasField('publicClassField'));
   }
 
-  #[@test]
+  #[Test]
   public function all_fields() {
     $this->assertEquals(
       [
@@ -260,7 +245,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function declared_fields() {
     $this->assertEquals(
       [
@@ -279,7 +264,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function trait_fields() {
     $this->assertEquals(
       ['annotatedTraitField', 'traitField'],
@@ -287,7 +272,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function instance_field() {
     $this->assertEquals(
       'publicInstanceField',
@@ -295,7 +280,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function static_field() {
     $this->assertEquals(
       'publicClassField',
@@ -303,7 +288,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function inherited_field() {
     $this->assertEquals(
       'inheritedField',
@@ -311,28 +296,28 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function non_existant_field() {
     $this->reflect(MemberFixture::class)->fieldNamed('does.not.exist');
   }
 
-  #[@test]
+  #[Test]
   public function fieldAnnotations_of_field_in_this_class() {
     $field= $this->reflect(self::class)->fieldNamed('field');
     $this->assertEquals(['fixture' => null], $field['annotations']());
   }
 
-  #[@test]
+  #[Test]
   public function has_instance_method() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicInstanceMethod'));
   }
 
-  #[@test]
+  #[Test]
   public function has_static_method() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasMethod('publicClassMethod'));
   }
 
-  #[@test]
+  #[Test]
   public function all_methods() {
     $this->assertEquals(
       [
@@ -352,7 +337,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function declared_methods() {
     $this->assertEquals(
       [
@@ -371,7 +356,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function trait_methods() {
     $this->assertEquals(
       ['annotatedTraitMethod', 'traitMethod'],
@@ -379,7 +364,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function instance_method() {
     $this->assertEquals(
       'publicInstanceMethod',
@@ -387,7 +372,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function static_method() {
     $this->assertEquals(
       'publicClassMethod',
@@ -395,7 +380,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function inherited_method() {
     $this->assertEquals(
       'inheritedMethod',
@@ -403,24 +388,24 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function non_existant_method() {
     $this->reflect(MemberFixture::class)->methodNamed('does.not.exist');
   }
 
-  #[@test]
+  #[Test]
   public function methodAnnotations_of_field_in_this_class() {
     $method= $this->reflect(self::class)->methodNamed('method');
     $this->assertEquals(['fixture' => null], $method['annotations']());
   }
 
-  #[@test]
+  #[Test]
   public function no_params() {
     $method= $this->reflect(FixtureParams::class)->methodNamed('noParam');
     $this->assertEquals([], $method['params']());
   }
 
-  #[@test]
+  #[Test]
   public function one_param() {
     $method= $this->reflect(FixtureParams::class)->methodNamed('oneParam');
     $param= $method['params']()[0];
@@ -430,7 +415,7 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function one_optional_param() {
     $method= $this->reflect(FixtureParams::class)->methodNamed('oneOptionalParam');
     $param= $method['params']()[0];
@@ -440,40 +425,40 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function typed_param() {
     $method= $this->reflect(FixtureParams::class)->methodNamed('oneTypeHintedParam');
     $param= $method['params']()[0];
     $this->assertEquals(new XPClass(Type::class), $param['type']());
   }
 
-  #[@test]
+  #[Test]
   public function self_typehinted_param() {
     $method= $this->reflect(FixtureParams::class)->methodNamed('oneSelfTypeHintedParam');
     $param= $method['params']()[0];
     $this->assertEquals(new XPClass(FixtureParams::class), $param['type']());
   }
 
-  #[@test]
+  #[Test]
   public function array_typehinted_param() {
     $method= $this->reflect(FixtureParams::class)->methodNamed('oneArrayTypeHintedParam');
     $param= $method['params']()[0];
     $this->assertEquals(Type::$ARRAY, $param['type']());
   }
 
-  #[@test]
+  #[Test]
   public function callable_typehinted_param() {
     $method= $this->reflect(FixtureParams::class)->methodNamed('oneCallableTypeHintedParam');
     $param= $method['params']()[0];
     $this->assertEquals(Type::$CALLABLE, $param['type']());
   }
 
-  #[@test]
+  #[Test]
   public function has_constant() {
     $this->assertTrue($this->reflect(MemberFixture::class)->hasConstant('CONSTANT'));
   }
 
-  #[@test]
+  #[Test]
   public function all_constants() {
     $this->assertEquals(
       ['CONSTANT' => MemberFixture::CONSTANT, 'INHERITED' => MemberFixture::INHERITED],
@@ -481,12 +466,12 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function non_existant_constant() {
     $this->reflect(MemberFixture::class)->constantNamed('does.not.exist');
   }
 
-  #[@test]
+  #[Test]
   public function constant_named() {
     $this->assertEquals(
       MemberFixture::CONSTANT,
@@ -494,40 +479,40 @@ abstract class SourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function isSubtypeOf_returns_false_for_self() {
     $this->assertFalse($this->reflect(FixtureImpl::class)->isSubtypeOf(FixtureImpl::class));
   }
 
-  #[@test]
+  #[Test]
   public function isSubtypeOf_parent() {
     $this->assertTrue($this->reflect(FixtureImpl::class)->isSubtypeOf(FixtureBase::class));
   }
 
-  #[@test]
+  #[Test]
   public function isSubtypeOf_implemented_interface() {
     $this->assertTrue($this->reflect(FixtureImpl::class)->isSubtypeOf(FixtureInterface::class));
   }
 
-  #[@test]
+  #[Test]
   public function trait_field_comment() {
     $field= $this->reflect(MemberFixture::class)->fieldNamed('traitField');
     $this->assertEquals('/** @type int */', $field['comment']());
   }
 
-  #[@test]
+  #[Test]
   public function trait_field_annotations() {
     $field= $this->reflect(MemberFixture::class)->fieldNamed('annotatedTraitField');
     $this->assertEquals(['fixture' => null], $field['annotations']());
   }
 
-  #[@test]
+  #[Test]
   public function trait_method_comment() {
     $field= $this->reflect(MemberFixture::class)->methodNamed('traitMethod');
     $this->assertEquals('/** @return void */', $field['comment']());
   }
 
-  #[@test]
+  #[Test]
   public function trait_method_annotations() {
     $field= $this->reflect(MemberFixture::class)->methodNamed('annotatedTraitMethod');
     $this->assertEquals(['fixture' => null], $field['annotations']());

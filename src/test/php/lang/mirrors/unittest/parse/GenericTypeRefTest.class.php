@@ -1,14 +1,12 @@
 <?php namespace lang\mirrors\unittest\parse;
 
-use lang\mirrors\parse\GenericTypeRef;
-use lang\mirrors\parse\ReferenceTypeRef;
-use lang\mirrors\parse\TypeRef;
-use lang\Type;
-use lang\Primitive;
+use lang\mirrors\parse\{GenericTypeRef, ReferenceTypeRef, TypeRef};
+use lang\{Primitive, Type};
+use unittest\Test;
 
 class GenericTypeRefTest extends ResolveableTest {
 
-  #[@test]
+  #[Test]
   public function filter_of_int() {
     $this->assertEquals(
       Type::forName('util.Filter<int>'),
